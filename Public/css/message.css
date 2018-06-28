@@ -1,0 +1,26 @@
+.section_notice {
+    height: auto;
+}
+
+.section_message_main {
+    padding: 20px;
+    padding-top: 0;
+}
+
+.section_message {
+    border-bottom: 1px solid #C9C9C9;
+    padding-bottom: 10px;
+}
+
+.section_message * {
+    margin: 10px auto;
+}
+
+.section_message_title {
+    color: #C9C9C9;
+}
+
+.section_message_more {
+    text-align: center;
+    padding-top: 20px;
+}

@@ -1,0 +1,113 @@
+.section_Carousel #btns {
+    text-align: center;
+    padding: 5px 0;
+}
+
+.section_Carousel #showbox {
+    position: relative;
+    width: 1060px;
+    height: 280px;
+    overflow: hidden;
+}
+
+.section_Carousel #pics {
+    width: 8000px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    transition: left 0.5s;
+    z-index: 1;
+}
+
+.section_Carousel .pic {
+    font-size: 100px;
+    line-height: 350px;
+    text-align: center;
+    width: 1060px;
+    height: 280px;
+    float: left;
+    z-index: -1;
+}
+
+.section_Carousel #pics>div:nth-child(1) {
+    background-color: #32A0C5;
+}
+
+.section_Carousel #pics>div:nth-child(2) {
+    background-color: greenyellow;
+}
+
+.section_Carousel #pics>div:nth-child(3) {
+    background-color: orange;
+}
+
+
+.section_Carousel #prev {
+    display: none;
+    float: left;
+    position: absolute;
+    z-index: 2;
+}
+
+.section_Carousel #next {
+    display: none;
+    float: left;
+    position: absolute;
+    z-index: 2;
+    right: 0;
+}
+
+.section_Carousel .arrow {
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 40px;
+    line-height: 36px;
+    text-align: center;
+    width: 30px;
+    height: 40px;
+    top: 50%;
+    margin-top:-15px;
+    background-color: RGBA(0, 0, 0, .2);
+    color: #fff;
+}
+
+.section_Carousel .arrow:hover {
+    background-color: RGBA(0, 0, 0, .7);
+}
+
+.section_Carousel #swapButtons {
+    height: 15px;
+    margin: 0 auto;
+    z-index: 3;
+    position: absolute;
+    left: 510px;
+    bottom: 10px;
+}
+
+.section_Carousel #showbox:hover #prev {
+    display: block;
+}
+
+.section_Carousel #showbox:hover #next {
+    display: block;
+}
+
+.section_Carousel #swapButtons div {
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    float: left;
+    margin: 2px;
+    text-align: center;
+    font: bold 20px/30px "microsoft yahei";
+    cursor: pointer;
+    border-radius: 100%;
+}
+
+.section_Carousel #swapButtons div:hover {
+    background-color: RGBA(0, 0, 0, .7);
+}
+
+.section_Carousel #swapButtons .on {
+    background-color: RGBA(0, 0, 0, .7);
+}

@@ -1,0 +1,141 @@
+.section {
+    font-size: 14px;
+}
+
+.section_main {
+    width: 760px;
+    margin: 0 auto;
+}
+
+.section_notice,
+.section_notice_content {
+    height: auto;
+}
+
+.section_basicInfo .section_notice_title {
+    cursor: default;
+}
+
+.section_notice_title a {
+    float: right;
+    line-height: 40px;
+}
+
+.section_basicInfo_info,
+.section_basicInfo_organization,
+.section_basicInfo_gallary,
+.section_basicInfo_workExp {
+    width: 100%;
+}
+
+.section_basicInfo_info {
+    margin-bottom: 20px;
+}
+
+.section_basicInfo_left,
+.section_basicInfo_right {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.section_basicInfo_left {
+    width: 120px;
+    margin-right: 30px;
+}
+
+.section_basicInfo_avatar {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 15px;
+    background: #BCBCBC;
+}
+
+.section_basicInfo_sign {
+    cursor: pointer;
+    display: block;
+    height: 30px;
+    width: 60px;
+    color: #fff;
+    font-size: 14px;
+    line-height: 30px;
+    border-radius: 5px;
+    text-align: center;
+    margin: 0 auto;
+    background: #FF5400;
+}
+
+.section_basicInfo_sign:hover {
+    background: #F04C00;
+}
+
+.section_basicInfo_right_top {
+    border-bottom: 1px solid #999;
+    margin-bottom: 10px;
+}
+
+.section_basicInfo_right p {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.section_basicInfo_title {
+    border-bottom: 1px solid #999;
+    padding: 10px;
+}
+
+.section_organization_content {
+    height: 290px;
+    overflow-y: scroll;
+    border: 1px solid #999;
+    padding-top: 10px;
+}
+
+.section_oranization_content_higher>p,
+.section_oranization_content_lower>p {
+    margin-left: 10px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.section_oranization_higherP,
+.section_oranization_lowerP {
+    height: 50px;
+    border-bottom: 1px solid #999;
+}
+
+.section_oranization_higherP>div,
+.section_oranization_lowerP>div {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 50px;
+}
+
+.section_oranization_higherP_avatar,
+.section_oranization_lowerP_avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    background: #C9C9C9;
+    margin-left: 10px;
+    margin-right: 20px;
+}
+
+.section_oranization_higherP_email,
+.section_oranization_lowerP_email {
+    min-width: 200px;
+    float: right;
+    text-align: left;
+    margin-right: 10px;
+}
+
+.section_basicInfo_wordExpItem {
+    margin: 20px 20px;
+}
+
+.section_basicInfo_wordExpItem>div {
+    display: inline-block;
+}
+
+.section_basicInfo_wordExpTime {
+    margin-right: 50px;
+}
