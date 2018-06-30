@@ -24,7 +24,6 @@ class BaseModel extends  Model{
         $count=M($arg['table'])->where($where)->count();
         //$newPage=new \Think\Page($count,$pnum);
         $data=M($arg['table'])->where($where)->field($fields)->order("$order desc")->page($page,$pnum)->select();
-
         //$response['page']=$newPage->show();
         $response['pages']=ceil($count/C('PAGE_SIZE'));//总页数
         $response['data']=$data;
