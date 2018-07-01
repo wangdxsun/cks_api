@@ -10,10 +10,10 @@ use Think\Controller;
  * @author jan
  *
  */
-class ApiController extends Controller
+class BaseController extends Controller
 {
 
-    //响应前台的请求
+    //响应前台的请求--验证签名
     public function verifyEncryptSign(){
 
         //验证身份
@@ -44,5 +44,26 @@ class ApiController extends Controller
 
         //转换成大写
         return strtoupper(md5(sha1(implode($arr))));
+    }
+
+    //生成签名
+    public function createSignature(){
+        //时间戳
+        $timeStamp = time();
+        //随机字符串
+        $randomStr = $this -> createNonceStr();
+        //生成签名
+        $signature = $this -> arithmetic($timeStamp,$randomStr);
+        return $signature;
+    }
+
+    //随机生成字符串
+    private function createNonceStr($length = 8) {
+        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        $str = "";
+        for ($i = 0; $i < $length; $i++) {
+            $str .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
+        }
+        return "z".$str;
     }
 }
