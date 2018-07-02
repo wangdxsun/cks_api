@@ -94,6 +94,11 @@ class BaseModel extends  Model{
         return M($condition['table'])->add($condition['data']);
     }
 
+    //批量添加数据
+    public static function addAllData($condition){
+        return M($condition['table'])->addAll($condition['data']);
+    }
+
     //获取某个字段
     public static function getFieldVal($condition){
 
@@ -253,12 +258,6 @@ class BaseModel extends  Model{
         return $_SESSION['adminInfo']['role_id'] == 1 ? true : false;
     }
 
-    /**
-    @添加全部数据
-     **/
-    public static function addalldata($table,$data){
-        return M($table)->addAll($data);
-    }
 
 
 

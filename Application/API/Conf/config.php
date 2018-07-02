@@ -2,7 +2,7 @@
 return array(
 
 	//'配置项'=>'配置值'
-    'token' => 'KSHOPCODE',
+   'token' => 'KSHOPCODE',
 
     //云账号域名地址
     'cloud_url' => 'https://accountsym.phicomm.com',

@@ -100,6 +100,10 @@ class ProductController extends Controller
 
     }
 
+   /* public function say(){
+        return "hello world";
+    }*/
+
 }
 
 
