@@ -3,6 +3,7 @@ return array(
 
 	//'配置项'=>'配置值'
     'token' => 'KSHOPCODE',
+
     //云账号域名地址
     'cloud_url' => 'https://accountsym.phicomm.com',
 	//K码兑换H5
@@ -20,5 +21,10 @@ return array(
     //验证码
     'cloud_verificationCode' => '/v1/verificationCode',
     //忘记密码
-    'cloud_forgetpassword' => '/v1/forgetpassword'
+    'cloud_forgetpassword' => '/v1/forgetpassword',
+    //获取用户信息token->info
+    'cloud_phonenumberInfo' => '/v1/phonenumberInfo',
+
+    //商城api
+    //推啥api……
 );

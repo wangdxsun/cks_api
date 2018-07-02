@@ -11,29 +11,9 @@ use API\Controller\BaseController;
  * @author yy
  *
  */
-class LoginController extends Controller
+class LoginController extends BaseController
 {
 
-    /**
-        @功能:获取云账号登录授权码
-        @param:yy
-        @date:2018-06-30
-    **/
-    public function authorization(){
-        // redirect_uri    回调地址    string  可选，授权回调地址，需要与注册时设置的回调地址保持一致
-        // response_type   返回类型    string  这里固定值为code
-        // scope    范围权限    string  申请scope权限所需要的参数，如read,write
-        $data['client_id'] = C('web_client_id');
-        $data['client_secret'] = C('web_client_secret');
-        $data['redirect_uri'] = '';
-        $data['response_type'] = 'code';
-        $data['scope'] = 'read';
-        $params = http_build_query($data);
-        $url = C('cloud_url').C('cloud_authorization').'?'.$params;
-        $res = json_decode(Curl::curl_get($url),true);
-        $authorizationcode = $res['authorizationcode'];
-        return $authorizationcode;
-    }
     //邮箱手机号验证
     public function checkEmailOrPhone($account_number){
         $preg_email='/^[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*@([a-zA-Z0-9]+[-.])+([a-z]{2,5})$/ims';
@@ -107,9 +87,6 @@ class LoginController extends Controller
         $url = C('cloud_url').C('cloud_login');
         $res = Curl::curl_post($url,$data);
         $res = json_decode($res,true);
-        if ($res['code']==0) {
-            session('account_number',$_POST['account_number']);
-        }
         exit($res);
     }
 
