@@ -26,7 +26,7 @@ class MallController extends Controller
         $url="http://localhost/newtest/0630.php";
         $post["uid"]=$user_info["uid"];
         $post["mobile"]=$user_info["mobile"];
-        $post["kcode"]=$kcode="11111";
+        $post["kcode"]=$kcode="1111";
         $post["value"]=$value=200;
         $post["amount"]=$amount=300;
         $post["radio"]=$radio=2.00;
