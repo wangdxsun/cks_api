@@ -24,7 +24,13 @@ return array(
     'cloud_forgetpassword' => '/v1/forgetpassword',
     //获取用户信息token->info
     'cloud_phonenumberInfo' => '/v1/phonenumberInfo',
+    //验证token有效性
+    'cloud_verifyToken' =>  "/v1/verifyToken",
 
     //商城api
     //推啥api……
+    //以太星球
+    'eth_url' => 'https://www.phi-block.com/api/',
+    'eth_act' => 'cloud_star_points',
+    'eth_md5_key' => '1wSn0kMbpxaDCx',
 );

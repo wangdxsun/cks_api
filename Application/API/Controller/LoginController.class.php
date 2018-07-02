@@ -86,7 +86,6 @@ class LoginController extends BaseController
         $data['password'] = md5($_POST['password']);
         $url = C('cloud_url').C('cloud_login');
         $res = Curl::curl_post($url,$data);
-        $res = json_decode($res,true);
         exit($res);
     }
 

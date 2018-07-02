@@ -19,7 +19,7 @@ class MallController extends Controller
     }
 
     //拼接参数，发送请求
-//$token,$kcode,$value,$amount,$radio
+    //$token,$kcode,$value,$amount,$radio
     public function exchange(){
         //$user_info=BaseController::getInfoByToken($token);
         $user_info=array("uid"=>1103,"mobile"=>"13771028563");
@@ -34,7 +34,8 @@ class MallController extends Controller
         $timestamp=time();
         $method="exchange";
         $sign=$this->entry($timestamp,$method,$param);
-  /*      $header["timestamp"]=$timestamp;
+        /*  
+        $header["timestamp"]=$timestamp;
         $header["exchange"]=$method;
         $header["sign"]=$sign;*/
         $header=array("Content-type: application/json;charset=UTF-8","timestamp:$timestamp","method:$method","sign:$sign");
