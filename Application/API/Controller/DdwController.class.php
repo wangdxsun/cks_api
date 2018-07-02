@@ -28,8 +28,8 @@ class DdwController extends Controller
            exit("接口请求错误");
        }
        $rate=$data["data"]["rate"];
-       $where["cash"]=6;
-       $where["describe"]="ddw";
+       $where["cash"]=1;
+       $where["describe"]="DDW";
        $result=M("allot_policy")->where($where)->find();
        if($result){
            //修改
@@ -40,8 +40,8 @@ class DdwController extends Controller
 
        }else{
            //新增
-           $add["cash"]=6;
-           $add["describe"]="ddw";
+           $add["cash"]=1;
+           $add["describe"]="DDW";
            $add["create_time"]=date("Y-m-d H:i:s",time());
            $add["exratio"]=$data["data"]["premium"];
            $add["rate"]=$rate;
