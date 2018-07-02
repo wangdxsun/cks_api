@@ -28,6 +28,8 @@ return array(
     'cloud_verifyToken' =>  "/v1/verifyToken",
 
     //商城api
+    'mall_url' => 'http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/exchange',
+    'mall_interface' => 'vmcshop_vcprice_interface',
     //推啥api……
     //以太星球
     'eth_url' => 'https://www.phi-block.com/api/',

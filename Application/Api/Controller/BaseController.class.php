@@ -36,7 +36,6 @@ class BaseController extends Controller
         $params = http_build_query($data);
         $url = C('cloud_url').C('cloud_phonenumberInfo').'?'.$params;
         $res = json_decode(Curl::curl_get($url),true);
-        $res['mobile'] = $res['phonenumber'];
         $res['uid'] = $info['uid'];
         return $res;
     }
