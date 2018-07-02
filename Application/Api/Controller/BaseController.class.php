@@ -10,7 +10,7 @@ use Think\Controller;
  * @author jan
  *
  */
-class ApiController extends Controller
+class BaseController extends Controller
 {
 
     //响应前台的请求

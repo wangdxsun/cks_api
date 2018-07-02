@@ -3,10 +3,10 @@ return array(
 	//'配置项'=>'配置值'
     //数据库配置信息
     'DB_TYPE' => "mysql", // 数据库类型
-    'DB_HOST' => "localhost", //
-    'DB_NAME' => "phishop", // 数据库名
-    'DB_USER' => "root", // 用户名
-    'DB_PWD' => "", // 密码
+    'DB_HOST' => "172.17.188.6", //
+    'DB_NAME' => "phicomm_kcode", // 数据库名
+    'DB_USER' => "weixindev", // 用户名
+    'DB_PWD' => "weixin*123", // 密码
     'DB_PORT' => 3306, // 端口
     'DB_PREFIX' => "", // 数据库表前缀
     'DB_CHARSET' => "utf8", // 字符集
@@ -19,4 +19,7 @@ return array(
 
     //PAGE_SIZE
     'PAGE_SIZE' => 15,
+
+    //渠道
+    'CHANNEL' => [ 1 =>'商城', 2=>'推啥', 3=>'日日赢', 4=>'以太星球', 5=>'礼包' ]
 );
