@@ -97,12 +97,17 @@ class ProductController extends Controller
         $data = M("relation")->where(["orderid" => $order_no, "status" => 1])->field("secretcd,money,pname")->select();
         //发消息接口
 
+        exit(json_encode(array("status"=>true)));
+    }
+
+
+
+    public function dhresult(){
+        exit(json_encode(array("stautus"=>true,"msg"=>"11111111111")));
+
 
     }
 
-   /* public function say(){
-        return "hello world";
-    }*/
 
 }
 
