@@ -4,6 +4,8 @@ namespace API\Controller;
 
 use Think\Controller;
 use API\Controller\BaseController;
+use API\Controller\EthController;
+use API\Controller\MallController;
 use Admin\Model\BaseModel;
 /**
  * 页面操作类
@@ -86,11 +88,11 @@ class PageController extends BaseController
         
         $res = BaseModel::getDbData($condition, false);
         if (empty($res)) {
-            exit(json_encode(array('code' => 1,'message' => 'K码输入错误，信息不存在')));
+            exit(json_encode(array('error' => 1,'message' => 'K码输入错误，信息不存在')));
         }
         //status 状态 0未分配 1已分配 2已兑换 3已冻结 4已注销
         if ($res['status']!=1) {
-            exit(json_encode(array('code' => 1,'message' => 'K码不是待使用状态')));
+            exit(json_encode(array('error' => 1,'message' => 'K码不是待使用状态')));
         }
         $money = $res['money'];
 
@@ -158,8 +160,9 @@ class PageController extends BaseController
                 }
             }
         }
-        exit(json_encode($channel_list));
         //DDW汇率--待定
+        exit(json_encode(array('error' => 1,'data' => $channel_list)));
+        
     }
     public function addkey(&$val, $key, $param){
         $val[$param['key1']] = $param['value1']*$val['exratio'];
@@ -187,7 +190,11 @@ class PageController extends BaseController
         if (empty(isset($token))) {
             exit(json_encode(array('error' => 1,'message' => '账号信息错误，缺少token')));
         }
-        $info = $this->getInfoByToken($token);print_r($info);
+        $info = $this->getInfoByToken($token);
+        if ($info['error']!=0) {
+            exit(json_encode($info));
+        }
+        print_r($info);
         $page = $_POST['page'];
         $data = BaseModel::getListData([
             'table'=>'use_details',
@@ -197,5 +204,35 @@ class PageController extends BaseController
             'page' => $page = !empty($page) ? $page : 0
         ]);
         exit(json_encode(array('error' => 0,'data'=>$data)));
+    }
+
+    /**
+        @功能:点击兑换
+        @author:yy
+        @date:2018-07-01
+    **/
+    public function exchange(){
+        // token   是   身份唯一表示
+        // channel 是   渠道
+        // kcode   是   K码值，后台在验证是还需要再次查询数据库
+        // money   是   K码价值 
+        $channel = $_POST['channel'];
+        $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjMifQ.eyJ1aWQiOiI5NTc5NTY3OCIsImNvZGUiOiJmZWl4dW4qMTIzLlNIXzQ3MTczODMiLCJ0eXBlIjoiYWNjZXNzX3Rva2VuIiwiaXNzIjoiUGhpY29tbSIsIm5iZiI6MTUzMDUxMTY3NSwiZXhwIjoxNTMwNjQxMjc1LCJyZWZyZXNoVGltZSI6IjIwMTgtMDctMDMgMDI6MDc6NTUifQ.-3EJXRFwDUD2tmHVWuuyObIAwpmYhj7G2TFAmUZLCqM";//登录获取的token
+        switch ($channel) {
+            case '商城':
+                $res = EthController::ethChange($token, $price1, $price2);
+                break;
+            case '以太星球':
+                
+                $price1 = 100;//price1  是   k码对应的人民币价值
+                $price2 = 200;//price2  是   K码换算成星积分后的价值
+                $res = EthController::ethChange($token, $price1, $price2);
+                print_r($res);
+                # code...
+                break;
+            default:
+                # code...
+                break;
+        }
     }
 }

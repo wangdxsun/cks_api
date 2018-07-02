@@ -75,7 +75,6 @@ class BaseController extends Controller
 
     //数据重复提醒
     protected  function distRemind($remind){
-
         $remind['data'] && $this->ajaxReturn(['status'=>2, 'info'=>$remind['info']]);
 
     }

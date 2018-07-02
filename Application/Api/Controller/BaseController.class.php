@@ -19,17 +19,25 @@ class BaseController extends Controller
         @date:2018-07-01
     **/
     public function getInfoByToken($token){
-        $res = explode('.', $token);
-        $userInfo = json_decode(base64_decode($res[1]),true);
+        //验证token有效性，返回uid
+        $header = array("Authorization: $token");
+        $params = http_build_query($data);
+        $url = C('cloud_url').C('cloud_verifyToken').'?'.$params;
+        $info = json_decode(Curl::curl_header_get($url,$header),true);
+        if ($info['error']!=0) {
+            return $info;
+        }
+
         // GET 请求
         // authorizationcode   feixun.SH_7（输入你们的授权码）
         // uid 1230557
         $data['authorizationcode'] = $this->authorization();
-        $data['uid'] = $userInfo['uid'];
+        $data['uid'] = $info['uid'];
         $params = http_build_query($data);
         $url = C('cloud_url').C('cloud_phonenumberInfo').'?'.$params;
         $res = json_decode(Curl::curl_get($url),true);
-        $res['uid'] = $userInfo['uid'];
+        $res['mobile'] = $res['phonenumber'];
+        $res['uid'] = $info['uid'];
         return $res;
     }
     /**
