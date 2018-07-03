@@ -94,16 +94,30 @@ class PageController extends BaseController
         if ($res['status']!=1) {
             exit(json_encode(array('error' => 1,'message' => 'K码不是待使用状态')));
         }
-        $money = $res['money'];
+        
+        $condition2 = [
+            'table' => 'allot_policy',
+            'fields' => 'describe',
+            'where' => ['cash' => 1]
+        ];
+        $channel_info = BaseModel::getDbData($condition2);
+        foreach ($channel_info as $key => $value) {
+            $channel_list[] = $this->getChangeMoney($value['describe'],$res);
+        }
+        print_r($channel_list);
+        exit(json_encode(array('error' => 1,'data' => $channel_list)));
+        
+    }
 
+    public function getChangeMoney($channel,$res){
         //1兑换渠道策略 兑付策略 1渠道 2出货时间 3激活时间 4客户渠道 5料号 6兑换渠道
         $condition2 = [
             'table' => 'allot_policy',
-            'where' => ['cash' => 1]
+            'where' => ['cash' => 1, 'describe' => $channel]
         ];
-        $channel_list = BaseModel::getDbData($condition2);
-        $channel_list = array_column($channel_list, NULL, 'describe');
-        array_walk($channel_list,array($this,"addkey"),array('key1'=>'money','key2'=>'rate_str', 'value1'=>$money));  //数组添加键值  
+        $channel_list = BaseModel::getDbData($condition2,false); 
+        $channel_list['money'] = $res['money']*$channel_list['exratio'];
+        $channel_list['rate_str'] = $channel_list['id'].':'.$channel_list['exratio'];
 
         //2出货时间策略 
         $condition2 = [
@@ -113,7 +127,8 @@ class PageController extends BaseController
 
         $info = BaseModel::getDbData($condition2,false);
         if(!empty($info) && $this->compareOperat(strtotime($res['allot_time']), strtotime($info['describe']), $info['operator'])){
-            array_walk($channel_list,array($this,"editkey"),array('key1'=>'money','key2'=>'rate_str','value1'=>$info['id'],'value2'=>$info['exratio']));
+            $channel_list['money'] = $channel_list['money']*$info['exratio'];
+            $channel_list['rate_str'] = $channel_list['rate_str'].'-'.$info['id'].':'.$info['exratio'];
         }
         
         //3激活时间策略
@@ -123,7 +138,8 @@ class PageController extends BaseController
         ];
         $info = BaseModel::getDbData($condition2,false);
         if(!empty($info) && $this->compareOperat(strtotime(date('Y-m-d')), strtotime($info['describe']), $info['operator'])){
-            array_walk($channel_list,array($this,"editkey"),array('key1'=>'money','key2'=>'rate_str','value1'=>$info['id'],'value2'=>$info['exratio']));
+            $channel_list['money'] = $channel_list['money']*$info['exratio'];
+            $channel_list['rate_str'] = $channel_list['rate_str'].'-'.$info['id'].':'.$info['exratio'];
         }
 
         //4客户渠道策略
@@ -133,7 +149,8 @@ class PageController extends BaseController
         ];
         $info = BaseModel::getDbData($condition2,false);
         if(!empty($info)){
-            array_walk($channel_list,array($this,"editkey"),array('key1'=>'money','key2'=>'rate_str','value1'=>$info['id'],'value2'=>$info['exratio']));
+            $channel_list['money'] = $channel_list['money']*$info['exratio'];
+            $channel_list['rate_str'] = $channel_list['rate_str'].'-'.$info['id'].':'.$info['exratio'];
         }
         
         //5料号策略
@@ -143,35 +160,12 @@ class PageController extends BaseController
         ];
         $info = BaseModel::getDbData($condition2,false);
         if(!empty($info)){
-            array_walk($channel_list,array($this,"editkey"),array('key1'=>'money','key2'=>'rate_str','value1'=>$info['id'],'value2'=>$info['exratio']));
+            $channel_list['money'] = $channel_list['money']*$info['exratio'];
+            $channel_list['rate_str'] = $channel_list['rate_str'].'-'.$info['id'].':'.$info['exratio'];
         }
-        
-        //6第三方提供比例
-        $condition2 = [
-            'table' => 'allot_policy',
-            'where' => ['cash' => 6]
-        ];
-        $info = BaseModel::getDbData($condition2);
-        if(!empty($info)){
-            foreach ($info as $key => $value) {
-                if ($channel_list[$value['describe']]) {
-                    $channel_list[$value['describe']]['money'] = $channel_list[$value['describe']]['money']*$value['exratio'];
-                    $channel_list[$value['describe']]['rate_str'] = $channel_list[$value['describe']]['rate_str'].'-'.$value['id'].':'.$value['exratio'];
-                }
-            }
-        }
-        //DDW汇率--待定
-        exit(json_encode(array('error' => 1,'data' => $channel_list)));
-        
+        return $channel_list;
     }
-    public function addkey(&$val, $key, $param){
-        $val[$param['key1']] = $param['value1']*$val['exratio'];
-        $val[$param['key2']] = $val['id'].':'.$val['exratio'];
-    }
-    public function editkey(&$val, $key, $param){
-        $val[$param['key1']] = $val[$param['key1']]*$param['value2'];
-        $val[$param['key2']] = $val[$param['key2']].'-'.$param['value1'].':'.$param['value2'];
-    }
+
     public function compareOperat($num_1,$num_2,$operator)
     {
         if (empty($num_1)||empty($num_2)) {
@@ -217,10 +211,10 @@ class PageController extends BaseController
         // kcode   是   K码值，后台在验证是还需要再次查询数据库
         // money   是   K码价值 
         $channel = $_POST['channel'];
-        $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjMifQ.eyJ1aWQiOiI5NTc5NTY3OCIsImNvZGUiOiJmZWl4dW4qMTIzLlNIXzQ3MTczODMiLCJ0eXBlIjoiYWNjZXNzX3Rva2VuIiwiaXNzIjoiUGhpY29tbSIsIm5iZiI6MTUzMDUxMTY3NSwiZXhwIjoxNTMwNjQxMjc1LCJyZWZyZXNoVGltZSI6IjIwMTgtMDctMDMgMDI6MDc6NTUifQ.-3EJXRFwDUD2tmHVWuuyObIAwpmYhj7G2TFAmUZLCqM";//登录获取的token
+        $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjIifQ.eyJ1aWQiOiI5NTc5NTY3OCIsImNvZGUiOiJmZWl4dW4qMTIzLlNIXzQ3MTczODMiLCJ0eXBlIjoiYWNjZXNzX3Rva2VuIiwiaXNzIjoiUGhpY29tbSIsIm5iZiI6MTUzMDUzMzczNCwiZXhwIjoxNTMwNjYzMzM0LCJyZWZyZXNoVGltZSI6IjIwMTgtMDctMDMgMDg6MTU6MzQifQ.9NQJd9K_kmUGliBX9xTIiyB-PkTbwxJLnlFS0uoaVPE";//登录获取的token
         switch ($channel) {
             case '商城':
-                $res = EthController::ethChange($token, $price1, $price2);
+                $res = MallController::mallChange($token);
                 break;
             case '以太星球':
                 

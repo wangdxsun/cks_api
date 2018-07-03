@@ -97,12 +97,31 @@ class ProductController extends Controller
         $data = M("relation")->where(["orderid" => $order_no, "status" => 1])->field("secretcd,money,pname")->select();
         //发消息接口
 
-
+        exit(json_encode(array("status"=>true)));
     }
 
-   /* public function say(){
-        return "hello world";
-    }*/
+
+
+    public function dhresult(){
+        //exit(json_encode(array("stautus"=>true,"msg"=>"11111111111")));
+        $phone=$_POST["phone"];
+        $channel=$_POST["channel"];
+        $kcode=$_POST["kcode"];
+        $status=$_POST["status"];
+        $dhtotal=$_POST["dhtotal"];
+        $rate=$_POST["rate"];
+        $exratio=$_POST["exratio"];
+        if(empty($phone)||empty($channel)||empty($kcode)||empty($dhtotal)||empty($dhtotal)||empty($rate)||empty($exratio)){
+            exit(json_encode(array("status"=>false,"msg"=>"缺少必要字段")));
+        }
+        $result=CommonController::ChangeLog($kcode,$rate,$dhtotal,$phone,$status,$channel,$exratio);
+        if($result){
+            exit(json_encode(array("status"=>true,"msg"=>"插入成功")));
+        }else{
+            exit(json_encode(array("status"=>false,"msg"=>"回调失败")));
+        }
+    }
+
 
 }
 

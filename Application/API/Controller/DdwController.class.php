@@ -19,17 +19,17 @@ class DdwController extends Controller
 
    }
 
-    //定时任务更新
+    //定时任务更新,完成
    public function getrate(){
-       $url="https://accountsymtest.phicomm.com/ddwservice/v1/ddwrate";
+       $url="https://accountsymtest.phicomm.com/ddwservice/v1/ddwrate?activityID=2";
        $data_str=file_get_contents($url);
-       $data=json_decode($data_str);
+       $data=json_decode($data_str,true);
        if($data["error"]!=0){
            exit("接口请求错误");
        }
        $rate=$data["data"]["rate"];
-       $where["cash"]=6;
-       $where["describe"]="ddw";
+       $where["cash"]=1;
+       $where["describe"]="DDW";
        $result=M("allot_policy")->where($where)->find();
        if($result){
            //修改
@@ -40,9 +40,10 @@ class DdwController extends Controller
 
        }else{
            //新增
-           $add["cash"]=6;
-           $add["describe"]="ddw";
+           $add["cash"]=1;
+           $add["describe"]="DDW";
            $add["create_time"]=date("Y-m-d H:i:s",time());
+           $add["exratio"]=$data["data"]["premium"];
            $add["rate"]=$rate;
            M("allot_policy")->add($add);
 
