@@ -33,7 +33,9 @@
     <div class="panel panel-primary">
         <div class="panel-heading" style="background-color: #1ab394;border-color: #1ab394;">
             <span class="badge" style=" color: #1ab394;" ><?php echo $systemKeysValue['value1']?></span>
+            <?php if($tag != 7):?>
                 <i id="add-manager" class="layui-icon" style="float:right;font-size: 20px;margin-top:-5px;cursor:pointer">&#xe654;</i>
+            <?php endif;?>
         </div>
     </div>
 </div>
@@ -45,7 +47,12 @@
             <th>兑付策略</th>
             <th>描述</th>
             <th>比例</th>
+            <?php if($tag == 1 ):?>
+            <th>汇率</th>
+            <?php endif;?>
+            <?php if($tag != 7):?>
             <th>操作</th>
+            <?php endif;?>
         </tr>
         </thead>
         <tbody>
@@ -55,10 +62,15 @@
             <td><?php echo $systemKeysValue['value1']?></td>
             <td><?php echo $val['describe'];?></td>
             <td><?php echo $val['exratio'];?></td>
+            <?php if($tag == 1 ):?>
+            <th><?php echo $val['rate'];?></th>
+            <?php endif;?>
+            <?php if($tag != 7):?>
             <td>
                 <a class="edit" attr="<?php echo $val['id']?>" href="#"></a>
                 <a class="delete" attr="<?php echo $val['id']?>" href="#" ></a>
             </td>
+            <?php endif;?>
         </tr>
 
         <?php endforeach;?>
@@ -176,7 +188,7 @@
     });
     $(function() {
         //分页
-        globalFn.lypage('page', "{$data['pages']}", "Admin/Role/index");
+        globalFn.lypage('page', "{$data['pages']}", "Admin/CksManage/index");
 
         //点击添加
         $("#add-manager").click(function(){
@@ -185,7 +197,7 @@
             if(tag == 4 || tag == 5)$("#otcr").val('');
             cksManageFn.secCommon('ratio', 1, 1);
             cksManageFn.inputShow();
-            globalFn.lyPopup("<?php echo $systemKeysValue['value1']?>", ['400px', '500px'],'add-manage-popup',1);
+            globalFn.lyPopup("<?php echo $systemKeysValue['value1']?>", ['450px', '300px'],'add-manage-popup',1);
         })
 
         //点击编辑
@@ -207,7 +219,7 @@
                 $("#eid").val(data.data.id);
             })
 
-            globalFn.lyPopup("<?php echo $systemKeysValue['value1']?>", ['550px', '580px'],'add-manage-popup',1);
+            globalFn.lyPopup("<?php echo $systemKeysValue['value1']?>", ['450px', '300px'],'add-manage-popup',1);
         })
 
         layui.use(['form'], function(){
@@ -263,7 +275,6 @@
         secCommon:function(className, optionText, optionValue){
             $('.'+className+' .layui-unselect').val(optionText);
             $('.'+className+' dl dd').each(function(){
-
                 $(this).attr('lay-value') == optionValue ? $(this).addClass('layui-this'):$(this).removeClass('layui-this');
             })
 
