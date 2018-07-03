@@ -86,7 +86,7 @@ class WmsController extends BaseController
             $productInfo['mac'] = $clearcd[$i]['mac'];
             foreach($productInfo as $k=>$v){
                 if(empty($v)){
-                    $product[$k] = '';
+                    $productInfo[$k] = 'NA';
                 }
             }
             $res = BaseModel::saveData(
