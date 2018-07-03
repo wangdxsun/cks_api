@@ -11,9 +11,23 @@ use API\Controller\BaseController;
  * @author yy
  *
  */
-class LoginController extends BaseController
+class LoginController extends Controller
 {
-
+    //初始操作
+    public function _initialize()
+    {
+        echo "dddd";
+        $this->allowOrigin(); 
+        $is_sign = $this->verifyEncryptSign(); echo "ddd".$is_sign;
+        if ($is_sign) {
+            return json_encode(array('error' => 1,'message' => '验证失败'));
+        }
+    }
+    public function allowOrigin(){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Headers: X-Requested-With,X_Requested_With'); 
+        header("Content-type: text/json; charset=utf-8");
+    }
     //邮箱手机号验证
     public function checkEmailOrPhone($account_number){
         $preg_email='/^[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*@([a-zA-Z0-9]+[-.])+([a-z]{2,5})$/ims';
@@ -30,6 +44,37 @@ class LoginController extends BaseController
         return $code;
     }
 
+    //响应前台的请求--验证签名
+    public function verifyEncryptSign(){
+
+        //验证身份
+        $timeStamp = $_POST['timeStamp'];
+        $randomStr = $_POST['randomStr'];
+        $signature = $_POST['signature']; // $signature 客户端请求地址中携带的签名,与服务端生成的签名进行比对
+        //根据客户端请求过来的数据生成的签名 与$signature 进行对比
+        return $this -> arithmetic($timeStamp,$randomStr) != $signature ? 1 : 0;
+
+    }
+
+    /**
+     * @param $timeStamp 时间戳
+     * @param $randomStr 随机字符串
+     * @return string 返回签名
+     */
+    private function arithmetic($timeStamp, $randomStr){
+
+        $arr = [
+          'timeStamp' => $timeStamp,
+          'randomStr' => $randomStr,
+          'token' => C('token')
+        ];
+        return md5(implode("", $arr));
+
+        //转换成大写
+        //return strtoupper(md5(sha1(implode($arr))));
+    }
+
+
     /**
         @功能:获取云账号验证码
         @param:yy
@@ -42,7 +87,7 @@ class LoginController extends BaseController
         // phonenumber 手机号 string  邮箱号与手机号二选一
         // verificationtype    验证码类型   string  0.短信验证码，1.语音验证码
 
-        $data['authorizationcode'] = $this->authorization();
+        $data['authorizationcode'] = BaseController::authorization();
         $isEmail = $this->checkEmailOrPhone($_POST['account_number']);
         if($isEmail){
             $data[$isEmail] = $_POST['account_number'];
@@ -69,7 +114,7 @@ class LoginController extends BaseController
         // password    密码  string  用户密码 （用户输入的明文密码大写MD5值）由于需要兼容老用户登录，登录环节前端不设有密码校验规则，密码统一由服务端校验。
         // phonenumber 手机号码    string  手机号码 ，可选（邮箱，手机号，用户名不能都为空）
         // username    用户名 string  用户名，可选（邮箱，手机号，用户名不能都为空）
-        $data['authorizationcode'] = $this->authorization();
+        $data['authorizationcode'] = BaseController::authorization();
         $isEmail = $this->checkEmailOrPhone($_POST['account_number']);
         if($isEmail){
             $data[$isEmail] = $_POST['account_number'];
@@ -111,7 +156,7 @@ class LoginController extends BaseController
         // registersource  注册源 string  与client_id一致：0：预注册用户标识。1. 老商城，2.保留，3.论坛，4,WEB商城，5.H5商城，6.“斐讯路由APP”IOS版，7.“斐讯路由APP”安卓版 8.云账户web页面 9.路由器app服务器，10.环境猫Andoid app，11.环境猫iOS app，51.mobile运动Android app, 52.mobile健康Android app, 53.mobile运动iOS app, 54.mobile健康iOS app
         // username    用户名 string  用户名，可选（邮箱，手机号，用户名不能都为空）
         // verificationcode    验证码 string  
-        $data['authorizationcode'] = $this->authorization();
+        $data['authorizationcode'] = BaseController::authorization();
         $isEmail = $this->checkEmailOrPhone($_POST['account_number']);
         if($isEmail){
             $data[$isEmail] = $_POST['account_number'];
@@ -142,7 +187,7 @@ class LoginController extends BaseController
         // newpassword 新密码 string  （用户明文密码的MD5值）前端校验规则：6-20 个字符，可由 a-zA-Z0-9_!#$*+-./:;=?@[]^`| 组成，除此 外为非法字符
         // phonenumber 手机号 string  
         // verificationcode    验证码 string  
-        $data['authorizationcode'] = $this->authorization();
+        $data['authorizationcode'] = BaseController::authorization();
         $isEmail = $this->checkEmailOrPhone($_POST['account_number']);
         if($isEmail){
             $data[$isEmail] = $_POST['account_number'];

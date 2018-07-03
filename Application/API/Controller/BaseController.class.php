@@ -12,7 +12,7 @@ use API\Common\Curl;
  */
 class BaseController extends Controller
 {
-
+    
     /**
         @功能:查询账号信息token->phone
         @author:yy
@@ -24,7 +24,7 @@ class BaseController extends Controller
         $params = http_build_query($data);
         $url = C('cloud_url').C('cloud_verifyToken').'?'.$params;
         $info = json_decode(Curl::curl_header_get($url,$header),true);
-        if ($info['error']!=0) {
+        if ($info['error']!='0') {
             return $info;
         }
 

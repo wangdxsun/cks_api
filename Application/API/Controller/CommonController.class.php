@@ -26,10 +26,8 @@ class CommonController extends Controller
             if($status==1){
                 $data=M("relation")->filed("money,orderid")->where(["secretcd"=>$kcode])->find();
                 $save["status"]=2;
+                M()->startTrans();
                 $result1=M("relation")->where(["secretcd"=>$kcode])->save($save);
-                if($result1===false){
-                    return false;
-                }
                 //新增兑换记录
                 $add["atvphone"]=$phone;
                 $add["kvalue"]=$data["money"];
@@ -41,7 +39,7 @@ class CommonController extends Controller
                 $add["exratio"]=$exratio;
                 $add["exrate"]=$rate;
                 $result2=M("use_details")->add($add);
-                if($result2===false){
+                if($result2===false || $result1===false){
                     return false;
                 }else{
                     return true;
