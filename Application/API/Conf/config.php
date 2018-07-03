@@ -70,7 +70,7 @@ return array(
     'eth_md5_key' => '1wSn0kMbpxaDCx',
 
     //华夏、骏和,固定参数
-    'hxwj' => 'http://newtest.wanjiajinfu.com/',
+    'hxwj' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//1.1用户信息与兑换资格查询接口地址
     'jh' => 'http://newtest.wanjiajinfu.com/',
     'parter_code' => '103',
     'sign_type' => 'MD5',
