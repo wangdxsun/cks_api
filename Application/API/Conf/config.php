@@ -3,6 +3,8 @@ return array(
 
 	//'配置项'=>'配置值'
    'token' => 'KSHOPCODE',
+    //华夏、骏和 加密key
+    'SECRET_KEY' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
 
     //云账号域名地址
     'cloud_url' => 'https://accountsym.phicomm.com',
@@ -33,4 +35,12 @@ return array(
     'eth_url' => 'https://www.phi-block.com/api/',
     'eth_act' => 'cloud_star_points',
     'eth_md5_key' => '1wSn0kMbpxaDCx',
+
+    //华夏、骏和,固定参数
+    'hxwj' => 'http://newtest.wanjiajinfu.com/',
+    'jh' => 'http://newtest.wanjiajinfu.com/',
+    'parter_code' => '103',
+    'sign_type' => 'MD5',
+    'key' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
+
 );
