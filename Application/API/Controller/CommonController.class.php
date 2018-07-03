@@ -24,8 +24,10 @@ class CommonController extends Controller
     */
     public static function ChangeLog($kcode,$rate=1,$dhtotal,$phone,$status,$channel,$exratio){
             if($status==1){
-                $data=M("relation")->filed("money,orderid")->where(["secretcd"=>$kcode])->find();
+                $data=M("relation")->field("money,orderid")->where(["secretcd"=>$kcode])->find();
                 $save["status"]=2;
+
+                $save["channel1"]=$channel;
                 M()->startTrans();
                 $result1=M("relation")->where(["secretcd"=>$kcode])->save($save);
                 //新增兑换记录
@@ -38,10 +40,13 @@ class CommonController extends Controller
                 $add["status"]=2;
                 $add["exratio"]=$exratio;
                 $add["exrate"]=$rate;
+                $add["dhtotal"]=$dhtotal;
                 $result2=M("use_details")->add($add);
                 if($result2===false || $result1===false){
+                    M()->rollback();
                     return false;
                 }else{
+                    M()->commit();
                     return true;
                 }
             }

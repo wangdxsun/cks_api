@@ -15,10 +15,10 @@ class ProductController extends Controller
 {
 
 
-        public function _initialize()
+   /*  public function _initialize()
         {
             EntryController::index();
-        }
+        }*/
 
 
     //获取电子K码
@@ -87,7 +87,9 @@ class ProductController extends Controller
                $result["clearcd"] = $data["clearcd"];
                $save["orderid"] = $order_no;
                $save["status"]=1;
-               $result["money"] = $save["money"] = $data["money"];
+               $save["channel1"]="TS";
+               $result["money"] = $save["money"] = $v["money"];
+               $save["rephone"]=$phone;
                $result_status=M("relation")->where(["id" => $id])->save($save);
                //E('新增失败1111');
                array_push($response, $result);
@@ -145,7 +147,7 @@ class ProductController extends Controller
 
 
     public function dhresult(){
-        //exit(json_encode(array("stautus"=>true,"msg"=>"11111111111")));
+        //exit(json_encode(array("stautus"=>true,"msg"=>"11111111111"),JSON_UNESCAPED_UNICODE));
         $phone=$_POST["phone"];
         $channel=$_POST["channel"];
         $kcode=$_POST["kcode"];
@@ -163,6 +165,48 @@ class ProductController extends Controller
             exit(json_encode(array("status"=>false,"msg"=>"回调失败")));
         }
     }
+
+
+    public function getstatus(){
+        $clearcd=$_POST["clearcd"];
+        $secretcd=$_POST["secretcd"];
+        if(!empty($clearcd)){
+            $where["clearcd"]=$clearcd;
+        }
+        if(!empty($secretcd)){
+            $where["secretcd"]=$secretcd;
+        }
+       $data=M("relation")->field("status as kstatus")->where($where)->find();
+        if(!$data){
+            exit(json_encode(array("status"=>false,"message"=>"查无数据")));
+        }
+        exit(json_encode(array("status"=>true,"kstatus"=>$data["kstatus"])));
+    }
+
+     public function sendMessages($channel="TUI",$order_no="80200001"){
+
+         $auth=$channel=="TUI"?"feixun*123.SH_9913651":"";
+
+         $channel_name=$channel=="TUI"?"推啥":"云盘";
+         $sign="尊敬的用户您好,您通过".$channel_name."获取的K码是";
+
+         $data=M("relation")->field("secretcd,rephone")->where(["orderid"=>$order_no])->select();
+
+         foreach($data as $k=>$v){
+             $new_sign=$sign.$v["secretcd"]."请妥善保管,30天内有效";
+
+
+             $phone=$v['rephone'];
+             //echo "http://114.141.173.41:48080/v1/verificationCode?authorizationcode=$auth&isCustom=true&msg=$sign&phonenumber=$phone&verificationtype=0";
+             $url="http://114.141.173.41:48080/v1/verificationCode?authorizationcode=$auth&isCustom=true&msg=$new_sign&phonenumber=$phone&verificationtype=0";
+              echo $url;
+             echo "<hr/>";
+             $result=Curl::curl_get($url);
+             var_dump($result);
+         }
+
+
+     }
 
 
 }
