@@ -18,9 +18,9 @@ class WmsController extends Controller
 
         $data = BaseModel::getDbData(['table'=>'relation','where'=>['clearcd'=>$clearcd]],false);
         if(!$data){
-            exit(json_encode(array('status'=>false,'msg'=>$clearcd.': unknown kcode')));
+            exit(json_encode(array('status'=>false,'msg'=>$clearcd.': k码不存在'),JSON_UNESCAPED_UNICODE));
         }else{
-            exit(json_encode(array('status'=>true,'kstatus'=>intval($data['status']))));
+            exit(json_encode(array('status'=>true,'kstatus'=>intval($data['status'])),JSON_UNESCAPED_UNICODE));
         }
 
     }
@@ -35,14 +35,14 @@ class WmsController extends Controller
         $status = in_array($params['status'],array(1,3,4))?$params['status']:0; //只能操作1,3,4三个状态，其他状态无效
 
         if(empty($clearcd)||empty($status)){
-            exit(json_encode(array('status'=>false,'msg'=>'error status or not whole information')));
+            exit(json_encode(array('status'=>false,'msg'=>'状态无效或者信息不完整，请检查'),JSON_UNESCAPED_UNICODE));
         }
 
         $res = BaseModel::saveData(['table'=>'relation','where'=>['clearcd'=>$clearcd],'data'=>['status'=>$status]]);
         if(!$res){
-            exit(json_encode(array('status'=>false,'msg'=>'failed')));
+            exit(json_encode(array('status'=>false,'msg'=>'执行失败'),JSON_UNESCAPED_UNICODE));
         }else{
-            exit(json_encode(array('status'=>true,'msg'=>'successfully')));
+            exit(json_encode(array('status'=>true,'msg'=>'执行成功'),JSON_UNESCAPED_UNICODE));
         }
     }
 }
