@@ -2,10 +2,10 @@
 return array(
 
 	//'配置项'=>'配置值'
-   'token' => 'KSHOPCODE',
+   'token' => '2fae188df0878bafcd73f16b1a8e0386',
 
     //云账号域名地址
-    'cloud_url' => 'https://accountsym.phicomm.com',
+    'cloud_url' => 'http://114.141.173.41:48080',//'https://accountsym.phicomm.com'
 	//K码兑换H5
 	'h5_client_id' => '1569234',
 	'h5_client_secret' => '6FE32D94BE97DBB120E7B1C54FC0B239',
@@ -26,6 +26,9 @@ return array(
     'cloud_phonenumberInfo' => '/v1/phonenumberInfo',
     //验证token有效性
     'cloud_verifyToken' =>  "/v1/verifyToken",
+
+    //云账号错误信息
+    //0.表示成功；7.用户名不存在;8.密码错误;11.授权码错误，12. 参数错误；15. 密码未设置；30：多端登录账户被踢出；34.手机号格式错误；40.需要进行手机验证码验证 50.服务器异常;
 
     //商城api
     'mall_url' => 'http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/exchange',

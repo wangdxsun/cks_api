@@ -13,77 +13,19 @@ use Admin\Model\BaseModel;
  * @author yy
  *
  */
-class PageController extends BaseController
+class PageController extends LoginController
 {
-    //初始操作
-    public function _initialize()
-    {
-        $this->verifyEncryptSign(); 
-    }
-    //响应前台的请求--验证签名
-    public function verifyEncryptSign(){
-
-        //验证身份
-        $timeStamp = $_GET['t'];
-        $randomStr = $_GET['r'];
-        $signature = $_GET['s']; // $signature 客户端请求地址中携带的签名,与服务端生成的签名进行比对
-
-        //根据客户端请求过来的数据生成的签名 与$signature 进行对比
-        return $this -> arithmetic($timeStamp,$randomStr) != $signature ? -1 : 100;
-
-    }
-
-    /**
-     * @param $timeStamp 时间戳
-     * @param $randomStr 随机字符串
-     * @return string 返回签名
-     */
-    private function arithmetic($timeStamp, $randomStr){
-
-        $arr = [
-          'timeStamp' => $timeStamp,
-          'randomStr' => $randomStr,
-          'token' => C('token')
-        ];
-
-        //按照首字母大小写顺序排序
-        sort($arr, SORT_STRING);
-
-        //转换成大写
-        return strtoupper(md5(sha1(implode($arr))));
-    }
-
-    //生成签名
-    public function createSignature(){
-        //时间戳
-        $timeStamp = time();
-        //随机字符串
-        $randomStr = $this -> createNonceStr();
-        //生成签名
-        $signature = $this -> arithmetic($timeStamp,$randomStr);
-        return $signature;
-    }
-
-    //随机生成字符串
-    private function createNonceStr($length = 8) {
-        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        $str = "";
-        for ($i = 0; $i < $length; $i++) {
-            $str .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
-        }
-        return "z".$str;
-    }
     /**
         @功能:前端查询K码，获取可兑换信息
         @author:yy
         @date:2018-07-01
     **/
     public function getChangeInfo(){
-        $secretcd = $_POST['secretcd'];
+        $kcode = $_POST['kcode'];
         $condition = [
             'table' => 'relation',
             'fields' => '*',
-            'where' => ['secretcd' => $secretcd]
+            'where' => ['secretcd' => $kcode]
         ];
         
         $res = BaseModel::getDbData($condition, false);
@@ -108,7 +50,7 @@ class PageController extends BaseController
         exit(json_encode(array('error' => 1,'data' => $channel_list)));
         
     }
-
+    //$res 关系表单条k码数据
     public function getChangeMoney($channel,$res){
         //1兑换渠道策略 兑付策略 1渠道 2出货时间 3激活时间 4客户渠道 5料号 6兑换渠道
         $condition2 = [
@@ -116,7 +58,7 @@ class PageController extends BaseController
             'where' => ['cash' => 1, 'describe' => $channel]
         ];
         $channel_list = BaseModel::getDbData($condition2,false); 
-        $channel_list['money'] = $res['money']*$channel_list['exratio'];
+        $rate = $channel_list['exratio'];
         $channel_list['rate_str'] = $channel_list['id'].':'.$channel_list['exratio'];
 
         //2出货时间策略 
@@ -127,7 +69,7 @@ class PageController extends BaseController
 
         $info = BaseModel::getDbData($condition2,false);
         if(!empty($info) && $this->compareOperat(strtotime($res['allot_time']), strtotime($info['describe']), $info['operator'])){
-            $channel_list['money'] = $channel_list['money']*$info['exratio'];
+            $rate = $rate * $info['exratio'];
             $channel_list['rate_str'] = $channel_list['rate_str'].'-'.$info['id'].':'.$info['exratio'];
         }
         
@@ -138,7 +80,7 @@ class PageController extends BaseController
         ];
         $info = BaseModel::getDbData($condition2,false);
         if(!empty($info) && $this->compareOperat(strtotime(date('Y-m-d')), strtotime($info['describe']), $info['operator'])){
-            $channel_list['money'] = $channel_list['money']*$info['exratio'];
+            $rate = $rate * $info['exratio'];
             $channel_list['rate_str'] = $channel_list['rate_str'].'-'.$info['id'].':'.$info['exratio'];
         }
 
@@ -149,7 +91,7 @@ class PageController extends BaseController
         ];
         $info = BaseModel::getDbData($condition2,false);
         if(!empty($info)){
-            $channel_list['money'] = $channel_list['money']*$info['exratio'];
+            $rate = $rate * $info['exratio'];
             $channel_list['rate_str'] = $channel_list['rate_str'].'-'.$info['id'].':'.$info['exratio'];
         }
         
@@ -160,9 +102,11 @@ class PageController extends BaseController
         ];
         $info = BaseModel::getDbData($condition2,false);
         if(!empty($info)){
-            $channel_list['money'] = $channel_list['money']*$info['exratio'];
+            $rate = $rate * $info['exratio'];
             $channel_list['rate_str'] = $channel_list['rate_str'].'-'.$info['id'].':'.$info['exratio'];
         }
+        $channel_list['last_rate'] = $rate;
+        $channel_list['change_money'] = $res['money']*$rate;
         return $channel_list;
     }
 
@@ -184,7 +128,7 @@ class PageController extends BaseController
         if (empty(isset($token))) {
             exit(json_encode(array('error' => 1,'message' => '账号信息错误，缺少token')));
         }
-        $info = $this->getInfoByToken($token);
+        $info = BaseController::getInfoByToken($token);
         if ($info['error']!=0) {
             exit(json_encode($info));
         }
@@ -210,16 +154,31 @@ class PageController extends BaseController
         // channel 是   渠道
         // kcode   是   K码值，后台在验证是还需要再次查询数据库
         // money   是   K码价值 
+        $token = $_POST['token'];
         $channel = $_POST['channel'];
-        $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjIifQ.eyJ1aWQiOiI5NTc5NTY3OCIsImNvZGUiOiJmZWl4dW4qMTIzLlNIXzQ3MTczODMiLCJ0eXBlIjoiYWNjZXNzX3Rva2VuIiwiaXNzIjoiUGhpY29tbSIsIm5iZiI6MTUzMDUzMzczNCwiZXhwIjoxNTMwNjYzMzM0LCJyZWZyZXNoVGltZSI6IjIwMTgtMDctMDMgMDg6MTU6MzQifQ.9NQJd9K_kmUGliBX9xTIiyB-PkTbwxJLnlFS0uoaVPE";//登录获取的token
+        $kcode = $_POST['kcode'];
+        $condition = [
+            'table' => 'relation',
+            'fields' => '*',
+            'where' => ['secretcd' => $kcode]
+        ];
+        
+        $kcode_info = BaseModel::getDbData($condition, false);
+        $change_info = $this->getChangeMoney($channel,$kcode_info);
+        print_r($change_info);
         switch ($channel) {
             case '商城':
-                $res = MallController::mallChange($token);
+                $sku_bn = $kcode_info['pnumber'];//料号
+                $amount = round($kcode_info['money'], 2);//K码金额
+                $radio = round($change_info['last_rate'], 2);//兑换浮动比例
+                $res = MallController::mallChange($token,$kcode,$sku_bn,$amount,$radio);
                 break;
             case '以太星球':
-                
-                $price1 = 100;//price1  是   k码对应的人民币价值
-                $price2 = 200;//price2  是   K码换算成星积分后的价值
+                // $price1 = 20.00;//price1  是   k码对应的人民币价值
+                // $price2 = 43.68;//price2  是   K码换算成星积分后的价值
+                $price1 = floatval($kcode_info['money']);//price1  是   k码对应的人民币价值
+                $price2 = floatval($change_info['change_money']);//price2  是   K码换算成星积分后的价值
+
                 $res = EthController::ethChange($token, $price1, $price2);
                 print_r($res);
                 # code...
