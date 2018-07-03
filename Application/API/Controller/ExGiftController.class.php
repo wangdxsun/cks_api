@@ -22,7 +22,7 @@ class ExGiftController extends Controller
      * @param string $money
      * @return []
      */
-    public function inquireUserExRatio($money){
+    public function inquireUserExRatio($money = 666){
 
         $resData = [];
 
@@ -41,19 +41,20 @@ class ExGiftController extends Controller
 
     }
 
-
     /**
      * @ Purpose:1.1 用户信息与兑换资格查询接口
      * @param [] $parmArr 若参数值为空 不传
      * e.g. $parmArr = [
      * 'Phone' => 13333333333 //手机号
      * 'Kcodetype' => 'S7' //产品型号
+     * 'amount' => '66.66' //金额
      * ];
      * @return []
      */
     public function inquireUserExStatus($paramArr, $source){
 
         return $this->curlPostSend($paramArr, $source);
+        //p($this->curlPostSend($paramArr, $source));
 
     }
 
@@ -79,12 +80,23 @@ class ExGiftController extends Controller
 
     //发送数据
     public function curlPostSend($paramArr, $source){
-
+        //echo json_encode(EncryptSignVerify::sign($paramArr));die;
         return Curl::curl_header_post(
             C($source),
             json_encode(EncryptSignVerify::sign($paramArr)),
             ["content-type: application/json;charset=UTF-8"]
         );
+    }
+
+
+    //test
+    public function test(){
+        $arr = [
+          'Phone' =>   '18109069773',
+          'Kcodetype' =>   'W2',
+          'amount' => '66.66'
+        ];
+        $this->inquireUserExStatus($arr, 'hxwj');
     }
 
 
