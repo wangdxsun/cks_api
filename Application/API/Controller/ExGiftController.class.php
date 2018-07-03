@@ -33,9 +33,12 @@ class ExGiftController extends Controller
 
         if($data)
 
-            foreach ($data as $val)
-                $resData[] = ['describe' => $val['describe'], 'price' => $val['exratio'] * $money];
-
+            foreach ($data as $key => $val){
+                $val['rate_str'] = $val['id'].':'.$val['exratio'];
+                $val['last_rate'] = $val['exratio'];
+                $val['change_money'] = $val['exratio'] * $money;
+                $resData[$key] = $val;
+            }
 
         return $resData;
 

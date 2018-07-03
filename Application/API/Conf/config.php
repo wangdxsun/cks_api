@@ -58,6 +58,9 @@ return array(
     	'40' => '需要进行手机验证码验证',
     	'50' => '服务器异常',
     	'100' => '邮箱或手机填写错误',
+    	'101' => 'K码输入错误，信息不存在',
+    	'102' => 'K码不是待使用状态',
+    	'103' => '账号信息错误，缺少token'
     ),
 
     //商城api
@@ -65,7 +68,7 @@ return array(
     'mall_interface' => 'vmcshop_vcprice_interface',
     //推啥api……
     //以太星球
-    'eth_url' => 'http://testnottobuy.phi-block.com:18000/api/',
+    'eth_url' => 'http://testnottobuy.phi-block.com:18000/api/',//https://www.phi-block.com/api/
     'eth_act' => 'cloud_star_points',
     'eth_md5_key' => '1wSn0kMbpxaDCx',
 

@@ -160,7 +160,7 @@ class LoginController extends Controller
         if($isEmail){
             $data[$isEmail] = $_POST['account_number'];
         }else{
-            exit(json_encode(array('error'=>1,'message'=>"邮箱或手机填写错误"),JSON_UNESCAPED_UNICODE));
+            exit(BaseController::returnMsg(array('error'=>'100')));
         }
         //注册时邮箱和电话只能传一个
         //$data['mailaddress'] = $_POST['mailaddress'];
@@ -191,7 +191,7 @@ class LoginController extends Controller
         if($isEmail){
             $data[$isEmail] = $_POST['account_number'];
         }else{
-            exit(json_encode(array('error'=>1,'message'=>"邮箱或手机填写错误"),JSON_UNESCAPED_UNICODE));
+            exit(BaseController::returnMsg(array('error'=>'100')));
         }
         //忘记密码时邮箱和电话只能传一个
         //$data['mailaddress'] = $_POST['mailaddress'];
@@ -217,7 +217,7 @@ class LoginController extends Controller
         if($isEmail){
             $data[$isEmail] = $_POST['account_number'];
         }else{
-            exit(json_encode(array('error'=>1,'message'=>"邮箱或手机填写错误"),JSON_UNESCAPED_UNICODE));
+            exit(BaseController::returnMsg(array('error'=>'100')));
         }
         $params = http_build_query($data);
         $url = C('cloud_url').C('cloud_checkPhonenumber')."?".$params;
