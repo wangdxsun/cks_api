@@ -19,7 +19,7 @@ class ProductController extends Controller
         $phone = $_POST["phone"];
         $channel = $_POST["channel"];
         $order_no = $_POST["order_no"];
-        $products = $_POST["products"];
+        $products = json_decode($_POST["products"],true);
 
         //判断金额料号金额金额是否大于总的k码价值
         foreach ($products as $k => $v) {
