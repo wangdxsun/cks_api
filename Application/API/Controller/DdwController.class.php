@@ -52,6 +52,37 @@ class DdwController extends Controller
 
    }
 
+    //获取K码状态
+    public function getKcodeStatus(){
+        EntryController::index();
+        $where["secretcd"]=$kcode=$_POST["kcode"];
+        $data=M("relation")->where($where)->field("status,money")->find();
+        $request=PageController::getChangeMoney("DDW",$data);
+        $exratio=$request["last_rate"];
+
+
+        if(empty($data)){
+            exit(json_encode(array("status"=>false,"message"=>"没有找到对应的K码")));
+        }else{
+            $data["exratio"]=$exratio;
+            $data["kstatus"]=$data["status"];
+            unset($data["status"]);
+            $reponse["status"]=true;
+            $reponse["data"]=$data;
+            exit(json_encode($reponse));
+        }
+
+
+    }
+
+    public function getMoney(){
+        $kcode="am005";
+        $data=M("relation")->where(["secretcd"=>$kcode])->field("status,money")->find();
+        $result=PageController::getChangeMoney("DDW",$data);
+         print_r($result["last_rate"]);
+    }
+
+
 }
 
 

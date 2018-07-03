@@ -61,6 +61,10 @@ class TuiController extends Controller
 
     }
 
+    public function say(){
+        echo "hello world";
+    }
+
 
 }
 
