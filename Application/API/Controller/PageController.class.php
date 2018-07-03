@@ -46,8 +46,7 @@ class PageController extends LoginController
         foreach ($channel_info as $key => $value) {
             $channel_list[] = $this->getChangeMoney($value['describe'],$res);
         }
-        print_r($channel_list);
-        exit(json_encode(array('error' => 1,'data' => $channel_list)));
+        exit(json_encode(array('error' => 0,'data' => $channel_list)));
         
     }
     //$res 关系表单条k码数据
@@ -68,7 +67,7 @@ class PageController extends LoginController
         ];
 
         $info = BaseModel::getDbData($condition2,false);
-        if(!empty($info) && $this->compareOperat(strtotime($res['allot_time']), strtotime($info['describe']), $info['operator'])){
+        if(!empty($info) && self::compareOperat(strtotime($res['allot_time']), strtotime($info['describe']), $info['operator'])){
             $rate = $rate * $info['exratio'];
             $channel_list['rate_str'] = $channel_list['rate_str'].'-'.$info['id'].':'.$info['exratio'];
         }
@@ -79,7 +78,7 @@ class PageController extends LoginController
             'where' => ['cash' => 3]
         ];
         $info = BaseModel::getDbData($condition2,false);
-        if(!empty($info) && $this->compareOperat(strtotime(date('Y-m-d')), strtotime($info['describe']), $info['operator'])){
+        if(!empty($info) && self::compareOperat(strtotime(date('Y-m-d')), strtotime($info['describe']), $info['operator'])){
             $rate = $rate * $info['exratio'];
             $channel_list['rate_str'] = $channel_list['rate_str'].'-'.$info['id'].':'.$info['exratio'];
         }

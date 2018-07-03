@@ -26,8 +26,8 @@ class EthController extends Controller
         $data['price1'] = $price1;
         $data['price2'] = $price2;
         $url = C('eth_url');
-        $md5_str = md5($token.$price1.$price2.C('eth_md5_key'));print_r($data);echo $token.$price1.$price2.C('eth_md5_key');
-        $info = Curl::curl_header_post($url,$data,array("cloud-md5: $md5_str"));
+        $md5_str = md5($token.$price1.$price2.C('eth_md5_key'));//print_r($data);echo $token.$price1.$price2.C('eth_md5_key');
+        $info = Curl::curl_header_post($url,$data,array("cloud-md5: $md5_str"));var_dump($info);
         $info = json_decode($info,true);print_r($info);
         if ($info['return_code']=='SUCCESS') {
             //更新K码状态、明显、log

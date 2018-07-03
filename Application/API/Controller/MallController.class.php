@@ -24,7 +24,7 @@ class MallController extends Controller
         @date:2018-07-02
     **/
     public function mallChange($token,$kcode,$sku_bn,$amount,$radio){
-        $user_info=BaseController::getInfoByToken($token);print_r($user_info);
+        $user_info = BaseController::getInfoByToken($token);print_r($user_info);
         //$user_info = array("uid" => 1103,"phonenumber" => "13771028563");
         $url = C('mall_url');
         $post["uid"] = $user_info["uid"];
@@ -33,7 +33,8 @@ class MallController extends Controller
         $post["sku_bn"] = $sku_bn;
         $post["amount"] = $amount;
         $post["radio"] = $radio;
-
+        $post["cks_sns_no"] = "1111111";
+        print_r($post);
         $post_data["vmc_param_json"] = $param = json_encode($post);
         $timestamp = time();
         $method = "exchange";

@@ -16,17 +16,16 @@ class LoginController extends Controller
     //初始操作
     public function _initialize()
     {
-        echo "dddd";
         $this->allowOrigin(); 
-        $is_sign = $this->verifyEncryptSign(); echo "ddd".$is_sign;
+        $is_sign = $this->verifyEncryptSign();
         if ($is_sign) {
-            return json_encode(array('error' => 1,'message' => '验证失败'));
+            return json_encode(array('error' => 1,'message' => '验证失败'),JSON_UNESCAPED_UNICODE);
         }
     }
     public function allowOrigin(){
         header("Access-Control-Allow-Origin: *");
-        header('Access-Control-Allow-Headers: X-Requested-With,X_Requested_With'); 
-        header("Content-type: text/json; charset=utf-8");
+        //header('Access-Control-Allow-Headers: X-Requested-With,X_Requested_With'); 
+        //header("Content-type: text/json; charset=utf-8");
     }
     //邮箱手机号验证
     public function checkEmailOrPhone($account_number){
@@ -92,14 +91,14 @@ class LoginController extends Controller
         if($isEmail){
             $data[$isEmail] = $_POST['account_number'];
         }else{
-            exit(json_encode(array('error'=>1,'message'=>"邮箱或手机填写错误")));
+            exit(BaseController::returnMsg(array('error'=>'100')));
         }
 
         $data['verificationtype'] = 0;
         $params = http_build_query($data);
         $url = C('cloud_url').C('cloud_verificationCode').'?'.$params;
         $res = Curl::curl_get($url);
-        exit($res);
+        exit(BaseController::returnMsg($res));
     }
 
     /**
@@ -122,7 +121,7 @@ class LoginController extends Controller
             $data['username'] = $_POST['account_number'];
         }
         else{
-            exit(json_encode(array('error'=>1,'message'=>"邮箱或手机填写错误")));
+            exit(BaseController::returnMsg(array('error'=>'100')));
         }
         //登录时以上三个只能一个
         //$data['mailaddress'] = $_POST['account_number'];
@@ -131,7 +130,7 @@ class LoginController extends Controller
         $data['password'] = md5($_POST['password']);
         $url = C('cloud_url').C('cloud_login');
         $res = Curl::curl_post($url,$data);
-        exit($res);
+        exit(BaseController::returnMsg($res));
     }
 
     /**
@@ -161,19 +160,19 @@ class LoginController extends Controller
         if($isEmail){
             $data[$isEmail] = $_POST['account_number'];
         }else{
-            exit(json_encode(array('error'=>1,'message'=>"邮箱或手机填写错误")));
+            exit(json_encode(array('error'=>1,'message'=>"邮箱或手机填写错误"),JSON_UNESCAPED_UNICODE));
         }
         //注册时邮箱和电话只能传一个
         //$data['mailaddress'] = $_POST['mailaddress'];
         //$data['phonenumber'] = $_POST['phonenumber'];
-        $data['username'] = $_POST['username'];
+        //$data['username'] = $_POST['username'];
         $data['password'] = md5($_POST['password']);
         $data['registersource'] = $_POST['registersource'];
         $data['verificationcode'] = $_POST['verificationcode'];
-        $data['data'] = $_POST['data'];
+        //$data['data'] = $_POST['data'];
         $url = C('cloud_url').C('cloud_account');
         $res = Curl::curl_post($url,$data);
-        exit($res);
+        exit(BaseController::returnMsg($res));
     }
 
     /**
@@ -192,7 +191,7 @@ class LoginController extends Controller
         if($isEmail){
             $data[$isEmail] = $_POST['account_number'];
         }else{
-            exit(json_encode(array('error'=>1,'message'=>"邮箱或手机填写错误")));
+            exit(json_encode(array('error'=>1,'message'=>"邮箱或手机填写错误"),JSON_UNESCAPED_UNICODE));
         }
         //忘记密码时邮箱和电话只能传一个
         //$data['mailaddress'] = $_POST['mailaddress'];
@@ -201,6 +200,28 @@ class LoginController extends Controller
         $data['verificationcode'] = $_POST['verificationcode'];
         $url = C('cloud_url').C('cloud_forgetpassword');
         $res = Curl::curl_post($url,$data);
-        exit($res);
+        exit(BaseController::returnMsg($res));
+    }
+
+    /**
+        @功能:云账号验注册
+        @param:yy
+        @date:2018-06-30
+    **/
+    public function checkPhonenumber(){
+        // authorizationcode   授权码 string  调用请求授权码接口获得的code值（建议app每次开机都重新请求一下授权码）
+        // mailaddress 邮箱号 string  
+        // phonenumber 要被检测的手机号码   string  
+        $data['authorizationcode'] = BaseController::authorization();
+        $isEmail = $this->checkEmailOrPhone($_POST['account_number']);
+        if($isEmail){
+            $data[$isEmail] = $_POST['account_number'];
+        }else{
+            exit(json_encode(array('error'=>1,'message'=>"邮箱或手机填写错误"),JSON_UNESCAPED_UNICODE));
+        }
+        $params = http_build_query($data);
+        $url = C('cloud_url').C('cloud_checkPhonenumber')."?".$params;
+        $res = Curl::curl_get($url,$data);
+        exit(BaseController::returnMsg($res));
     }
 }
