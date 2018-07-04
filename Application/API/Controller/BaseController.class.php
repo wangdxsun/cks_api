@@ -91,14 +91,8 @@ class BaseController extends Controller
         if (!is_array($data)) {
             $data = json_decode($data,true);
         }
-        if ($data['error']=='0') {
-            $res['error'] = 0;
-        }
-        else {
-            $res['error'] = $data['error'];
-        }
-        $res = array_merge($data, $res);
-        $res['message'] = C('error_msg')[$data['error']]?C('error_msg')[$data['error']]:$data['message'];
-        return json_encode($res,JSON_UNESCAPED_UNICODE);
+
+        $data['message'] = C('error_msg')[$data['error']]?C('error_msg')[$data['error']]:$data['message'];
+        return json_encode($data,JSON_UNESCAPED_UNICODE);
     }
 }
