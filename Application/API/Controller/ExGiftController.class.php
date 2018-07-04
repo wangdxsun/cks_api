@@ -27,7 +27,8 @@ class ExGiftController extends Controller
      */
     public function inquireUserExStatus($paramArr, $source, $key){
 
-        return $this->curlPostSend($paramArr, $source, $key);
+
+        return self::curlPostSend($paramArr, $source, $key);
         //p($this->curlPostSend($paramArr, $source));
 
     }
