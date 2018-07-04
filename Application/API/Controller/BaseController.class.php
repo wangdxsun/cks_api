@@ -76,7 +76,7 @@ class BaseController extends Controller
             $res['error'] = 1;
         }
         $res = array_merge($data, $res);
-        $res['message'] = C('error_msg')[$data['error']];
+        $res['message'] = C('error_msg')[$data['error']]?C('error_msg')[$data['error']]:$data['message'];
         return json_encode($res,JSON_UNESCAPED_UNICODE);
     }
 }

@@ -44,7 +44,7 @@ class MallController extends Controller
         $sign = self::entry($timestamp, $method, $param);
 
         $header = array("Content-type: application/json;charset=UTF-8", "timestamp:$timestamp", "method:$method", "sign:$sign");
-        $result = Curl::curl_header_post($url, $param, $header);//($url,json_encode($post_data));
+        $result = Curl::curl_header_post($url, $param, $header);
         print_r($result);
         if ($result['status']) {
             //更新K码状态、明显、log

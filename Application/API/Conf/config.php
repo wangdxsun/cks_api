@@ -3,7 +3,15 @@ return array(
 
 	//'配置项'=>'配置值'
    'token' => '2fae188df0878bafcd73f16b1a8e0386',
-
+   //各个渠道货币单位：策略表cash-tag
+   'channel_unit' => array(
+   		'1-1' => 'K值',
+   		'1-2' => 'K值',
+   		'1-3' => 'DDW',
+   		'1-4' => 'DDW',
+   		'7-1' => '元',
+   		'7-2' => '元'
+   	),
     //华夏、骏和 加密key
     'SECRET_KEY' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
 
@@ -32,7 +40,7 @@ return array(
     //验收是否可被注册
     'cloud_checkPhonenumber' => '/v1/checkPhonenumber',
 
-    //云账号错误信息
+    //错误信息
     'error_msg' => array(
     	'0' => '成功',
     	'1' => '验证码错误',

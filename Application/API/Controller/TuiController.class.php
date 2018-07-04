@@ -25,12 +25,12 @@ class TuiController extends Controller
     $arr["exratio"]=1.1;
     $arr["timeStamp"]=$time=time();
      */
-    public function index($channel="TUI",$kcode="V83xkje3",$mobile="17717689858",$exratio=1.1,$rate=1){
+    public function index($channel="TS",$kcode="V83xkje3",$mobile="17717689858",$exratio=1.1,$rate=1){
         $url="http://a842a093.ngrok.io/cks/blackDiamond";
         $where["secretcd"]=$kcode;
         $where["status"]=1;
         $money=M("relation")->where($where)->getField("money");
-        $arr["channel"]="TUI";
+        $arr["channel"]="TS";
         $arr["cksSnsNo"]=md5($kcode);
         $arr["diamondValue"]=$dhtotal=number_format(round($money*$exratio,2),2);
         $arr["kcode"]=$kcode;
