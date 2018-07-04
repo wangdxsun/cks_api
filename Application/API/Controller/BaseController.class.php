@@ -35,13 +35,30 @@ class BaseController extends Controller
         $res['uid'] = $info['uid'];
         return $res;
     }
-    //验证token有效性，返回uid
+    /**
+        @功能:验证token有效性-返回uid
+        @param:yy
+        @date:2018-06-30
+    **/
     public function checkToken($token){
         
         $header = array("Authorization: $token");
-        $params = http_build_query($data);
-        $url = C('cloud_url').C('cloud_verifyToken').'?'.$params;
+        $url = C('cloud_url').C('cloud_verifyToken');
         $info = json_decode(Curl::curl_header_get($url,$header),true);
+        return $info; 
+    }
+
+    /**
+        @功能:根据手机查uid
+        @param:yy
+        @date:2018-06-30
+    **/
+    public function getUidByPhone($phone){
+        $data['authorizationcode'] = self::authorization();
+        $data['phonenumber'] = $phone;
+        $params = http_build_query($data);
+        $url = C('cloud_url').C('cloud_uidInfo').'?'.$params;
+        $info = json_decode(Curl::curl_get($url),true);
         return $info; 
     }
     /**
@@ -78,7 +95,7 @@ class BaseController extends Controller
             $res['error'] = 0;
         }
         else {
-            $res['error'] = 1;
+            $res['error'] = $data['error'];
         }
         $res = array_merge($data, $res);
         $res['message'] = C('error_msg')[$data['error']]?C('error_msg')[$data['error']]:$data['message'];

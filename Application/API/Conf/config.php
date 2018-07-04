@@ -39,6 +39,8 @@ return array(
     'cloud_verifyToken' =>  "/v1/verifyToken",
     //验收是否可被注册
     'cloud_checkPhonenumber' => '/v1/checkPhonenumber',
+    //
+    'cloud_uidInfo' => '/v1/uidInfo',
 
     //错误信息
     'error_msg' => array(
