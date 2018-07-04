@@ -56,7 +56,7 @@ class DdwController extends Controller
     public function getKcodeStatus(){
         EntryController::index();
         $where["secretcd"]=$kcode=$_POST["kcode"];
-        $data=M("relation")->where($where)->field("status,money")->find();
+        $data=M("relation")->where($where)->field("status,money,pnumber,pname")->find();
         $request=PageController::getChangeMoney(3,$data);
         $exratio=$request["last_rate"];
 
@@ -66,6 +66,7 @@ class DdwController extends Controller
         }else{
             $data["exratio"]=$exratio;
             $data["kstatus"]=$data["status"];
+            $data["cksSnsNo"]=md5($kcode);
             unset($data["status"]);
             $reponse["status"]=true;
             $reponse["data"]=$data;
