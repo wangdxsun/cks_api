@@ -57,7 +57,7 @@ class DdwController extends Controller
         EntryController::index();
         $where["secretcd"]=$kcode=$_POST["kcode"];
         $data=M("relation")->where($where)->field("status,money")->find();
-        $request=PageController::getChangeMoney("DDW",$data);
+        $request=PageController::getChangeMoney(3,$data);
         $exratio=$request["last_rate"];
 
 
@@ -78,7 +78,7 @@ class DdwController extends Controller
     public function getMoney(){
         $kcode="am005";
         $data=M("relation")->where(["secretcd"=>$kcode])->field("status,money")->find();
-        $result=PageController::getChangeMoney("DDW",$data);
+        $result=PageController::getChangeMoney(3,$data);
          print_r($result["last_rate"]);
     }
 

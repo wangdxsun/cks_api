@@ -41,6 +41,8 @@ class BaseModel extends  Model{
         $condition['where'] = $condition['where'] ? $condition['where'] : null;
         $condition['fields'] = $condition['fields'] ? $condition['fields'] : '*';
         $condition['order'] = $condition['order'] ? $condition['order'] : 'id desc';
+        //M($condition['table'])->where($condition['where'])->field($condition['fields'])->order($condition['order'])->select();
+        //echo M($condition['table'])->getLastSql();die;
 
 
         return $data = $tag

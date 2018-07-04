@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="__PUBLIC__/css/content.css" />
     <link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
+    <!-- 引入jQuery UI的css文件 -->
     <link rel="stylesheet" href="__PUBLIC__/css/plugins/datapicker/datepicker3.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
@@ -18,6 +19,7 @@
     <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/global.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <!-- 引入jQuery UI的js文件 -->
 </head>
 <style>
     .panel-primary{
@@ -122,8 +124,11 @@
         <div class="layui-form-item date-rule">
             <div class="layui-inline">
                 <label class="layui-form-label"><?php echo $systemKeysValue['value1']?></label>
-                <div class="layui-input-block">
-                    <input name="describe"  placeholder="<?php if($tag == 4):?>请输入客户渠道<?php endif;?><?php if($tag == 5):?>请输入料号<?php endif;?>"  class="layui-input" type="text" id="otcr">
+                <div class="layui-input-inline">
+                    <input name="describe"  placeholder="请输入渠道" lay-verify="required" class="layui-input" type="text" id="describe">
+                    <div id="aaresults" style="display: none;height: 150px;overflow-y: scroll">
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -144,8 +149,8 @@
         </div>
     </form>
 
-</div>
 
+</div>
 </body>
 
 <script>
@@ -157,6 +162,29 @@
         todayHighlight:true
     });
     $(function() {
+        //模糊搜索
+
+
+        $('#describe').on('input propertychange', function() {
+            $("#aaresults").html('');
+            $.get("/index.php/Admin/CksManage/dimSearch.html?tag=<?php echo $tag?>&describe="+$('#describe').val(),function(data){
+                //$('.ui-autocomplete').show();
+                var htmls = '';
+                var resulte = JSON.parse(data);
+                for(var i in resulte) {
+                    htmls = htmls + "<p>"+resulte[i].label+"</p>";
+                }
+                $("#aaresults").html(htmls);
+                $("#aaresults").show();
+            });
+        });
+
+        $("body").on('click','#aaresults p',function () {
+            var index = $(this).index("#aaresults p");
+            $("#describe").val($("#aaresults p").eq(index).html());
+            $("#aaresults").html('');
+            $("#aaresults").hide();
+        })
         //分页
         globalFn.lypage('page', "{$data['pages']}", "Admin/CksManage/index");
 

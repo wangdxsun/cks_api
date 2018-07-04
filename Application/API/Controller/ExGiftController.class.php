@@ -25,9 +25,9 @@ class ExGiftController extends Controller
      * ];
      * @return []
      */
-    public function inquireUserExStatus($paramArr, $source){
+    public function inquireUserExStatus($paramArr, $source, $key){
 
-        return $this->curlPostSend($paramArr, $source);
+        return $this->curlPostSend($paramArr, $source, $key);
         //p($this->curlPostSend($paramArr, $source));
 
     }
@@ -46,18 +46,18 @@ class ExGiftController extends Controller
      * ];
      * @return []
      */
-    public  function pushGift($paramArr, $source){
+    public  function pushGift($paramArr, $source, $key){
 
-        return $this->curlPostSend($paramArr, $source);
+        return $this->curlPostSend($paramArr, $source, $key);
     }
 
 
     //发送数据
-    public function curlPostSend($paramArr, $source){
+    public function curlPostSend($paramArr, $source, $key){
         //echo json_encode(EncryptSignVerify::sign($paramArr));die;
         return Curl::curl_header_post(
             C($source),
-            json_encode(EncryptSignVerify::sign($paramArr)),
+            json_encode(EncryptSignVerify::sign($paramArr, $key)),
             ["content-type: application/json;charset=UTF-8"]
         );
     }
@@ -70,7 +70,7 @@ class ExGiftController extends Controller
           'Kcodetype' =>   'W2',
           'amount' => '66.66'
         ];
-        $this->inquireUserExStatus($arr, 'hxwj');
+        $this->inquireUserExStatus($arr, 'hxwj', 'key');
     }
 
 

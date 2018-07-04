@@ -2,7 +2,7 @@
 namespace Admin\Controller;
 
 use Admin\Model\BaseModel;
-
+use Admin\Model\RoleModel;
 
 /**
  * wms
@@ -12,6 +12,10 @@ use Admin\Model\BaseModel;
  */
 class WmsController extends BaseController
 {
+    public function index(){
+        $this->display();
+    }
+
     public function allot()
     {
         $params = json_decode(file_get_contents('php://input'), true);
@@ -76,7 +80,7 @@ class WmsController extends BaseController
         $total = 0;
         for($i = 0;$i<count($clearcd);$i++){
             $productInfo['money'] = $clearcd[$i]['kMoney'];
-            $productInfo['status'] = 1;
+            $productInfo['status'] = ($params['info']['channel2'] == '备货')?2:1;
             $productInfo['sn'] = $clearcd[$i]['sn'];
             $productInfo['pnumber'] = $clearcd[$i]['partNumber'];
             $productInfo['pname'] = $clearcd[$i]['productName'];
@@ -84,6 +88,7 @@ class WmsController extends BaseController
             $productInfo['imei1'] = $clearcd[$i]['imei1'];
             $productInfo['imei2'] = $clearcd[$i]['imei2'];
             $productInfo['mac'] = $clearcd[$i]['mac'];
+
             foreach($productInfo as $k=>$v){
                 if(empty($v)){
                     $productInfo[$k] = 'NA';
