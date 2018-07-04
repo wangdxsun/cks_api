@@ -240,13 +240,21 @@ class ProductController extends Controller
         if($clearcd_str){
             $cards=json_decode($clearcd_str,true);
             $where["clearcd"]=array("in",$cards);
-            $data=M("relation")->field("clearcd,secretcd,channel1,status")->where($where)->select();
+            $data=M("relation")->field("clearcd,secretcd,channel1,status,last_return_time")->where($where)->select();
         }
         if($secretcd_str){
             $cards=json_decode($secretcd_str,true);
             $where["secretcd"]=array("in",$cards);
-            $data=M("relation")->field("clearcd,secretcd,channel1,status")->where($where)->select();
+            $data=M("relation")->field("clearcd,secretcd,channel1,status,last_return_time")->where($where)->select();
         }
+
+        foreach($data as $kk=>$vv){
+            if($vv["last_return_time"]<date("Y-m-d H:i:s",time())){
+                exit(json_encode(array("status"=>false,"message"=>"已超过最晚退货时间"),JSON_UNESCAPED_UNICODE));
+
+            }
+        }
+
         //获取到data，对data进行遍历
        if(count($data)==1){
            if($data[0]["status"]<2){
@@ -366,7 +374,11 @@ class ProductController extends Controller
             $new_method="cancel";
         }
         $phone=M("relation")->where(["clearcd"=>$clearcd])->getField("rephone");
-        $uid="1111";
+        $uids=BaseController::getUidByPhone($phone);
+        if($uids["err"]>0){
+            return false;
+        }
+        $uid=$uids["uid"];
         $post_arr["kcode"]=$secretcd;
         $post_arr["uid"]=$uid;
         $post_arr["mobile"]=$phone;
@@ -387,7 +399,23 @@ class ProductController extends Controller
     }
     //改变华夏万家
     protected  function changeHX($clearcd,$secretcd,$method){
-        return "hx";
+        if($method==1){
+            $new_method="freeze";
+        }elseif ($method==2){
+            $new_method="unfreeze";
+        }else{
+            $new_method="invalid";
+        }
+        $url="xxxxx";
+        $key="1111111";
+        $postparmas=array("kcode"=>$secretcd,"status"=>$new_method,"statusname"=>"status");
+        $result_str=ExGiftController::changeGiftStatus($postparmas,$url,$key);
+        $result_arr=json_decode($result_str,true);
+        if($result_arr["message"]=="success"){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }
