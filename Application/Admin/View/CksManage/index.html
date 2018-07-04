@@ -94,18 +94,6 @@
                 </select>
             </div>
         </div>
-
-
-        <div class="layui-form-item ratio">
-            <label class="layui-form-label"> 兑换比例</label>
-            <div class="layui-input-inline">
-                <select name="ratio" lay-filter="">
-                    <?php foreach($ratio as $val):?>
-                    <option value="<?php echo $val['key2']?>"><?php echo $val['value1']?></option>
-                    <?php endforeach;?>
-                </select>
-            </div>
-        </div>
         <?php endif;?>
 
         <?php if($tag == 2 || $tag == 3):?>
@@ -113,20 +101,8 @@
             <div class="layui-inline">
                 <label class="layui-form-label"><?php echo $systemKeysValue['value1']?></label>
                 <div class="layui-input-block">
-                    <input type='text' readonly class='form-control selectData layui-input' id='datepicker' name='describe' value="">
+                    <input type='text' readonly lay-verify="required" class='form-control selectData layui-input' id='datepicker' name='describe' value="">
                 </div>
-            </div>
-        </div>
-
-
-        <div class="layui-form-item ratio">
-            <label class="layui-form-label"> 兑换比例</label>
-            <div class="layui-input-inline">
-                <select name="ratio" lay-filter="">
-                    <?php foreach($ratio as $val):?>
-                    <option value="<?php echo $val['key2']?>"><?php echo $val['value1']?></option>
-                    <?php endforeach;?>
-                </select>
             </div>
         </div>
 
@@ -151,20 +127,14 @@
                 </div>
             </div>
         </div>
-
+        <?php endif;?>
 
         <div class="layui-form-item ratio">
             <label class="layui-form-label"> 兑换比例</label>
             <div class="layui-input-inline">
-                <select name="ratio" lay-filter="">
-                    <?php foreach($ratio as $val):?>
-                    <option value="<?php echo $val['key2']?>"><?php echo $val['value1']?></option>
-                    <?php endforeach;?>
-                </select>
+                <input name="ratio"  placeholder="请输入兑换比例" lay-verify="required" class="layui-input" type="text" id="ratio">
             </div>
         </div>
-
-        <?php endif;?>
 
         <div class="layui-form-item" style="text-align:center; width:100%;height:100%;margin-left:-28px; " >
             <div class="layui-btn" lay-submit="" lay-filter="demo2" id="sub-btn">添加</div>
@@ -195,7 +165,7 @@
             if(tag == 1) cksManageFn.secCommon('channel', '商城', '商城');
             if(tag == 2 || tag == 3)cksManageFn.secCommon('operator', '等于', '=');
             if(tag == 4 || tag == 5)$("#otcr").val('');
-            cksManageFn.secCommon('ratio', 1, 1);
+            //cksManageFn.secCommon('ratio', 1, 1);
             cksManageFn.inputShow();
             globalFn.lyPopup("<?php echo $systemKeysValue['value1']?>", ['450px', '300px'],'add-manage-popup',1);
         })
@@ -215,7 +185,8 @@
                 //客户渠道、料号策略
                 if(tag == 4 || tag ==5)$("#otcr").val(data.data.describe);
 
-                cksManageFn.secCommon('ratio', data.data.exratio, data.data.exratio);
+                $('#ratio').val(data.data.exratio);
+                //cksManageFn.secCommon('ratio', data.data.exratio, data.data.exratio);
                 $("#eid").val(data.data.id);
             })
 
@@ -261,6 +232,7 @@
     var cksManageFn = {
 
         inputShow:function(){
+            $('#ratio').val('');
             $('#action').val("add");
             $('#sub-btn').text('添加');
 

@@ -29,21 +29,51 @@ return array(
     'cloud_phonenumberInfo' => '/v1/phonenumberInfo',
     //验证token有效性
     'cloud_verifyToken' =>  "/v1/verifyToken",
+    //验收是否可被注册
+    'cloud_checkPhonenumber' => '/v1/checkPhonenumber',
 
     //云账号错误信息
-    //0.表示成功；7.用户名不存在;8.密码错误;11.授权码错误，12. 参数错误；15. 密码未设置；30：多端登录账户被踢出；34.手机号格式错误；40.需要进行手机验证码验证 50.服务器异常;
+    'error_msg' => array(
+    	'0' => '成功',
+    	'1' => '验证码错误',
+    	'2' => '验证码过期',
+    	'4' => '旧密码错误',
+    	'5' => 'token失效',
+    	'7' => '用户名不存在',
+    	'8' => '密码错误',
+    	'9' => 'client_id不存在',
+    	'10' => 'client_secret错误',
+    	'11' => '授权码错误',
+    	'12' => '参数错误',
+    	'13' => '获取验证码失败',
+    	'14' => '该账户已经存在',
+    	'15' => '密码未设置',
+    	'21' => 'token错误',
+    	'23' => '验证码已使用',
+    	'25' => '邮箱已经注册',
+    	'30' => '多端登录账户被踢出',
+    	'33' => 'username格式错误',
+    	'34' => '手机号格式错误',
+    	'38' => '验证码请求过快',
+    	'40' => '需要进行手机验证码验证',
+    	'50' => '服务器异常',
+    	'100' => '邮箱或手机填写错误',
+    	'101' => 'K码输入错误，信息不存在',
+    	'102' => 'K码不是待使用状态',
+    	'103' => '账号信息错误，缺少token'
+    ),
 
     //商城api
     'mall_url' => 'http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/exchange',
     'mall_interface' => 'vmcshop_vcprice_interface',
     //推啥api……
     //以太星球
-    'eth_url' => 'https://www.phi-block.com/api/',
+    'eth_url' => 'http://testnottobuy.phi-block.com:18000/api/',//https://www.phi-block.com/api/
     'eth_act' => 'cloud_star_points',
     'eth_md5_key' => '1wSn0kMbpxaDCx',
 
     //华夏、骏和,固定参数
-    'hxwj' => 'http://newtest.wanjiajinfu.com/',
+    'hxwj' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//1.1用户信息与兑换资格查询接口地址
     'jh' => 'http://newtest.wanjiajinfu.com/',
     'parter_code' => '103',
     'sign_type' => 'MD5',

@@ -24,19 +24,25 @@ class CksManageController extends BaseController
 
 
         //比例
-        $this->assign('ratio', SystemKeysModel:: getSystemKeys('ratio','key2 asc'));
+        //$this->assign('ratio', SystemKeysModel:: getSystemKeys('ratio','key2 asc'));
 
         //策略
-        $this->assign('policy',SystemKeysModel:: getSystemKeys('policy','key2 asc'));
+        //$this->assign('policy',SystemKeysModel:: getSystemKeys('policy','key2 asc'));
 
         //获取本次对应策略
         $this->assign('systemKeysValue',SystemKeysModel:: getSystemKeysKey1('policy',$_GET['tag']));
 
         //对应渠道
-        $this->assign('channel',SystemKeysModel:: getSystemKeys('channel','key2 asc'));
+        if($_GET['tag'] == 1) $this->assign('channel',SystemKeysModel:: getSystemKeys('channel','key2 asc'));
 
         //操作符
-        $this->assign('operator',SystemKeysModel:: getSystemKeys('operator','value2 desc'));
+        if($_GET['tag'] == 2 || $_GET['tag'] == 3) $this->assign('operator',SystemKeysModel:: getSystemKeys('operator','value2 desc'));
+
+        //获取客户渠道
+        if($_GET['tag'] == 4)$this->assign('otcr',BaseModel::getListData(['table'=>CksManageModel::$table[$_GET['tag']]]));
+
+        //获取料号
+        if($_GET['tag'] == 5)$this->assign('pn',BaseModel::getListData(['table'=>CksManageModel::$table[$_GET['tag']]]));
 
         $this->display();
     }
@@ -125,7 +131,6 @@ class CksManageController extends BaseController
 
     //去重规则
     public function distinct($pdata){
-
 
         //cash 1渠道兑付 4客户渠道 5料号
         if(trim($pdata['sign']) == 1 || trim($pdata['sign']) == 4 || trim($pdata['sign']) == 5){

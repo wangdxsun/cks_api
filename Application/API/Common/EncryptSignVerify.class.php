@@ -21,11 +21,20 @@ class EncryptSignVerify{
         return [
                 'parterCode' => C('parter_code'),
                 'signType' => C('sign_type'),
-                'sign' => md5(http_build_query($parmArr).'&key='.C('key')),
-                'data' => [$parmArr],
+                'sign' => md5(
+                    'data='.json_encode($parmArr).
+                    '&'
+                    .http_build_query([
+                        'parterCode' => C('parter_code'),
+                        'signType' => C('sign_type'),
+                        'key'=>C('key')
+                    ])),
+                'data' => $parmArr,
         ];
 
     }
+ //需要签名的数据类型
+//data={"Kcodetype":"sss","Phone":"13333333333","amount":"66.66"}&parterCode=103&signType=MD5&key=y36smqkfeOHen88SOq9sYOZ4sTkxfv60
 
     /*private static function arr2str($arr){
 

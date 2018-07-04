@@ -15,14 +15,16 @@ class ChannelController extends Controller
 {
 
     public function changerate(){
+        //EntryController::index();
         $channel=$_POST["channel"];
         $exratio=$_POST["exratio"];
-        if($channel!="HXWJ"&&$channel!="JH"){
+        if($channel!="华夏万家"&&$channel!="骏和"){
             exit(json_encode(array("status"=>false,"message"=>"渠道参数传递错误")));
         }
         if(empty($exratio)){
             exit(json_encode(array("status"=>false,"message"=>"兑换比例参数传递错误")));
         }
+        $tag=$channel=="华夏万家"?1:2;
         $data=M("allot_policy")->where(["cash"=>7,"describe"=>$channel])->find();
         if($data){
             //修改
@@ -34,6 +36,7 @@ class ChannelController extends Controller
             $add["create_time"]=date("Y-m-d H:i:s",time());
             $add["exratio"]=$exratio;
             $add["cash"]=7;
+            $add["tag"]=$tag;
             $add["describe"]=$channel;
             $result=M("allot_policy")->add($add);
         }

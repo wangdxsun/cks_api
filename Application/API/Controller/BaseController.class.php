@@ -31,7 +31,7 @@ class BaseController extends Controller
         // GET 请求
         // authorizationcode   feixun.SH_7（输入你们的授权码）
         // uid 1230557
-        $data['authorizationcode'] = $this->authorization();
+        $data['authorizationcode'] = self::authorization();
         $data['uid'] = $info['uid'];
         $params = http_build_query($data);
         $url = C('cloud_url').C('cloud_phonenumberInfo').'?'.$params;
@@ -58,5 +58,25 @@ class BaseController extends Controller
         $res = json_decode(Curl::curl_get($url),true);
         $authorizationcode = $res['authorizationcode'];
         return $authorizationcode;
+    }
+
+    /**
+        @功能:返回信息
+        @param:yy 
+        @date:2018-06-30
+    **/
+    public function returnMsg($data){
+        if (!is_array($data)) {
+            $data = json_decode($data,true);
+        }
+        if ($data['error']=='0') {
+            $res['error'] = 0;
+        }
+        else {
+            $res['error'] = 1;
+        }
+        $res = array_merge($data, $res);
+        $res['message'] = C('error_msg')[$data['error']];
+        return json_encode($res,JSON_UNESCAPED_UNICODE);
     }
 }

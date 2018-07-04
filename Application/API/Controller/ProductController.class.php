@@ -13,62 +13,106 @@ use API\Controller\BaseController;
  */
 class ProductController extends Controller
 {
+
+
+   /*  public function _initialize()
+        {
+            EntryController::index();
+        }*/
+
+
     //获取电子K码
     public function getKcode()
     {
-        $phone = $_POST["phone"];
-        $channel = $_POST["channel"];
-        $order_no = $_POST["order_no"];
-        $products = json_decode($_POST["products"],true);
+        if(IS_POST){
+            $phone = $_POST["phone"];
+            $channel = $_POST["channel"];
+            $order_no = $_POST["order_no"];
+            $products = json_decode($_POST["products"],true);
 
-        //判断金额料号金额金额是否大于总的k码价值
-        foreach ($products as $k => $v) {
-            $where["channel1"] = $channel;
-            $where["pnumber"] = $v["pnumber"];
-            $where["pname"] = $v["pname"];
-            $where["status"] = 1;
-            $pmoneys = M("relation")->where($where)->field("pmoney")->select();
-            foreach ($pmoneys as $kk => $money) {
-                if ($money < $v["money"]) {
-                    exit(json_encode(array("status" => false, "message" => "传递产品金额大于实际产品金额")));
-                    break;
+            //判断金额料号金额金额是否大于总的k码价值
+            foreach ($products as $k => $v) {
+                $where["channel1"] = $channel;
+                $where["pnumber"] = $v["pnumber"];
+                $where["pname"] = $v["pname"];
+                $where["status"] = 1;
+                $pmoneys = M("relation")->where($where)->field("pmoney")->select();
+                foreach ($pmoneys as $kk => $money) {
+                    if ($money < $v["money"]) {
+                        exit(json_encode(array("status" => false, "message" => "传递产品金额大于实际产品金额")));
+                        break;
+                    }
+                }
+                if ($v["money"] <= 0) {
+                    unset($products[$k]);
                 }
             }
-            if ($v["money"] <= 0) {
-                unset($products[$k]);
-            }
-        }
-        //传递金额过来
-        if ($channel == "TUI") {
-            //获取推啥接口
-            $response = $this->getTresult($phone, $order_no, $products);
-        } else if ($channel == 'ETH') {
-            //获取金额
-            $response = $this->getEresult($order_no, $products);
-        } else {
+            //传递金额过来
+            if ($channel == "TUI") {
+                //获取推啥接口
+                $response = $this->getTresult($phone, $order_no, $products);
+            } else if ($channel == 'ETH') {
+                //获取金额
+                $response = $this->getEresult($order_no, $products);
+            } else {
 
+            }
+            exit(json_encode($response));
+           // exit(print_r($response));
+        }else{
+            exit(json_encode(array("status"=>false,"message"=>"请求方式错误"),JSON_UNESCAPED_UNICODE));
         }
-        exit(json_encode($response));
+
     }
 
     //获取推啥result
     protected function getTresult($phone, $order_no, $products)
     {
         $response = array();
-        foreach ($products as $k => $v) {
-            $where["status"] = 0;
-            $where["pname"] = $v["pname"];
-            $where["pnumber"] = $v["pnumber"];
-            $where["money"] = array("eq", 0);
-            $data = M("relation")->where($where)->find();
-            $id = $data["id"];
-            $result["clearcd"] = $data["clearcd"];
-            $save["orderid"] = $order_no;
-            $reuslt["money"] = $save["money"] = $v["money"];
-            M("relation")->where(["id" => $id])->save($save);
-            array_push($response, $result);
-        }
-        return $response;
+        $status_pool=array();
+
+       try{
+           M()->startTrans();
+           foreach ($products as $k => $v) {
+               $where["status"] = 0;
+               $where["pname"] = $v["pname"];
+               $where["pnumber"] = $v["pnumber"];
+               $where["money"] = array("gt", 0);
+
+               $data = M("relation")->lock(true)->where($where)->find();
+               if(empty($data)){
+                   return array("status"=>false,"message"=>"查不到对应K码");
+               }
+               $id = $data["id"];
+               $result["clearcd"] = $data["clearcd"];
+               $save["orderid"] = $order_no;
+               $save["status"]=1;
+               $save["channel1"]="TS";
+               $result["money"] = $save["money"] = $v["money"];
+               $save["rephone"]=$phone;
+               $result_status=M("relation")->where(["id" => $id])->save($save);
+               //E('新增失败1111');
+               array_push($response, $result);
+               array_push($status_pool,$result_status);
+           }
+           foreach($status_pool as $kk=>$vv){
+               if($vv===false){
+                   M()->rollback();
+                   return array("status"=>false,"message"=>"系统发生错误");
+               }
+           }
+           M()->commit();
+       }catch (Exception $e){
+           M()->rollback();
+           return array("status"=>false,"message"=>"系统发生错误");
+       }
+
+        $new_response["status"]=true;
+        $new_response["phone"]=$phone;
+        $new_response["order_no"]=$order_no;
+        $new_response["channel"]="TUI";
+        $new_response["products"]=$response;
+        return $new_response;
 
     }
 
@@ -103,7 +147,7 @@ class ProductController extends Controller
 
 
     public function dhresult(){
-        //exit(json_encode(array("stautus"=>true,"msg"=>"11111111111")));
+        //exit(json_encode(array("stautus"=>true,"msg"=>"11111111111"),JSON_UNESCAPED_UNICODE));
         $phone=$_POST["phone"];
         $channel=$_POST["channel"];
         $kcode=$_POST["kcode"];
@@ -121,6 +165,48 @@ class ProductController extends Controller
             exit(json_encode(array("status"=>false,"msg"=>"回调失败")));
         }
     }
+
+
+    public function getstatus(){
+        $clearcd=$_POST["clearcd"];
+        $secretcd=$_POST["secretcd"];
+        if(!empty($clearcd)){
+            $where["clearcd"]=$clearcd;
+        }
+        if(!empty($secretcd)){
+            $where["secretcd"]=$secretcd;
+        }
+       $data=M("relation")->field("status as kstatus")->where($where)->find();
+        if(!$data){
+            exit(json_encode(array("status"=>false,"message"=>"查无数据")));
+        }
+        exit(json_encode(array("status"=>true,"kstatus"=>$data["kstatus"])));
+    }
+
+     public function sendMessages($channel="TUI",$order_no="80200001"){
+
+         $auth=$channel=="TUI"?"feixun*123.SH_9913651":"";
+
+         $channel_name=$channel=="TUI"?"推啥":"云盘";
+         $sign="尊敬的用户您好,您通过".$channel_name."获取的K码是";
+
+         $data=M("relation")->field("secretcd,rephone")->where(["orderid"=>$order_no])->select();
+
+         foreach($data as $k=>$v){
+             $new_sign=$sign.$v["secretcd"]."请妥善保管,30天内有效";
+
+
+             $phone=$v['rephone'];
+             //echo "http://114.141.173.41:48080/v1/verificationCode?authorizationcode=$auth&isCustom=true&msg=$sign&phonenumber=$phone&verificationtype=0";
+             $url="http://114.141.173.41:48080/v1/verificationCode?authorizationcode=$auth&isCustom=true&msg=$new_sign&phonenumber=$phone&verificationtype=0";
+              echo $url;
+             echo "<hr/>";
+             $result=Curl::curl_get($url);
+             var_dump($result);
+         }
+
+
+     }
 
 
 }
