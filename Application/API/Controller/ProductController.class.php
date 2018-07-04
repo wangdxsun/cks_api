@@ -126,7 +126,7 @@ class ProductController extends Controller
             $save["orderid"] = $order_no;
             $save["money"] = $v["money"];
             M("relation")->where($where)->save($save);
-            $new_result = M("relation")->where($where)->field("clearcd,money")->find();
+            $new_result = M("relation")->where($where)->field("clearcd,money,secretcd")->find();
             array_push($response, $new_result);
         }
         return $response;
@@ -155,10 +155,17 @@ class ProductController extends Controller
         $dhtotal=$_POST["dhtotal"];
         $rate=$_POST["rate"];
         $exratio=$_POST["exratio"];
-        if(empty($phone)||empty($channel)||empty($kcode)||empty($dhtotal)||empty($dhtotal)||empty($rate)||empty($exratio)){
+        $chkSnsNo=$_POST["cksSnsNo"];
+        $last_return_time=$_POST["last_return_time"];
+
+        if(empty($phone)||empty($channel)||empty($kcode)||empty($dhtotal)||empty($dhtotal)||empty($rate)||empty($exratio)||empty($chkSnsNo)||empty($last_return_time)){
             exit(json_encode(array("status"=>false,"msg"=>"缺少必要字段")));
         }
-        $result=CommonController::ChangeLog($kcode,$rate,$dhtotal,$phone,$status,$channel,$exratio);
+        if($chkSnsNo!=md5($kcode)){
+            exit(json_encode(array("status"=>false,"msg"=>"流水号错误")));
+        }
+
+        $result=CommonController::ChangeLog($kcode,$rate,$dhtotal,$phone,$status,$channel,$exratio,$chkSnsNo,$last_return_time);
         if($result){
             exit(json_encode(array("status"=>true,"msg"=>"插入成功")));
         }else{
@@ -167,6 +174,7 @@ class ProductController extends Controller
     }
 
 
+    //查看K码状态
     public function getstatus(){
         $clearcd=$_POST["clearcd"];
         $secretcd=$_POST["secretcd"];
@@ -183,6 +191,8 @@ class ProductController extends Controller
         exit(json_encode(array("status"=>true,"kstatus"=>$data["kstatus"])));
     }
 
+
+    //发送短信接口
      public function sendMessages($channel="TUI",$order_no="80200001"){
 
          $auth=$channel=="TUI"?"feixun*123.SH_9913651":"";
@@ -208,6 +218,150 @@ class ProductController extends Controller
 
      }
 
+    //改变K码状态接口
+    public function changekcode(){
+        $clearcd_str=$_POST["clearcd"];
+        $secretcd_str=$_POST["secretcd"];
+        $method=$_POST["method"];
+        if(empty($clearcd_str)&&empty($secretcd_str)){
+            exit(json_encode(array("status"=>false,"message"=>"缺少必要参数")));
+        }
+        //如果不在1-3之内
+        if(!in_array($method,array(1,2,3))){
+            exit(json_encode(array("status"=>false,"message"=>"method参数不对")));
+        }
+
+        //开始对接接口
+        if($clearcd_str){
+            $cards=json_decode($clearcd_str,true);
+            $where["clearcd"]=array("in",$cards);
+            $data=M("relation")->field("clearcd,secretcd,channel1,status")->where($where)->select();
+        }
+        if($secretcd_str){
+            $cards=json_decode($secretcd_str,true);
+            $where["secretcd"]=array("in",$cards);
+            $data=M("relation")->field("clearcd,secretcd,channel1,status")->where($where)->select();
+        }
+        //获取到data，对data进行遍历
+       if(count($data)==1){
+           if($data[0]["status"]<2){
+               exit(json_encode(array("status"=>true,"message"=>"未激活K码，直接退款")));
+           }else{
+               $clearcd=$data[0]["clearcd"];
+               $secretcd=$data[0]["secretcd"];
+               M()->startTrans();
+               $res=self::chooseMethod($data[0]["channel1"],$clearcd,$secretcd,$method);
+               if($res===false){
+                   M()->rollback();
+                   exit(json_encode(array("status"=>false,"message"=>"调用接口失败")));
+               } else{
+                   if($method==1){
+                       $save["status"]=3;
+                   }elseif ($method==2){
+                       $save["status"]=2;
+                   }else{
+                       $save["status"]=4;
+                   }
+                   $result_relat=M("relation")->where(["clearcd"=>$clearcd])->save($save);
+                   if($result_relat===false){
+                       M()->rollback();
+                       exit(json_encode(array("status"=>false,"message"=>"修改本地接口失败")));
+                   }else{
+                       M()->commit();
+                       exit(json_encode(array("status"=>true,"message"=>"操作成功")));
+                   }
+               }
+           }
+       }else{
+           $status_pool=array();
+            foreach($data as $k=>$item){
+                if($item["status"]<2){
+                    array_push($status_pool,1);
+                }else{
+                    $clearcd=$item["clearcd"];
+                    $secretcd=$item["secretcd"];
+                    $res=self::chooseMethod($item["channel1"],$clearcd,$secretcd,$method);
+                    array_push($status_pool,$res);
+                }
+            }
+         if(in_array(false,$status_pool)){
+             exit(json_encode(array("status"=>false,"message"=>"调用接口失败")));
+         }else{
+             M()->startTrans();
+             if($method==1){
+                 $save["status"]=3;
+             }elseif ($method==2){
+                 $save["status"]=2;
+             }else{
+                 $save["status"]=4;
+             }
+             $result_status=M("relation")->where($where)->save($save);
+             if($result_status===false){
+                 M()->rollback();
+                 exit(json_encode(array("status"=>false,"message"=>"修改数据失败")));
+             }else{
+                 M()->commit();
+                 exit(json_encode(array("status"=>true,"message"=>"修改数据成功")));
+             }
+         }
+
+       }
+        
+    }
+
+    public   function chooseMethod($channel="DDW",$clearcd,$secretcd,$method){
+        switch ($channel)
+        {
+            case "DDW":
+                 return self::changeDDW($clearcd,$secretcd,$method);
+                break;
+            case "TS":
+                return self::changeTS($clearcd,$secretcd,$method);
+                break;
+            case "MALL":
+                return self::changeTS($clearcd,$secretcd,$method);
+                break;
+            case "JH":
+                return self::changeTS($clearcd,$secretcd,$method);
+                break;
+            case "HX":
+                return self::changeTS($clearcd,$secretcd,$method);
+                break;
+            default:
+                exit(json_encode(array("status"=>false,"message"=>"渠道参数不对")));
+        }
+
+    }
+
+
+    //改变ddw
+    protected  function changeDDW($clearcd,$secretcd,$method){
+
+            return "ddw";
+
+    }
+
+    //改变推啥
+    protected  function changeTS($clearcd,$secretcd,$method){
+        return "ts";
+
+
+    }
+
+    //改变商城
+    protected  function changeMall($clearcd,$secretcd,$method){
+        return "mall";
+
+    }
+
+    //改变骏和
+    protected  function chanageJH($clearcd,$secretcd,$method){
+          return "jh";
+    }
+    //改变华夏万家
+    protected  function changeHX($clearcd,$secretcd,$method){
+        return "hx";
+    }
 
 }
 
