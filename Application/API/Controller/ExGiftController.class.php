@@ -15,35 +15,6 @@ use Admin\Model\BaseModel;
 class ExGiftController extends Controller
 {
 
-    public static $table = ['allot_policy'];
-
-    /**
-     * @ Purpose: 礼包兑换金额页面显示
-     * @param string $money
-     * @return []
-     */
-    public function inquireUserExRatio($money = 666){
-
-        $resData = [];
-
-        $data = BaseModel::getDbData([
-            'table' => self::$table[0],
-            'where' => ['cash' => 7]
-        ]);
-
-        if($data)
-
-            foreach ($data as $key => $val){
-                $val['rate_str'] = $val['id'].':'.$val['exratio'];
-                $val['last_rate'] = $val['exratio'];
-                $val['change_money'] = $val['exratio'] * $money;
-                $resData[$key] = $val;
-            }
-
-        return $resData;
-
-    }
-
     /**
      * @ Purpose:1.1 用户信息与兑换资格查询接口
      * @param [] $parmArr 若参数值为空 不传
