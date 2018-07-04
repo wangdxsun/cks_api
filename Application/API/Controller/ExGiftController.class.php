@@ -47,7 +47,13 @@ class ExGiftController extends Controller
      */
     public  function pushGift($paramArr, $source, $key){
 
-        return $this->curlPostSend($paramArr, $source, $key);
+        return self::curlPostSend($paramArr, $source, $key);
+    }
+
+
+    public  function changeGiftStatus($paramArr, $source, $key){
+
+        return self::curlPostSend($paramArr, $source, $key);
     }
 
 
