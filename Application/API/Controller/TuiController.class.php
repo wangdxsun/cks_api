@@ -47,14 +47,14 @@ class TuiController extends Controller
         $result_str=Curl::curl_post($url,$arr);
         $result_arr=json_decode($result_str,true);
         if($result_arr["err"]>0){
-            exit(json_encode(array('status'=>false,"message"=>"请求推啥失败,请检查原因"),JSON_UNESCAPED_UNICODE));
+            return array('status'=>false,"message"=>"请求推啥失败,请检查原因");
         }else{
             //插入兑换记录数据库
             $result_status=CommonController::ChangeLog($kcode,$rate,$dhtotal,$mobile,1,$channel,$exratio);
             if($result_status){
-                exit(json_encode(array("status"=>"true")));
+                return array("status"=>"true");
             }else{
-                exit(json_encode(array("status"=>"false","message"=>"修改状态失败")));
+                return array("status"=>"false","message"=>"修改状态失败");
             }
         }
 

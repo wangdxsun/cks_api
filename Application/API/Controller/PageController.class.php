@@ -219,7 +219,7 @@ class PageController extends LoginController
                     $res = MallController::mallChange($token,$kcode,$sku_bn,$amount,$radio);
                     break;
                 case 2://'推啥':
-                    
+                    $res=TuiController::index("TS",$kcode,"17751518563",round($change_info['last_rate'], 2),1);
                     break;
                 case 3://'DDW':
                     
