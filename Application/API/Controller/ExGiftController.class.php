@@ -54,9 +54,9 @@ class ExGiftController extends Controller
      * ];
      * @return []
      */
-    public function inquireUserExStatus($paramArr, $source){
+    public function inquireUserExStatus($paramArr, $source, $key){
 
-        return $this->curlPostSend($paramArr, $source);
+        return $this->curlPostSend($paramArr, $source, $key);
         //p($this->curlPostSend($paramArr, $source));
 
     }
@@ -77,7 +77,7 @@ class ExGiftController extends Controller
      */
     public  function pushGift($paramArr, $source, $key){
 
-        return $this->curlPostSend($paramArr, $source);
+        return $this->curlPostSend($paramArr, $source, $key);
     }
 
 
