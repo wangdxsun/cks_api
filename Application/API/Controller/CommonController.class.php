@@ -22,12 +22,13 @@ class CommonController extends Controller
      * $channel, 兑换通道
      * exratio   兑换比例
     */
-    public static function ChangeLog($kcode,$rate=1,$dhtotal,$phone,$status,$channel,$exratio){
+    public static function ChangeLog($kcode,$rate=1,$dhtotal,$phone,$status,$channel,$exratio,$cksSnsNo,$last_return_time){
             if($status==1){
                 $data=M("relation")->field("money,orderid")->where(["secretcd"=>$kcode])->find();
                 $save["status"]=2;
-
                 $save["channel1"]=$channel;
+                $save["cksSnsNo"]=$cksSnsNo;
+                $save["last_return_time"]=$last_return_time;
                 M()->startTrans();
                 $result1=M("relation")->where(["secretcd"=>$kcode])->save($save);
                 //新增兑换记录

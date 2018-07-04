@@ -19,15 +19,11 @@ class BaseController extends Controller
         @date:2018-07-01
     **/
     public function getInfoByToken($token){
-        //验证token有效性，返回uid
-        $header = array("Authorization: $token");
-        $params = http_build_query($data);
-        $url = C('cloud_url').C('cloud_verifyToken').'?'.$params;
-        $info = json_decode(Curl::curl_header_get($url,$header),true);
+        
+        $info = self::checkToken($token);
         if ($info['error']!='0') {
             return $info;
         }
-
         // GET 请求
         // authorizationcode   feixun.SH_7（输入你们的授权码）
         // uid 1230557
@@ -38,6 +34,32 @@ class BaseController extends Controller
         $res = json_decode(Curl::curl_get($url),true);
         $res['uid'] = $info['uid'];
         return $res;
+    }
+    /**
+        @功能:验证token有效性-返回uid
+        @param:yy
+        @date:2018-06-30
+    **/
+    public function checkToken($token){
+        
+        $header = array("Authorization: $token");
+        $url = C('cloud_url').C('cloud_verifyToken');
+        $info = json_decode(Curl::curl_header_get($url,$header),true);
+        return $info; 
+    }
+
+    /**
+        @功能:根据手机查uid
+        @param:yy
+        @date:2018-06-30
+    **/
+    public function getUidByPhone($phone){
+        $data['authorizationcode'] = self::authorization();
+        $data['phonenumber'] = $phone;
+        $params = http_build_query($data);
+        $url = C('cloud_url').C('cloud_uidInfo').'?'.$params;
+        $info = json_decode(Curl::curl_get($url),true);
+        return $info; 
     }
     /**
         @功能:获取云账号登录授权码
@@ -73,7 +95,7 @@ class BaseController extends Controller
             $res['error'] = 0;
         }
         else {
-            $res['error'] = 1;
+            $res['error'] = $data['error'];
         }
         $res = array_merge($data, $res);
         $res['message'] = C('error_msg')[$data['error']]?C('error_msg')[$data['error']]:$data['message'];

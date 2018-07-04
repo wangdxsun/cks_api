@@ -176,7 +176,7 @@ class PageController extends LoginController
             'joinWhere' => 'LEFT JOIN relation ON use_details.secretcd = relation.secretcd LEFT JOIN allot_policy ON (allot_policy.cash = use_details.cash AND allot_policy.tag = use_details.tag)',
             'where' => ['atvphone' => $info['phonenumber']],
             'order' => 'activate_time',
-            'pnum' => 20,
+            'pnum' => 10,
             'page' => $page = !empty($page) ? $page : 0
         ]);
 
@@ -187,15 +187,78 @@ class PageController extends LoginController
     }
 
     /**
+        @功能:点击兑换
+        @author:yy
+        @date:2018-07-01
+    **/
+    public function butnChange(){
+        $token = $_POST['token'];
+        $tag = $_POST['tag'];
+        $kcode = $_POST['kcode'];
+        $cash = $_POST['cash'];
+        $condition = [
+            'table' => 'relation',
+            'fields' => '*',
+            'where' => ['secretcd' => $kcode]
+        ];
+        
+        $kcode_info = BaseModel::getDbData($condition, false);
+        //跟新流水号，变更状态--锁定-to do 
+
+        if ($cash==1) {
+            $change_info = $this->getChangeMoney($tag,$kcode_info);
+            switch ($tag) {
+                case 1://'商城':
+                    break;
+                case 2://'推啥':
+                    
+                    break;
+                case 3://'DDW':
+                    
+                    break;
+                case 4://'以太星球':
+
+                    break;
+                default:
+                    # code...
+                    break;  
+            }
+        }
+        elseif ($cash==7) {
+            switch ($tag) {
+                case 1://'华夏':
+                    // * e.g. $parmArr = [
+                    // * 'Phone' => 13333333333 //手机号
+                    // * 'Kcodetype' => 'S7' //产品型号
+                    // * 'amount' => '66.66' //金额
+                    // * ];
+                    $param = array(
+                        'Phone' => '18109069773',
+                        'Kcodetype' => 'W2',//$kcode_info['im_model'],
+                        'amount' => '66'//(string)$change_info['change_money']
+                    );print_r($param);
+                    $res = ExGiftController::inquireUserExStatus($param, 'hxwj', 'key');
+                    echo $res;
+                    break;
+                case 2://'骏和':
+                    
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }
+    }
+    /**
         @功能:点击兑换--确认兑换
         @author:yy
         @date:2018-07-01
     **/
     public function exchange(){
         // token   是   身份唯一表示
-        // tag      是   渠道代码 tag: 1：商城 2：推啥 3：DDW 4：以太星球
+        // tag     是   渠道代码 tag: 1：商城 2：推啥 3：DDW 4：以太星球
         // kcode   是   K码值，暗码
-        // cash   是   策略类别，1：渠道兑付策略 7：礼包平台策略
+        // cash    是   策略类别，1：渠道兑付策略 7：礼包平台策略
         $token = $_POST['token'];
         $tag = $_POST['tag'];
         $kcode = $_POST['kcode'];
@@ -219,7 +282,7 @@ class PageController extends LoginController
                     $res = MallController::mallChange($token,$kcode,$sku_bn,$amount,$radio);
                     break;
                 case 2://'推啥':
-                    
+                    $res=TuiController::index("TS",$kcode,"17751518563",round($change_info['last_rate'], 2),1);
                     break;
                 case 3://'DDW':
                     
@@ -240,7 +303,6 @@ class PageController extends LoginController
         elseif ($cash==7) {
             switch ($tag) {
                 case 1://'华夏':
-
                     break;
                 case 2://'骏和':
                     

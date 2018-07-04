@@ -27,8 +27,7 @@ class ExGiftController extends Controller
      */
     public function inquireUserExStatus($paramArr, $source, $key){
 
-        return $this->curlPostSend($paramArr, $source, $key);
-        //p($this->curlPostSend($paramArr, $source));
+        return self::curlPostSend($paramArr, $source, $key);
 
     }
 
@@ -48,13 +47,19 @@ class ExGiftController extends Controller
      */
     public  function pushGift($paramArr, $source, $key){
 
-        return $this->curlPostSend($paramArr, $source, $key);
+        return self::curlPostSend($paramArr, $source, $key);
+    }
+
+
+    public  function changeGiftStatus($paramArr, $source, $key){
+
+        return self::curlPostSend($paramArr, $source, $key);
     }
 
 
     //发送数据
     public function curlPostSend($paramArr, $source, $key){
-        //echo json_encode(EncryptSignVerify::sign($paramArr));die;
+//        echo json_encode(EncryptSignVerify::sign($paramArr, $key));
         return Curl::curl_header_post(
             C($source),
             json_encode(EncryptSignVerify::sign($paramArr, $key)),
@@ -66,13 +71,26 @@ class ExGiftController extends Controller
     //test
     public function test(){
         $arr = [
-          'Phone' =>   '18109069773',
+          'Phone' =>   '13795000060',
           'Kcodetype' =>   'W2',
-          'amount' => '66.66'
+          'amount' => '999'
         ];
-        $this->inquireUserExStatus($arr, 'hxwj', 'key');
+        $this->inquireUserExStatus($arr, 'jh', 'key');
     }
 
+    public function testPushGift()
+    {
+        $arr = [
+            'phone' =>   '13795000060',
+            'kcodeType' =>   'W2',
+            'kcode' => 'am123',
+            'kcodeSn' => 'mm1234',
+            'deviceSn' => 'sb1234',
+            'bingSn' => 'bd123',
+            'Amount' => '999'
+        ];
+        $this->pushGift($arr, 'jh_push_gift', 'key');
+    }
 
 }
 

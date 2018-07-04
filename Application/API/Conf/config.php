@@ -39,6 +39,8 @@ return array(
     'cloud_verifyToken' =>  "/v1/verifyToken",
     //验收是否可被注册
     'cloud_checkPhonenumber' => '/v1/checkPhonenumber',
+    //
+    'cloud_uidInfo' => '/v1/uidInfo',
 
     //错误信息
     'error_msg' => array(
@@ -82,7 +84,9 @@ return array(
 
     //华夏、骏和,固定参数
     'hxwj' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//1.1用户信息与兑换资格查询接口地址
-    'jh' => 'http://newtest.wanjiajinfu.com/',
+    'jh' => 'http://180.167.58.6:8206/CKSKM/QueryUserAndKCode',
+    'jh_push_gift' => 'http://180.167.58.6:8206/CKSKM/ActivateKcode',
+    'jh_deal_status' => 'http://180.167.58.6:8206/CKSKM/DealKCodeStatus',
     'parter_code' => '103',
     'sign_type' => 'MD5',
     'key' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',

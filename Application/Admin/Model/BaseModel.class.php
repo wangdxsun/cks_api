@@ -67,7 +67,7 @@ class BaseModel extends  Model{
         //$data=M($arg['table'])->where($where)->field($fields)->order("$order desc")->page($page,$pnum)->select();
 
         //$response['page']=$newPage->show();
-        $response['pages']=ceil($count/C('PAGE_SIZE'));//总页数
+        $response['pages']=ceil($count/$pnum);//总页数
         $response['data']=$data;
         $response['currentResult']=$page;
 

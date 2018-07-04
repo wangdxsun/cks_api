@@ -126,7 +126,7 @@ class ProductController extends Controller
             $save["orderid"] = $order_no;
             $save["money"] = $v["money"];
             M("relation")->where($where)->save($save);
-            $new_result = M("relation")->where($where)->field("clearcd,money")->find();
+            $new_result = M("relation")->where($where)->field("clearcd,money,secretcd")->find();
             array_push($response, $new_result);
         }
         return $response;
@@ -155,10 +155,17 @@ class ProductController extends Controller
         $dhtotal=$_POST["dhtotal"];
         $rate=$_POST["rate"];
         $exratio=$_POST["exratio"];
-        if(empty($phone)||empty($channel)||empty($kcode)||empty($dhtotal)||empty($dhtotal)||empty($rate)||empty($exratio)){
+        $chkSnsNo=$_POST["cksSnsNo"];
+        $last_return_time=$_POST["last_return_time"];
+
+        if(empty($phone)||empty($channel)||empty($kcode)||empty($dhtotal)||empty($dhtotal)||empty($rate)||empty($exratio)||empty($chkSnsNo)||empty($last_return_time)){
             exit(json_encode(array("status"=>false,"msg"=>"缺少必要字段")));
         }
-        $result=CommonController::ChangeLog($kcode,$rate,$dhtotal,$phone,$status,$channel,$exratio);
+        if($chkSnsNo!=md5($kcode)){
+            exit(json_encode(array("status"=>false,"msg"=>"流水号错误")));
+        }
+
+        $result=CommonController::ChangeLog($kcode,$rate,$dhtotal,$phone,$status,$channel,$exratio,$chkSnsNo,$last_return_time);
         if($result){
             exit(json_encode(array("status"=>true,"msg"=>"插入成功")));
         }else{
@@ -167,6 +174,7 @@ class ProductController extends Controller
     }
 
 
+    //查看K码状态
     public function getstatus(){
         $clearcd=$_POST["clearcd"];
         $secretcd=$_POST["secretcd"];
@@ -183,8 +191,10 @@ class ProductController extends Controller
         exit(json_encode(array("status"=>true,"kstatus"=>$data["kstatus"])));
     }
 
-     public function sendMessages($channel="TUI",$order_no="80200001"){
 
+    //发送短信接口
+     public function sendMessages($channel="TUI",$order_no="80200001"){
+        set_time_limit(0);
          $auth=$channel=="TUI"?"feixun*123.SH_9913651":"";
 
          $channel_name=$channel=="TUI"?"推啥":"云盘";
@@ -198,16 +208,215 @@ class ProductController extends Controller
 
              $phone=$v['rephone'];
              //echo "http://114.141.173.41:48080/v1/verificationCode?authorizationcode=$auth&isCustom=true&msg=$sign&phonenumber=$phone&verificationtype=0";
-             $url="http://114.141.173.41:48080/v1/verificationCode?authorizationcode=$auth&isCustom=true&msg=$new_sign&phonenumber=$phone&verificationtype=0";
-              echo $url;
-             echo "<hr/>";
+             $senddata["authorizationcode"]=$auth;
+             $senddata["isCustom"]=true;
+             $senddata["msg"]=$new_sign;
+             $senddata["phonenumber"]=$phone;
+             $senddata["verificationtype"]=0;
+             $url="http://114.141.173.53:80/v1/verificationCode?".http_build_query($senddata);
+
              $result=Curl::curl_get($url);
+             sleep(60);
              var_dump($result);
          }
 
 
      }
 
+    //改变K码状态接口
+    public function changekcode(){
+        $clearcd_str=$_POST["clearcd"];
+        $secretcd_str=$_POST["secretcd"];
+        $method=$_POST["method"];
+        if(empty($clearcd_str)&&empty($secretcd_str)){
+            exit(json_encode(array("status"=>false,"message"=>"缺少必要参数")));
+        }
+        //如果不在1-3之内
+        if(!in_array($method,array(1,2,3))){
+            exit(json_encode(array("status"=>false,"message"=>"method参数不对")));
+        }
+
+        //开始对接接口
+        if($clearcd_str){
+            $cards=json_decode($clearcd_str,true);
+            $where["clearcd"]=array("in",$cards);
+            $data=M("relation")->field("clearcd,secretcd,channel1,status,last_return_time")->where($where)->select();
+        }
+        if($secretcd_str){
+            $cards=json_decode($secretcd_str,true);
+            $where["secretcd"]=array("in",$cards);
+            $data=M("relation")->field("clearcd,secretcd,channel1,status,last_return_time")->where($where)->select();
+        }
+
+        foreach($data as $kk=>$vv){
+            if($vv["last_return_time"]<date("Y-m-d H:i:s",time())){
+                exit(json_encode(array("status"=>false,"message"=>"已超过最晚退货时间"),JSON_UNESCAPED_UNICODE));
+
+            }
+        }
+
+        //获取到data，对data进行遍历
+       if(count($data)==1){
+           if($data[0]["status"]<2){
+               exit(json_encode(array("status"=>true,"message"=>"未激活K码，直接退款")));
+           }else{
+               $clearcd=$data[0]["clearcd"];
+               $secretcd=$data[0]["secretcd"];
+               M()->startTrans();
+               $res=self::chooseMethod($data[0]["channel1"],$clearcd,$secretcd,$method);
+               if($res===false){
+                   M()->rollback();
+                   exit(json_encode(array("status"=>false,"message"=>"调用接口失败")));
+               } else{
+                   if($method==1){
+                       $save["status"]=3;
+                   }elseif ($method==2){
+                       $save["status"]=2;
+                   }else{
+                       $save["status"]=4;
+                   }
+                   $result_relat=M("relation")->where(["clearcd"=>$clearcd])->save($save);
+                   if($result_relat===false){
+                       M()->rollback();
+                       exit(json_encode(array("status"=>false,"message"=>"修改本地接口失败")));
+                   }else{
+                       M()->commit();
+                       exit(json_encode(array("status"=>true,"message"=>"操作成功")));
+                   }
+               }
+           }
+       }else{
+           $status_pool=array();
+            foreach($data as $k=>$item){
+                if($item["status"]<2){
+                    array_push($status_pool,1);
+                }else{
+                    $clearcd=$item["clearcd"];
+                    $secretcd=$item["secretcd"];
+                    $res=self::chooseMethod($item["channel1"],$clearcd,$secretcd,$method);
+                    array_push($status_pool,$res);
+                }
+            }
+         if(in_array(false,$status_pool)){
+             exit(json_encode(array("status"=>false,"message"=>"调用接口失败")));
+         }else{
+             M()->startTrans();
+             if($method==1){
+                 $save["status"]=3;
+             }elseif ($method==2){
+                 $save["status"]=2;
+             }else{
+                 $save["status"]=4;
+             }
+             $result_status=M("relation")->where($where)->save($save);
+             if($result_status===false){
+                 M()->rollback();
+                 exit(json_encode(array("status"=>false,"message"=>"修改数据失败")));
+             }else{
+                 M()->commit();
+                 exit(json_encode(array("status"=>true,"message"=>"修改数据成功")));
+             }
+         }
+
+       }
+
+    }
+
+    public   function chooseMethod($channel="DDW",$clearcd,$secretcd,$method){
+        switch ($channel)
+        {
+            case "DDW":
+                 return self::changeDDW($clearcd,$secretcd,$method);
+                break;
+            case "TS":
+                return self::changeTS($clearcd,$secretcd,$method);
+                break;
+            case "MALL":
+                return self::changeTS($clearcd,$secretcd,$method);
+                break;
+            case "JH":
+                return self::changeTS($clearcd,$secretcd,$method);
+                break;
+            case "HX":
+                return self::changeTS($clearcd,$secretcd,$method);
+                break;
+            default:
+                exit(json_encode(array("status"=>false,"message"=>"渠道参数不对")));
+        }
+
+    }
+
+
+    //改变ddw
+    protected  function changeDDW($clearcd,$secretcd,$method){
+
+            return "ddw";
+
+    }
+
+    //改变推啥
+    protected  function changeTS($clearcd,$secretcd,$method){
+        return "ts";
+
+
+    }
+
+    //改变商城
+    protected  function changeMall($clearcd,$secretcd,$method){
+        if($method==1){
+            $url="";
+            $new_method="froze";
+        }elseif ($method==2){
+            $url="";
+            $new_method="unfroze";
+        }else{
+            $url="";
+            $new_method="cancel";
+        }
+        $phone=M("relation")->where(["clearcd"=>$clearcd])->getField("rephone");
+        $uids=BaseController::getUidByPhone($phone);
+        if($uids["err"]>0){
+            return false;
+        }
+        $uid=$uids["uid"];
+        $post_arr["kcode"]=$secretcd;
+        $post_arr["uid"]=$uid;
+        $post_arr["mobile"]=$phone;
+        $post["vmc_param_json"] = $param = json_encode($post_arr);
+        $timestamp = time();
+        $method = $new_method;
+        $sign=md5(md5($timestamp).md5($method).md5($param).C('mall_interface'));
+        $header = array("Content-type: application/json;charset=UTF-8", "timestamp:$timestamp", "method:$new_method", "sign:$sign");
+        $result_str= Curl::curl_header_post($url, $param, $header);
+        $result_arr=json_decode($result_str,true);
+        return $result_arr["status"];
+
+    }
+
+    //改变骏和
+    protected  function chanageJH($clearcd,$secretcd,$method){
+          return "jh";
+    }
+    //改变华夏万家
+    protected  function changeHX($clearcd,$secretcd,$method){
+        if($method==1){
+            $new_method="freeze";
+        }elseif ($method==2){
+            $new_method="unfreeze";
+        }else{
+            $new_method="invalid";
+        }
+        $url="xxxxx";
+        $key="1111111";
+        $postparmas=array("kcode"=>$secretcd,"status"=>$new_method,"statusname"=>"status");
+        $result_str=ExGiftController::changeGiftStatus($postparmas,$url,$key);
+        $result_arr=json_decode($result_str,true);
+        if($result_arr["message"]=="success"){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 }
 
