@@ -84,6 +84,20 @@ class DdwController extends Controller
     }
 
 
+    //获取pnames
+    public function getPnames(){
+        $data=M("relation")->field("pname")->group("pname")->select();
+        $pnames=array();
+        foreach($data as $k=>$v){
+            if(empty($v["pname"])){
+                continue;
+            }
+            array_push($pnames,$v["pname"]);
+        }
+        exit(json_encode(array("status"=>true,"datalist"=>$pnames)));
+    }
+
+
 }
 
 

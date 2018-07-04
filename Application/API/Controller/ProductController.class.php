@@ -194,7 +194,7 @@ class ProductController extends Controller
 
     //发送短信接口
      public function sendMessages($channel="TUI",$order_no="80200001"){
-
+        set_time_limit(0);
          $auth=$channel=="TUI"?"feixun*123.SH_9913651":"";
 
          $channel_name=$channel=="TUI"?"推啥":"云盘";
@@ -208,10 +208,15 @@ class ProductController extends Controller
 
              $phone=$v['rephone'];
              //echo "http://114.141.173.41:48080/v1/verificationCode?authorizationcode=$auth&isCustom=true&msg=$sign&phonenumber=$phone&verificationtype=0";
-             $url="http://114.141.173.41:48080/v1/verificationCode?authorizationcode=$auth&isCustom=true&msg=$new_sign&phonenumber=$phone&verificationtype=0";
-              echo $url;
-             echo "<hr/>";
+             $senddata["authorizationcode"]=$auth;
+             $senddata["isCustom"]=true;
+             $senddata["msg"]=$new_sign;
+             $senddata["phonenumber"]=$phone;
+             $senddata["verificationtype"]=0;
+             $url="http://114.141.173.53:80/v1/verificationCode?".http_build_query($senddata);
+
              $result=Curl::curl_get($url);
+             sleep(60);
              var_dump($result);
          }
 
@@ -306,7 +311,7 @@ class ProductController extends Controller
          }
 
        }
-        
+
     }
 
     public   function chooseMethod($channel="DDW",$clearcd,$secretcd,$method){
@@ -350,7 +355,29 @@ class ProductController extends Controller
 
     //改变商城
     protected  function changeMall($clearcd,$secretcd,$method){
-        return "mall";
+        if($method==1){
+            $url="";
+            $new_method="froze";
+        }elseif ($method==2){
+            $url="";
+            $new_method="unfroze";
+        }else{
+            $url="";
+            $new_method="cancel";
+        }
+        $phone=M("relation")->where(["clearcd"=>$clearcd])->getField("rephone");
+        $uid="1111";
+        $post_arr["kcode"]=$secretcd;
+        $post_arr["uid"]=$uid;
+        $post_arr["mobile"]=$phone;
+        $post["vmc_param_json"] = $param = json_encode($post_arr);
+        $timestamp = time();
+        $method = $new_method;
+        $sign=md5(md5($timestamp).md5($method).md5($param).C('mall_interface'));
+        $header = array("Content-type: application/json;charset=UTF-8", "timestamp:$timestamp", "method:$new_method", "sign:$sign");
+        $result_str= Curl::curl_header_post($url, $param, $header);
+        $result_arr=json_decode($result_str,true);
+        return $result_arr["status"];
 
     }
 
