@@ -32,16 +32,19 @@ class SystemKeysModel extends  BaseModel{
 
     //通过key2 获取value1
 
-    public static function getSystemKeysKey1($field, $key2){
+    public static function getSystemKeyValue($field, $key2, $fieldKey){
+        //echo $key2;die;
 
         return BaseModel::getDbData([
 
             'table' => SystemKeysModel::$table[0],
             'fields' => ['key2', 'value1'],
-            'where' => ['key1' => $field,  'key2' => $key2]
+            'where' => ['key1' => $field,  $fieldKey => $key2]
 
         ], false);
 
     }
+
+    //通过value1 获取key2
 
 }

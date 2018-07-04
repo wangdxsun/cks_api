@@ -30,7 +30,7 @@ class CksManageController extends BaseController
         //$this->assign('policy',SystemKeysModel:: getSystemKeys('policy','key2 asc'));
 
         //获取本次对应策略
-        $this->assign('systemKeysValue',SystemKeysModel:: getSystemKeysKey1('policy',$_GET['tag']));
+        $this->assign('systemKeysValue',SystemKeysModel:: getSystemKeyValue('policy',$_GET['tag'], 'key2'));
 
         //对应渠道
         if($_GET['tag'] == 1) $this->assign('channel',SystemKeysModel:: getSystemKeys('channel','key2 asc'));
@@ -38,11 +38,11 @@ class CksManageController extends BaseController
         //操作符
         if($_GET['tag'] == 2 || $_GET['tag'] == 3) $this->assign('operator',SystemKeysModel:: getSystemKeys('operator','value2 desc'));
 
-        //获取客户渠道
-        if($_GET['tag'] == 4)$this->assign('otcr',BaseModel::getListData(['table'=>CksManageModel::$table[$_GET['tag']]]));
-
-        //获取料号
-        if($_GET['tag'] == 5)$this->assign('pn',BaseModel::getListData(['table'=>CksManageModel::$table[$_GET['tag']]]));
+        //获取客户渠道 or 获取料号
+        if($_GET['tag'] == 4 || $_GET['tag'] == 5)$this->assign('render', [
+            'data' => BaseModel::getListData(['table'=>CksManageModel::$table[$_GET['tag']]]),
+            'key' => $key = $_GET['tag'] == 4 ? 'channel_name' : 'pnumber',
+        ]);
 
         $this->display();
     }
@@ -58,7 +58,7 @@ class CksManageController extends BaseController
 
         $this->ajaxReturn([
             'data'=>$policyData,
-            'operator' => SystemKeysModel:: getSystemKeysKey1('operator', $policyData['operator'])
+            'operator' => SystemKeysModel:: getSystemKeyValue('operator', $policyData['operator'], 'key2')
         ]);
     }
 
@@ -117,6 +117,7 @@ class CksManageController extends BaseController
 
         $data['table'] = CksManageModel::$table[0];
         $data['data']['describe'] = trim($pdata['describe']);
+        if($pdata['sign'] == 1 || $pdata['sign'] == 7)$data['data']['tag'] = $this->mapping($pdata['describe']);
         $data['data']['exratio'] = trim($pdata['ratio']);
         $data['data']['cash'] = trim($pdata['sign']);
         $data['data']['operator'] = trim($pdata['operator']) ? trim($pdata['operator']) : '=';
@@ -124,9 +125,15 @@ class CksManageController extends BaseController
 
         //添加、修改去重规则
         $data['distinct'] = $this->distinct($pdata);
-        //p($data);die;
 
         return $data;
+    }
+
+    //前端渠道接口标识
+    public function mapping($describe){
+
+        return SystemKeysModel:: getSystemKeyValue('channel',$describe, 'value1')['key2'];
+
     }
 
     //去重规则
@@ -158,6 +165,31 @@ class CksManageController extends BaseController
             ];
         }
 
+
+    }
+
+    //模糊搜索
+    public function dimSearch(){
+
+        echo
+        $render = [];
+        $data = BaseModel::getDbData([
+
+            'table' => CksManageModel::$table[$_GET['tag']],
+            'fields' => [CksManageModel::$field[$_GET['tag']]],
+            'where' => [ CksManageModel::$field[$_GET['tag']] => ['like', "%".$_GET['describe']."%"]  ],
+
+        ]);
+        //echo M(CksManageModel::$table[$_GET['tag']])->getLastSql();
+        foreach ($data as $val){
+           $render[] = [
+               'label' => $val[CksManageModel::$field[$_GET['tag']]],
+               'value' => 'channel'
+           ];
+        }
+
+        //p($render);
+        echo json_encode($render);
 
     }
 

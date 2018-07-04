@@ -14,7 +14,7 @@ class EncryptSignVerify{
      * e.g. $parmArr = ['phone' => 13333333333 ];
      * @return []
      */
-    public static function sign($parmArr) {
+    public static function sign($parmArr, $key) {
 
         ksort($parmArr);
 
@@ -27,7 +27,7 @@ class EncryptSignVerify{
                     .http_build_query([
                         'parterCode' => C('parter_code'),
                         'signType' => C('sign_type'),
-                        'key'=>C('key')
+                        'key'=>C($key)
                     ])),
                 'data' => $parmArr,
         ];

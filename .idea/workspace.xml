@@ -4,10 +4,11 @@
     <list default="true" id="3d79f8ba-c1a9-424a-a2b3-7f5398ab2efb" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Common/EncryptSignVerify.class.php" afterPath="$PROJECT_DIR$/Application/API/Common/EncryptSignVerify.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Conf/config.php" afterPath="$PROJECT_DIR$/Application/API/Conf/config.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Controller/ExGiftController.class.php" afterPath="$PROJECT_DIR$/Application/API/Controller/ExGiftController.class.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Admin/Controller/CksManageController.class.php" afterPath="$PROJECT_DIR$/Application/Admin/Controller/CksManageController.class.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Admin/Model/BaseModel.class.php" afterPath="$PROJECT_DIR$/Application/Admin/Model/BaseModel.class.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Admin/Model/CksManageModel.class.php" afterPath="$PROJECT_DIR$/Application/Admin/Model/CksManageModel.class.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Admin/Model/SystemKeysModel.class.php" afterPath="$PROJECT_DIR$/Application/Admin/Model/SystemKeysModel.class.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Admin/View/CksManage/index.html" afterPath="$PROJECT_DIR$/Application/Admin/View/CksManage/index.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,8 +24,8 @@
       <file leaf-file-name="ExGiftController.class.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Application/API/Controller/ExGiftController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1672">
-              <caret line="76" column="45" lean-forward="false" selection-start-line="76" selection-start-column="45" selection-end-line="76" selection-end-column="45" />
+            <state relative-caret-position="380">
+              <caret line="88" column="45" lean-forward="false" selection-start-line="88" selection-start-column="45" selection-end-line="88" selection-end-column="45" />
               <folding>
                 <element signature="e#34#55#0#PHP" expanded="true" />
               </folding>
@@ -35,18 +36,22 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Application/Admin/View/CksManage/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4179">
-              <caret line="218" column="45" lean-forward="false" selection-start-line="218" selection-start-column="39" selection-end-line="218" selection-end-column="45" />
-              <folding />
+            <state relative-caret-position="418">
+              <caret line="169" column="90" lean-forward="false" selection-start-line="169" selection-start-column="90" selection-end-line="169" selection-end-column="90" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#3;n#form#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Application/Admin/View/Account/index.html">
+      <file leaf-file-name="global.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Public/js/global.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="528">
-              <caret line="129" column="55" lean-forward="false" selection-start-line="129" selection-start-column="55" selection-end-line="129" selection-end-column="55" />
+            <state relative-caret-position="396">
+              <caret line="18" column="48" lean-forward="false" selection-start-line="18" selection-start-column="48" selection-end-line="18" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -55,28 +60,24 @@
       <file leaf-file-name="PageController.class.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Application/API/Controller/PageController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4664">
-              <caret line="216" column="56" lean-forward="false" selection-start-line="216" selection-start-column="56" selection-end-line="216" selection-end-column="56" />
-              <folding />
+            <state relative-caret-position="534">
+              <caret line="181" column="23" lean-forward="false" selection-start-line="181" selection-start-column="23" selection-end-line="181" selection-end-column="23" />
+              <folding>
+                <marker date="1530626307469" expanded="true" signature="395:683" ph="..." />
+                <marker date="1530626307469" expanded="true" signature="665:683" ph="..." />
+                <marker date="1530626307469" expanded="true" signature="7760:7783" ph="..." />
+                <marker date="1530626307469" expanded="true" signature="7760:7862" ph="..." />
+                <marker date="1530626307469" expanded="true" signature="7760:7868" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Curl.class.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Application/API/Common/Curl.class.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="600">
-              <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EncryptSignVerify.class.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="EncryptSignVerify.class.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Application/API/Common/EncryptSignVerify.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="682">
-              <caret line="35" column="12" lean-forward="false" selection-start-line="35" selection-start-column="12" selection-end-line="35" selection-end-column="12" />
+            <state relative-caret-position="468">
+              <caret line="31" column="35" lean-forward="true" selection-start-line="31" selection-start-column="35" selection-end-line="31" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -85,18 +86,18 @@
       <file leaf-file-name="config.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Application/API/Conf/config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="990">
-              <caret line="45" column="48" lean-forward="false" selection-start-line="45" selection-start-column="48" selection-end-line="45" selection-end-column="48" />
+            <state relative-caret-position="644">
+              <caret line="76" column="43" lean-forward="false" selection-start-line="76" selection-start-column="43" selection-end-line="76" selection-end-column="43" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SystemKeysModel.class.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Application/Admin/Model/SystemKeysModel.class.php">
+      <file leaf-file-name="BaseModel.class.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Application/Admin/Model/BaseModel.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="418">
-              <caret line="19" column="27" lean-forward="false" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
+            <state relative-caret-position="-1301">
+              <caret line="40" column="42" lean-forward="false" selection-start-line="40" selection-start-column="42" selection-end-line="40" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -105,8 +106,8 @@
       <file leaf-file-name="CksManageController.class.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/CksManageController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="506">
-              <caret line="35" column="29" lean-forward="false" selection-start-line="35" selection-start-column="29" selection-end-line="35" selection-end-column="29" />
+            <state relative-caret-position="402">
+              <caret line="179" column="93" lean-forward="false" selection-start-line="179" selection-start-column="93" selection-end-line="179" selection-end-column="93" />
               <folding>
                 <element signature="e#34#65#0#PHP" expanded="true" />
               </folding>
@@ -117,8 +118,18 @@
       <file leaf-file-name="CksManageModel.class.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Application/Admin/Model/CksManageModel.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="7" column="83" lean-forward="false" selection-start-line="7" selection-start-column="83" selection-end-line="7" selection-end-column="83" />
+            <state relative-caret-position="176">
+              <caret line="8" column="61" lean-forward="false" selection-start-line="8" selection-start-column="61" selection-end-line="8" selection-end-column="61" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SystemKeysModel.class.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Application/Admin/Model/SystemKeysModel.class.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="66">
+              <caret line="3" column="6" lean-forward="false" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -129,6 +140,8 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>policy</find>
+      <find>ui-autocomplete</find>
+      <find>客户渠道策略</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -148,8 +161,6 @@
         <option value="$PROJECT_DIR$/Application/Admin/Model/KcodeManageModel.class.php" />
         <option value="$PROJECT_DIR$/Application/Common/Conf/config.php" />
         <option value="$PROJECT_DIR$/Application/Admin/View/CksManage/addPolicy.html" />
-        <option value="$PROJECT_DIR$/Application/Admin/Model/SystemKeysModel.class.php" />
-        <option value="$PROJECT_DIR$/Application/Admin/Model/BaseModel.class.php" />
         <option value="$PROJECT_DIR$/Application/Admin/Controller/BaseController.class.php" />
         <option value="$PROJECT_DIR$/Application/Api/Controller/PageController.class.php" />
         <option value="$PROJECT_DIR$/Application/Api/Common/EncryptSign.class.php" />
@@ -158,12 +169,14 @@
         <option value="$PROJECT_DIR$/Application/Api/Controller/ExGiftController.class.php" />
         <option value="$PROJECT_DIR$/Application/Admin/View/SystemKeys/index.html" />
         <option value="$PROJECT_DIR$/Application/API/Conf/config.php" />
-        <option value="$PROJECT_DIR$/Application/API/Common/EncryptSignVerify.class.php" />
-        <option value="$PROJECT_DIR$/Application/API/Controller/ExGiftController.class.php" />
-        <option value="$PROJECT_DIR$/Application/Admin/View/CksManage/index.html" />
-        <option value="$PROJECT_DIR$/Application/Admin/Model/CksManageModel.class.php" />
-        <option value="$PROJECT_DIR$/Application/Admin/Controller/CksManageController.class.php" />
         <option value="$PROJECT_DIR$/Application/API/Common/Curl.class.php" />
+        <option value="$PROJECT_DIR$/Application/Admin/Model/BaseModel.class.php" />
+        <option value="$PROJECT_DIR$/Application/Admin/Model/SystemKeysModel.class.php" />
+        <option value="$PROJECT_DIR$/Application/Admin/Model/CksManageModel.class.php" />
+        <option value="$PROJECT_DIR$/Application/Admin/View/CksManage/index.html" />
+        <option value="$PROJECT_DIR$/Application/Admin/Controller/CksManageController.class.php" />
+        <option value="$PROJECT_DIR$/Application/API/Controller/ExGiftController.class.php" />
+        <option value="$PROJECT_DIR$/Application/API/Common/EncryptSignVerify.class.php" />
       </list>
     </option>
   </component>
@@ -207,6 +220,38 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="phishop" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="phishop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="phishop" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Public" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="phishop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="phishop" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Public" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
               <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
           </PATH>
@@ -642,18 +687,18 @@
       <updated>1530083035122</updated>
       <workItem from="1530083036283" duration="3748000" />
       <workItem from="1530174339395" duration="104942000" />
-      <workItem from="1530607906775" duration="2576000" />
+      <workItem from="1530607906775" duration="24560000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="111266000" />
+    <option name="totallyTimeSpent" value="133250000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20677084" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.175" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -797,29 +842,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Public/js/global.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="29" column="34" lean-forward="false" selection-start-line="29" selection-start-column="34" selection-end-line="29" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Application/API/Controller/LoginController.class.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-910">
           <caret line="87" column="26" lean-forward="false" selection-start-line="87" selection-start-column="26" selection-end-line="87" selection-end-column="26" />
           <folding>
-            <marker date="1530517038213" expanded="true" signature="192:6093" ph="{...}" />
-            <marker date="1530517038213" expanded="true" signature="1647:2860" ph="..." />
-            <marker date="1530517038213" expanded="true" signature="2870:2938" ph="@功能:云账号验注册 ..." />
-            <marker date="1530517038213" expanded="true" signature="2971:4970" ph="..." />
-            <marker date="1530517038213" expanded="true" signature="4296:4361" ph="..." />
-            <marker date="1530517038213" expanded="true" signature="4367:4449" ph="..." />
-            <marker date="1530517038213" expanded="true" signature="4980:5048" ph="@功能:云账号验注册 ..." />
-            <marker date="1530517038213" expanded="true" signature="5088:6090" ph="..." />
-            <marker date="1530517038213" expanded="true" signature="5097:5395" ph="//..." />
-            <marker date="1530517038213" expanded="true" signature="5549:5614" ph="..." />
-            <marker date="1530517038213" expanded="true" signature="5620:5702" ph="..." />
+            <marker date="1530626307461" expanded="true" signature="8304:8314" ph="{...}" />
+            <marker date="1530626307461" expanded="true" signature="1647:2860" ph="..." />
+            <marker date="1530626307461" expanded="true" signature="2870:2938" ph="@功能:云账号验注册 ..." />
+            <marker date="1530626307461" expanded="true" signature="2971:4970" ph="..." />
+            <marker date="1530626307461" expanded="true" signature="4296:4361" ph="..." />
+            <marker date="1530626307461" expanded="true" signature="4367:4449" ph="..." />
+            <marker date="1530626307461" expanded="true" signature="4980:5048" ph="@功能:云账号验注册 ..." />
+            <marker date="1530626307461" expanded="true" signature="8304:8311" ph="..." />
+            <marker date="1530626307461" expanded="true" signature="5097:5395" ph="//..." />
+            <marker date="1530626307461" expanded="true" signature="6890:6955" ph="..." />
+            <marker date="1530626307461" expanded="true" signature="6961:7043" ph="..." />
           </folding>
         </state>
       </provider>
@@ -885,14 +923,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/RoleController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/MenuController.class.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="814">
@@ -901,19 +931,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Application/API/View/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/SystemKeysController.class.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="785">
           <caret line="40" column="5" lean-forward="false" selection-start-line="40" selection-start-column="5" selection-end-line="40" selection-end-column="5" />
           <folding>
-            <element signature="e#34#66#0#PHP" expanded="true" />
+            <element signature="e#34#66#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -944,30 +967,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/AccountController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1342">
-          <caret line="62" column="42" lean-forward="false" selection-start-line="62" selection-start-column="42" selection-end-line="62" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/BaseController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-214">
-          <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Application/Admin/Model/BaseModel.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4328">
-          <caret line="41" column="28" lean-forward="false" selection-start-line="41" selection-start-column="28" selection-end-line="41" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Application/Admin/Model/MenuModel.class.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -984,38 +983,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Application/Admin/Model/SystemKeysModel.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="19" column="27" lean-forward="false" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Application/API/Conf/config.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="990">
-          <caret line="45" column="48" lean-forward="false" selection-start-line="45" selection-start-column="48" selection-end-line="45" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Application/API/Controller/PageController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4664">
-          <caret line="216" column="56" lean-forward="false" selection-start-line="216" selection-start-column="56" selection-end-line="216" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Application/API/Common/EncryptSignVerify.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="682">
-          <caret line="35" column="12" lean-forward="false" selection-start-line="35" selection-start-column="12" selection-end-line="35" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Application/Admin/View/Account/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="528">
@@ -1024,46 +991,136 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Application/API/Controller/ExGiftController.class.php">
+    <entry file="file://$PROJECT_DIR$/Application/API/Common/Curl.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1672">
-          <caret line="76" column="45" lean-forward="false" selection-start-line="76" selection-start-column="45" selection-end-line="76" selection-end-column="45" />
+        <state relative-caret-position="600">
+          <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Application/API/View/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/BaseController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="292">
+          <caret line="43" column="37" lean-forward="true" selection-start-line="43" selection-start-column="37" selection-end-line="43" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/RoleController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-726">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/AccountController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="367">
+          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Application/API/Controller/PageController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="534">
+          <caret line="181" column="23" lean-forward="false" selection-start-line="181" selection-start-column="23" selection-end-line="181" selection-end-column="23" />
           <folding>
-            <element signature="e#34#55#0#PHP" expanded="true" />
+            <marker date="1530626307469" expanded="true" signature="395:683" ph="..." />
+            <marker date="1530626307469" expanded="true" signature="665:683" ph="..." />
+            <marker date="1530626307469" expanded="true" signature="7760:7783" ph="..." />
+            <marker date="1530626307469" expanded="true" signature="7760:7862" ph="..." />
+            <marker date="1530626307469" expanded="true" signature="7760:7868" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Application/Admin/Model/CksManageModel.class.php">
+    <entry file="file://$PROJECT_DIR$/Application/Admin/Model/BaseModel.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" column="83" lean-forward="false" selection-start-line="7" selection-start-column="83" selection-end-line="7" selection-end-column="83" />
+        <state relative-caret-position="-1301">
+          <caret line="40" column="42" lean-forward="false" selection-start-line="40" selection-start-column="42" selection-end-line="40" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Public/js/global.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="18" column="48" lean-forward="false" selection-start-line="18" selection-start-column="48" selection-end-line="18" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Application/Admin/Model/SystemKeysModel.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="3" column="6" lean-forward="false" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Application/API/Conf/config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="644">
+          <caret line="76" column="43" lean-forward="false" selection-start-line="76" selection-start-column="43" selection-end-line="76" selection-end-column="43" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Application/Admin/View/CksManage/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4179">
-          <caret line="218" column="45" lean-forward="false" selection-start-line="218" selection-start-column="39" selection-end-line="218" selection-end-column="45" />
+        <state relative-caret-position="418">
+          <caret line="169" column="90" lean-forward="false" selection-start-line="169" selection-start-column="90" selection-end-line="169" selection-end-column="90" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#3;n#form#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Application/Admin/Model/CksManageModel.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="8" column="61" lean-forward="false" selection-start-line="8" selection-start-column="61" selection-end-line="8" selection-end-column="61" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/CksManageController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="506">
-          <caret line="35" column="29" lean-forward="false" selection-start-line="35" selection-start-column="29" selection-end-line="35" selection-end-column="29" />
+        <state relative-caret-position="402">
+          <caret line="179" column="93" lean-forward="false" selection-start-line="179" selection-start-column="93" selection-end-line="179" selection-end-column="93" />
           <folding>
             <element signature="e#34#65#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Application/API/Common/Curl.class.php">
+    <entry file="file://$PROJECT_DIR$/Application/API/Controller/ExGiftController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
+        <state relative-caret-position="380">
+          <caret line="88" column="45" lean-forward="false" selection-start-line="88" selection-start-column="45" selection-end-line="88" selection-end-column="45" />
+          <folding>
+            <element signature="e#34#55#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Application/API/Common/EncryptSignVerify.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="31" column="35" lean-forward="true" selection-start-line="31" selection-start-column="35" selection-end-line="31" selection-end-column="35" />
           <folding />
         </state>
       </provider>
