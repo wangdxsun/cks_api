@@ -229,10 +229,7 @@ class ProductController extends Controller
 
          foreach($data as $k=>$v){
              $new_sign=$sign.$v["secretcd"]."请妥善保管,30天内有效";
-
-
              $phone=$v['rephone'];
-             //echo "http://114.141.173.41:48080/v1/verificationCode?authorizationcode=$auth&isCustom=true&msg=$sign&phonenumber=$phone&verificationtype=0";
              $senddata["authorizationcode"]=$auth;
              $senddata["isCustom"]=true;
              $senddata["msg"]=$new_sign;
@@ -387,7 +384,7 @@ class ProductController extends Controller
     }
 
     //改变商城
-    protected  function changeMall($clearcd,$secretcd,$method){
+    public  function changeMall($clearcd="fsdfdf",$secretcd="gyfsdd",$method=1){
         if($method==1){
             $url="http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/froze";
             $new_method="froze";
@@ -400,10 +397,11 @@ class ProductController extends Controller
         }
         $phone=M("relation")->where(["clearcd"=>$clearcd])->getField("rephone");
         $uids=BaseController::getUidByPhone($phone);
-        if($uids["err"]>0){
+
+       /* if($uids["err"]>0){
             return false;
-        }
-        $uid=$uids["uid"];
+        }*/
+        $uid=$uids["uid"]=2048;
         $post_arr["kcode"]=$secretcd;
         $post_arr["uid"]=$uid;
         $post_arr["mobile"]=$phone;
@@ -411,9 +409,18 @@ class ProductController extends Controller
         $timestamp = time();
         $method = $new_method;
         $sign=md5(md5($timestamp).md5($method).md5($param).C('mall_interface'));
+        echo $sign;
+        echo "<hr/>";
         $header = array("Content-type: application/json;charset=UTF-8", "timestamp:$timestamp", "method:$new_method", "sign:$sign");
+        print_r($header);
+        echo "<hr/>";
+        print_r($url);
+        echo "<hr/>";
+        print_r($param);
+        echo "<hr/>";
         $result_str= Curl::curl_header_post($url, $param, $header);
         $result_arr=json_decode($result_str,true);
+        var_dump($result_arr);die;
         return $result_arr["status"];
 
     }

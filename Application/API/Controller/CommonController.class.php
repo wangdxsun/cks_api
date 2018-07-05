@@ -28,7 +28,7 @@ class CommonController extends Controller
                 $save["status"]=2;
                 $save["channel1"]=$channel;
                 $save["cks_sns_no"]=$cksSnsNo;
-                $save["last_return_time"]=date("Y-m-d H:i:s",$last_return_time);
+                $save["last_return_time"]=$last_return_time;
                 M()->startTrans();
                 $result1=M("relation")->where(["secretcd"=>$kcode])->save($save);
                 //新增兑换记录
