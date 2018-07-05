@@ -274,7 +274,7 @@ class ProductController extends Controller
 
                if($res===false){
                    M()->rollback();
-                   exit(json_encode(array("status"=>false,"message"=>"调用接口失败")));
+                   exit(json_encode(array("status"=>false,"message"=>"调用接口失败1")));
                } else{
                    if($method==1){
                        $save["status"]=3;
@@ -307,7 +307,7 @@ class ProductController extends Controller
                 }
             }
          if(in_array(false,$status_pool)){
-             exit(json_encode(array("status"=>false,"message"=>"调用接口失败")));
+             exit(json_encode(array("status"=>false,"message"=>"调用接口失败2")));
          }else{
              M()->startTrans();
              if($method==1){
