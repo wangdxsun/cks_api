@@ -217,10 +217,8 @@ class ProductController extends Controller
              $senddata["phonenumber"]=$phone;
              $senddata["verificationtype"]=0;
              $url="http://114.141.173.53:80/v1/verificationCode?".http_build_query($senddata);
-
-             $result=Curl::curl_get($url);
-             sleep(60);
-             var_dump($result);
+             Curl::curl_get($url);
+             sleep(1);
          }
 
 
