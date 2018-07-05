@@ -98,7 +98,7 @@ class IndexController extends BaseController
     {
         $condition = [
             'table'=> $this->table[1],
-            'where' => ['uname' => ['eq', $_POST['uname'] ]]
+            'where' => ['uname' => ['eq', I('post.uname')]]
         ];
 
 

@@ -22,7 +22,6 @@ class CksManageController extends BaseController
         $this->assign('data', CksManageModel::getPolicyListData($_GET['tag']));
         //dump(CksManageModel::getPolicyListData($_GET['tag']));die;
 
-
         //比例
         //$this->assign('ratio', SystemKeysModel:: getSystemKeys('ratio','key2 asc'));
 

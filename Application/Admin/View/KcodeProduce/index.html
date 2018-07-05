@@ -34,7 +34,7 @@
 <div class="container-fluid" style="margin-top: 10px">
     <div class="panel panel-primary">
         <div class="panel-heading" style="background-color: #1ab394;border-color: #1ab394;">
-            <span class="badge" style=" color: #1ab394;" >K码生成</span>
+            <span class="badge" style=" color: #1ab394;" >导出</span>
                 <i id="add-manager" class="layui-icon" style="float:right;font-size: 20px;margin-top:-5px;cursor:pointer">&#xe654;</i>
         </div>
     </div>
@@ -50,12 +50,12 @@
             <th>K码状态</th>
             <th>导入料号</th>
             <th>导入型号</th>
-            <th>渠道名称</th>
+            <!--<th>渠道名称</th>-->
             <th>导入时间</th>
             <th>导入人员</th>
             <th>产品金额</th>
             <th>有效期</th>
-            <th>操作</th>
+            <!-- <th>操作</th>-->
         </tr>
         </thead>
         <tbody>
@@ -68,15 +68,16 @@
             <td><?php echo $val['status'];?></td>
             <td><?php echo $val['im_pnumber'];?></td>
             <td><?php echo $val['im_model'];?></td>
-            <td><?php echo $val['im_channel'];?></td>
+            <!--<td><?php echo $val['im_channel'];?></td>-->
             <td><?php echo $val['im_time'];?></td>
             <td><?php echo $val['im_staff'];?></td>
             <td><?php echo $val['money'];?></td>
             <td><?php echo $val['close_time'];?></td>
+            <!--
             <td>
                 <a class="edit" attr="<?php echo $val['id']?>" href="#"></a>
                 <a class="delete" attr="<?php echo $val['id']?>" href="#" ></a>
-            </td>
+            </td>-->
         </tr>
 
         <?php endforeach;?>
@@ -127,8 +128,38 @@
             <input name="eid" type="hidden" class="layui-input" value="" id="eid">
         </div>
     </form>
+</div>
 
+<div class="container-fluid" id="derive-manage-popup" style="display:none;margin-left:20px;margin-top:20px">
+    <form class="layui-form layui-form-pane" action="">
 
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">料号</label>
+                <div class="layui-input-inline">
+                    <input name="pnumbers"  placeholder="请输入料号" lay-verify="required" class="layui-input pnumbers" type="text" id="pnumbers">
+                    <div id="aaresults1" style="display: none;height: 150px;overflow-y: scroll">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">型号</label>
+                <div class="layui-input-inline">
+                    <input name="pnames" readonly placeholder="" class="layui-input" type="text" id="pnamess">
+                </div>
+            </div>
+        </div>
+
+        <inpt name="derive" type="hidden" value="derive" />
+
+        <div class="layui-form-item" style="text-align:center; width:100%;height:100%;margin-left:-28px; " >
+            <div class="layui-btn" lay-submit="" lay-filter="demo3" >导出</div>
+        </div>
+    </form>
 </div>
 </body>
 
@@ -170,9 +201,7 @@
             if(selectId == 'pnumber'){
                 $.post("{:U('getPnameByPnumber')}", {pnumber:postPnumberValue}, function(data){
                     console.log(data);
-                    if(data){
-                        $('#pname').val(data.pname);
-                    }
+                    $('#pname').val(data.pname);
                 });
             }
         })
@@ -180,8 +209,45 @@
 
         //点击添加
         $("#add-manager").click(function(){
-            globalFn.lyPopup("K码生成", ['450px', '500px'],'add-manage-popup',1);
+            globalFn.lyPopup("K码生成", ['450px', '480px'],'add-manage-popup',1);
         })
+
+        //点击导出
+        $(".badge").click(function(){
+            globalFn.lyPopup("K码导出", ['415px', '250px'],'derive-manage-popup',1);
+        })
+
+        //模糊搜索导出
+        $('.pnumbers').on('input propertychange', function() {
+                $("#aaresults1").html('');
+                $.post("{:U('dimSearch')}", {tag: 5, describe: $(this).val()}, function (data) {
+                    //$('.ui-autocomplete').show();
+                    var htmls = '';
+                    //var resulte = JSON.parse(data);
+                    if (data.data.length >0) {
+                        var field = data.field;
+                        for (var i in data.data)
+                            htmls = htmls + "<p>" + data.data[i][data.field] + "</p>";
+                        $("#aaresults1").html(htmls);
+                        $("#aaresults1").show();
+                    }
+
+                });
+        });
+
+        $("body").on('click','#aaresults1 p',function () {
+            var index = $(this).index("#aaresults1 p");
+            postPnumberValue =  $("#aaresults1 p").eq(index).html();
+            $(".pnumbers").val(postPnumberValue);
+            $("#aaresults1").html('');
+            $("#aaresults1").hide();
+
+            $.post("{:U('getPnameByPnumber')}", {pnumber:postPnumberValue}, function(data){
+                console.log(data);
+                $('#pnamess').val(data.pname);
+            });
+        })
+
 
         layui.use(['form'], function(){
             var form = layui.form(),layer = layui.layer;
@@ -191,6 +257,16 @@
                 $.post("{:U('imProductInitialData')}", {data:JSON.stringify(data.field)},function(res){
                     res.status == 1 ? globalFn.remind(_index, res.info,"{:U('index')}")
                         : globalFn.remind(_index, res.info);
+                });
+                return false;
+            });
+
+            form.on('submit(demo3)', function(data){
+                _index1 = layer.load();
+                $.post("{:U('exportProductInitialData')}", {data:JSON.stringify(data.field)},function(res){
+                    //alert(res.info);
+                    res.status == 1 ? globalFn.remind(_index1, res.info, res.url)
+                        : globalFn.remind(_index1, res.info);
                 });
                 return false;
             });
