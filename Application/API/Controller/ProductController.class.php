@@ -33,13 +33,14 @@ class ProductController extends Controller
             //判断金额料号金额金额是否大于总的k码价值
             foreach ($products as $k => $v) {
                 //$where["channel1"] = $channel;
-                if($v["sn"]){
+                /*if($v["sn"]){
                     $where["sn"]=$v["sn"];
-                }
-                $where["pnumber"] = $v["pnumber"];
-                $where["pname"] = $v["pname"];
-                $where["status"] = 1;
+                }*/
+                $where["im_pnumber"] = $v["pnumber"];
+                $where["im_pname"] = $v["pname"];
+                $where["status"] = 0;
                 $pmoneys = M("relation")->where($where)->field("pmoney")->select();
+                //print_r(M()->getLastSql());die;
                 if(empty($pmoneys)){
                     exit(json_encode(array("status" => false, "message" => "找不到合适的产品")));
                 }
@@ -56,10 +57,10 @@ class ProductController extends Controller
             //传递金额过来
             if ($channel == "TUI") {
                 //获取推啥接口
-                $response = $this->getTresult($phone, $order_no, $products);
+                $response = $this->getTresult($phone, $order_no, $products,$channel);
             } else if ($channel == 'ETH') {
                 //获取金额
-                $response = $this->getEresult($order_no, $products,$phone);
+                $response = $this->getTresult($phone,$order_no, $products,$channel);
             } else {
 
             }
@@ -72,7 +73,7 @@ class ProductController extends Controller
     }
 
     //获取推啥result
-    protected function getTresult($phone, $order_no, $products)
+    protected function getTresult($phone, $order_no, $products,$channel)
     {
         $response = array();
         $status_pool=array();
@@ -81,9 +82,9 @@ class ProductController extends Controller
            M()->startTrans();
            foreach ($products as $k => $v) {
                $where["status"] = 0;
-               $where["pname"] = $v["pname"];
-               $where["pnumber"] = $v["pnumber"];
-               $where["money"] = array("gt", 0);
+               $where["im_pname"] = $v["pname"];
+               $where["im_pnumber"] = $v["pnumber"];
+               //$where["money"] = array("gt", 0);
 
                $data = M("relation")->lock(true)->where($where)->find();
                if(empty($data)){
@@ -93,7 +94,16 @@ class ProductController extends Controller
                $result["clearcd"] = $data["clearcd"];
                $save["orderid"] = $order_no;
                $save["status"]=1;
-               $save["channel1"]="TS";
+               if($channel=="TUI"){
+                   $save["channel1"]="TS";
+               }else if($channel=="ETH"){
+                   $save["channel1"]="ETH";
+                   $save["sn"]=$v["sn"];
+                   $result["secretcd"]=$data["secretcd"];
+               }else{
+                   $save["channel1"]="YP";
+               }
+
                $result["money"] = $save["money"] = $v["money"];
                $save["rephone"]=$phone;
                $result_status=M("relation")->where(["id" => $id])->save($save);
@@ -116,7 +126,7 @@ class ProductController extends Controller
         $new_response["status"]=true;
         $new_response["phone"]=$phone;
         $new_response["order_no"]=$order_no;
-        $new_response["channel"]="TUI";
+        $new_response["channel"]=$channel;
         $new_response["products"]=$response;
         return $new_response;
 
@@ -124,7 +134,7 @@ class ProductController extends Controller
 
 
     //获取ETH result
-    protected function getEresult($order_no, $products,$phone)
+   /* protected function getEresult($order_no, $products,$phone)
     {
         $response = array();
         $sns=array();
@@ -154,7 +164,7 @@ class ProductController extends Controller
         $result["products"]=$new_result;
         return $result;
 
-    }
+    }*/
 
 
     //发送短信
@@ -416,7 +426,7 @@ class ProductController extends Controller
 
         $result_str= Curl::curl_header_post($url, $param, $header);
         $result_arr=json_decode($result_str,true);
-        
+
         return $result_arr["status"];
 
     }
