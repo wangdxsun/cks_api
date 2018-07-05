@@ -128,43 +128,13 @@ class ProductController extends Controller
         $new_response["order_no"]=$order_no;
         $new_response["channel"]=$channel;
         $new_response["products"]=$response;
+        self::sendMessages($channel,$order_no);
         return $new_response;
 
     }
 
 
-    //获取ETH result
-   /* protected function getEresult($order_no, $products,$phone)
-    {
-        $response = array();
-        $sns=array();
-        M()->startTrans();
-        $status_pool=array();
 
-        foreach ($products as $k => $v) {
-            $where["sn"] = $v["sn"];
-            $save["orderid"] = $order_no;
-            $save["money"] = $v["money"];
-            $save["status"]=2;
-            $save["channel1"]="ETH";
-            $status=M("relation")->where($where)->save($save);
-            array_push($status_pool,$status);
-            array_push($sns,$v["sn"]);
-        }
-        if(in_array(false,$status_pool)){
-            M()->rollback();
-            return array("status"=>false,"message"=>"分配K码失败");
-        }
-        M()->commit();
-        $new_where["sn"]=array("in",$sns);
-        $new_result = M("relation")->where($new_where)->field("clearcd,money,secretcd")->find();
-        $result["status"]=true;
-        $result["order_no"]=$order_no;
-        $result["phone"]=$phone;
-        $result["products"]=$new_result;
-        return $result;
-
-    }*/
 
 
     //发送短信
