@@ -53,7 +53,7 @@ class ProductController extends Controller
                 $response = $this->getTresult($phone, $order_no, $products);
             } else if ($channel == 'ETH') {
                 //获取金额
-                $response = $this->getEresult($order_no, $products);
+                $response = $this->getEresult($order_no, $products,$phone);
             } else {
 
             }
@@ -118,7 +118,7 @@ class ProductController extends Controller
 
 
     //获取ETH result
-    protected function getEresult($order_no, $products)
+    protected function getEresult($order_no, $products,$phone)
     {
         $response = array();
         foreach ($products as $k => $v) {
@@ -129,7 +129,12 @@ class ProductController extends Controller
             $new_result = M("relation")->where($where)->field("clearcd,money,secretcd")->find();
             array_push($response, $new_result);
         }
-        return $response;
+        $result["status"]=true;
+        $result["order_no"]=$order_no;
+        $result["phone"]=$phone;
+        $result["products"]=$response;
+        return $result;
+
     }
 
 
@@ -185,6 +190,7 @@ class ProductController extends Controller
             $where["secretcd"]=$secretcd;
         }
        $data=M("relation")->field("status as kstatus,last_return_time,money,channel1")->where($where)->find();
+
         if(!$data){
             exit(json_encode(array("status"=>false,"message"=>"查无数据")));
         }
@@ -364,13 +370,13 @@ class ProductController extends Controller
     //改变商城
     protected  function changeMall($clearcd,$secretcd,$method){
         if($method==1){
-            $url="";
+            $url="http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/froze";
             $new_method="froze";
         }elseif ($method==2){
-            $url="";
+            $url="http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/unfroze";
             $new_method="unfroze";
         }else{
-            $url="";
+            $url="http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/cancel";
             $new_method="cancel";
         }
         $phone=M("relation")->where(["clearcd"=>$clearcd])->getField("rephone");
