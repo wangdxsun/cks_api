@@ -96,7 +96,7 @@ class WmsController extends BaseController
             }
             $res = BaseModel::saveData(
                 ['table'=>'relation',
-                    'where'=>['clearcd'=>array('in',$clearcd[$i]['cardId'])],
+                    'where'=>['clearcd'=>$clearcd[$i]['cardId']],
                     'data'=>array_merge($productInfo,$params['info'])
                 ]);
             if($res)
@@ -144,7 +144,6 @@ class WmsController extends BaseController
         $info['readdress'] = $params['readdress'];
         $info['factoryid'] = $params['factoryId'];
         $info['channel2'] = $params['supply'];
-        $info['update_time'] = date("Y-m-d H:i:s");
 
         foreach($info as $k=>$v){
             if(empty($v)){
@@ -154,133 +153,6 @@ class WmsController extends BaseController
         return ['info'=>$info,'list'=>$params['allotList']];
     }
 
-
-
-    //数据导入(已停止使用)
-    public function import()
-    {
-
-        if(!empty($_FILES['excelFile']['tmp_name']))
-        {
-            $filename = $_FILES['excelFile']['name'];
-            $tmp_name = $_FILES['excelFile']['tmp_name'];
-            $extend=strrchr ($filename,'.');
-            $extendLower = strtolower($extend);
-            /*判别是不是.xls和.xlsx文件，判别是不是excel文件*/
-            if (($extendLower != ".xls") && ($extendLower != ".xlsx"))
-                exit(json_encode(array('result'=>1, 'msg'=>'请上传excel文件'),JSON_UNESCAPED_UNICODE));
-            else{
-
-                //存入excel
-                set_time_limit(0);
-                ini_set("memory_limit","1024M");
-                $file = $this->initExcel($filename,$tmp_name);
-                if(!$file)
-                    exit(json_encode(array('result'=>1, 'msg'=>'文件上传失败'),JSON_UNESCAPED_UNICODE));
-                $res = $this->readExcel($file); //读取excel，将excel数据转换为键值对的数组
-                $count = count($res);
-
-                //每次写入1000个数据就停一会儿
-                $M = M('relation');
-                $M->startTrans();
-                for($i = 0;$i<(int)($count/1000)+1;$i++) {
-                    $data = array_slice($res,$i*1000,min(1000,$count-$i*1000));
-                    $res = BaseModel::addalldata(['table'=>'relation', 'data'=>$data]);
-                    if(!$res){
-                        $M->rollback();
-                        exit(json_encode(array('result'=>1, 'msg'=>'插入失败，请检查表格'.$i),JSON_UNESCAPED_UNICODE));
-                    }
-                    sleep(1);
-                }
-                $M->commit();
-                exit(json_encode(array('result'=>0, 'msg'=>'插入成功，一共插入'.$count.'条数据'),JSON_UNESCAPED_UNICODE));
-            }
-        }
-    }
-
-    protected function initExcel($file,$filetempname){
-
-        $filePath = 'Upload/Excel/';
-        //注意设置时区
-        $time=date("y-m-d-H-i-s");//去当前上传的时间
-        //获取上传文件的扩展名
-        $extend=strrchr ($file,'.');
-        //上传后的文件名
-        $name=$time.$extend;
-        $uploadfile=$filePath.$name;//上传后的文件名地址
-        $result=move_uploaded_file($filetempname,$uploadfile);//假如上传到当前目录下
-
-        if($result) //如果上传文件成功，就执行导入excel操作
-            return $uploadfile;
-        else
-            return -1;
-    }
-
-    protected function readExcel($file){
-        vendor('PHPExcel.PHPExcel');
-        vendor('PHPExcel.PHPExcel.Shared.Date');
-        vendor("PHPExcel.PHPExcel.Reader.Excel5");
-        vendor("PHPExcel.PHPExcel.Reader.Excel2007");
-
-        $extend = strrchr($file,'.');
-        if($extend == '.xls')
-            $PHPReader = new \PHPExcel_Reader_Excel5();
-        else
-            $PHPReader = new \PHPExcel_Reader_Excel2007();
-
-        // 载入文件
-        $mylist = array();
-
-        $objPHPExcel = $PHPReader->load($file);
-        $objWorksheet = $objPHPExcel->getSheet(0);
-        $highestRow = $objWorksheet->getHighestRow();
-        $highestColumn = $objWorksheet->getHighestColumn();
-
-        // for ($row = 1;$row <= $highestRow;$row++) //从第一行开始读取数据
-        for ($row = 2; $row <= $highestRow; $row++) //从第二行开始读取数据，一般第一行作为名称
-        {
-            $strs = array();
-            for ($col = 'A'; $col <= $highestColumn; $col++) {
-                $address = $col.$row;
-                $val = $objWorksheet-> getCell($address)-> getValue();
-                $strs[$col] = $val;
-            }
-            //$mylist[$row]['id'] = $strs[0];
-            $mylist[$row]['clearcd'] = $strs['B'];
-            $mylist[$row]['secretcd'] = $strs['C'];
-            $mylist[$row]['im_pnumber'] = $strs['D'];
-            $mylist[$row]['im_model'] = $strs['E'];
-            $mylist[$row]['pmoney'] = $strs['F'];
-            $mylist[$row]['close_time'] = $strs['G'];
-            $mylist[$row]['hcode'] = "";
-            $mylist[$row]['channel1'] = "";
-            //$mylist[$row]['allot_time'] = "";
-            $mylist[$row]['status'] = 0;
-            $mylist[$row]['im_time'] = date("Y-m-d H:i:s");
-            $mylist[$row]['jobnu'] = "";
-            $mylist[$row]['name'] = "";
-            $mylist[$row]['sn'] = "";
-            $mylist[$row]['orderid'] = "";
-            $mylist[$row]['rename'] = "";
-            $mylist[$row]['rephone'] = "";
-            $mylist[$row]['readdress'] = "";
-            $mylist[$row]['meid'] = "";
-            $mylist[$row]['imei1'] = "";
-            $mylist[$row]['imei2'] = "";
-            $mylist[$row]['mac'] = "";
-            $mylist[$row]['factoryid'] = "";
-            $mylist[$row]['im_staff'] = "";
-            $mylist[$row]['pnumber'] = "";
-            $mylist[$row]['pname'] = "";
-            $mylist[$row]['channel2'] = "";
-            $mylist[$row]['last_return_time'] = "";
-            $mylist[$row]['hcode_flag'] = 0;
-            $mylist[$row]['update_time'] = date("Y-m-d H:i:s");
-            //$mylist[$row]['money'] = "";
-        }
-
-        return $mylist;
-    }
 
 }
 

@@ -51,7 +51,7 @@ class PageController extends LoginController
         //各个理财包数据
         $gift_data = $this->inquireUserExRatio($res['money']);
 
-        exit(BaseController::returnMsg(array('error' => 0,'code_data' => $res,'data' => $channel_list,'gift_data' => $gift_data)));
+        exit(BaseController::returnMsg(array('error' => '0','code_data' => $res,'data' => $channel_list,'gift_data' => $gift_data)));
         
     }
     //$res 关系表单条k码数据 tag: 1：商城 2：推啥 3：DDW 4：以太星球
@@ -131,27 +131,31 @@ class PageController extends LoginController
      * @param string $money
      * @return []
      */
-    public function inquireUserExRatio($money = 666){
-
-        $resData = [];
+    public function inquireUserExRatio($money){
 
         $data = BaseModel::getDbData([
             'table' => 'allot_policy',
             'where' => ['cash' => 7]
         ]);
 
-        if($data)
-
+        if($data){
             foreach ($data as $key => $val){
-                $val['rate_str'] = $val['id'].':'.$val['exratio'];
-                $val['last_rate'] = $val['exratio'];
-                $val['change_money'] = $val['exratio'] * $money;
-                $val['channel_unit'] = C('channel_unit')[$val['cash'].'-'.$val['tag']];
-                $resData[$key] = $val;
+                $resData[] = self::getGiftMoney($val['tag'], $money);
             }
-
+        }
         return $resData;
+    }
 
+    public function getGiftMoney($tag, $money){
+        $data = BaseModel::getDbData([
+            'table' => 'allot_policy',
+            'where' => ['cash' => 7, 'tag' => $tag]
+        ],false);
+        $data['rate_str'] = $data['id'].':'.$data['exratio'];
+        $data['last_rate'] = $data['exratio'];
+        $data['change_money'] = $data['exratio'] * $money;
+        $data['channel_unit'] = C('channel_unit')[$data['cash'].'-'.$data['tag']];
+        return $data;
     }
     /**
         @功能:获取兑换记录
@@ -161,11 +165,11 @@ class PageController extends LoginController
     public function getHistoryInfo(){
         $token = $_POST['token'];
         if (empty(isset($token))) {
-            exit(BaseController::returnMsg(array('error' => 103)));
+            exit(BaseController::returnMsg(array('error' => '103')));
         }
         //验证token 获取手机号等信息
         $info = BaseController::getInfoByToken($token);
-        if ($info['error']!=0) {
+        if ($info['error']!='0') {
             exit(BaseController::returnMsg($info));
         }
         
@@ -183,7 +187,7 @@ class PageController extends LoginController
         array_walk($data['data'],function(&$val, $key){
             $val['channel_unit'] = C('channel_unit')[$val['cash'].'-'.$val['tag']]; 
         });
-        exit(BaseController::returnMsg(array('error' => 0, 'data'=>$data)));
+        exit(BaseController::returnMsg(array('error' => '0', 'data'=>$data)));
     }
 
     /**
@@ -201,30 +205,19 @@ class PageController extends LoginController
             'fields' => '*',
             'where' => ['secretcd' => $kcode]
         ];
-        
         $kcode_info = BaseModel::getDbData($condition, false);
-        //跟新流水号，变更状态--锁定-to do 
+        //验证token 并获取uid 手机
+        $user_info = BaseController::getInfoByToken($token);
+        if ($user_info['error']!='0') {
+            exit(BaseController::returnMsg($user_info));
+        }
 
         if ($cash==1) {
             $change_info = $this->getChangeMoney($tag,$kcode_info);
-            switch ($tag) {
-                case 1://'商城':
-                    break;
-                case 2://'推啥':
-                    
-                    break;
-                case 3://'DDW':
-                    
-                    break;
-                case 4://'以太星球':
-
-                    break;
-                default:
-                    # code...
-                    break;  
-            }
+            exit(BaseController::returnMsg(array('error' => '0', 'data'=>$change_info)));
         }
         elseif ($cash==7) {
+            $gift_info = $this->getGiftMoney($tag, $kcode_info['money']);
             switch ($tag) {
                 case 1://'华夏':
                     // * e.g. $parmArr = [
@@ -233,12 +226,19 @@ class PageController extends LoginController
                     // * 'amount' => '66.66' //金额
                     // * ];
                     $param = array(
-                        'Phone' => '18109069773',
-                        'Kcodetype' => 'W2',//$kcode_info['im_model'],
-                        'amount' => '66'//(string)$change_info['change_money']
-                    );print_r($param);
-                    $res = ExGiftController::inquireUserExStatus($param, 'hxwj', 'key');
-                    echo $res;
+                        'Phone' => $user_info['phonenumber'],
+                        'Kcodetype' => $kcode_info['im_model'],
+                        'amount' => strval($gift_info['change_money'])
+                    );
+                    $res = ExGiftController::inquireUserExStatus($param, 'hxwj', 'hxwj_key');
+                    //'0000'成功 rescode
+                    // 1000 用户不存在或未实名
+                    // 2000 k码类型不存在
+                    // 4000 data数据有误
+                    // 5000 签名不正确
+                    $res = json_decode($res, true);
+                    $res['error'] = $res['rescode']=='0000'?'0':$res['rescode'];
+                    
                     break;
                 case 2://'骏和':
                     
@@ -247,6 +247,7 @@ class PageController extends LoginController
                     # code...
                     break;
             }
+            exit(BaseController::returnMsg($res));
         }
     }
     /**
@@ -268,12 +269,17 @@ class PageController extends LoginController
             'fields' => '*',
             'where' => ['secretcd' => $kcode]
         ];
-        
         $kcode_info = BaseModel::getDbData($condition, false);
-        $change_info = $this->getChangeMoney($tag,$kcode_info);
+        //验证token 并获取uid 手机
+        $user_info = BaseController::getInfoByToken($token);
+        if ($user_info['error']!='0') {
+            exit(BaseController::returnMsg($user_info));
+        }
+        
         //跟新流水号，变更状态--锁定-to do 
 
         if ($cash==1) {
+            $change_info = $this->getChangeMoney($tag,$kcode_info);
             switch ($tag) {
                 case 1://'商城':
                     $sku_bn = $kcode_info['pnumber'];//料号
@@ -282,7 +288,10 @@ class PageController extends LoginController
                     $res = MallController::mallChange($token,$kcode,$sku_bn,$amount,$radio);
                     break;
                 case 2://'推啥':
-                    $res=TuiController::index("TS",$kcode,"17751518563",round($change_info['last_rate'], 2),1);
+                    $res=TuiController::index("TS",$kcode,$user_info['phonenumber'],round($change_info['last_rate'], 2),1);
+                    if ($res['status']) {
+                        # code...
+                    }
                     break;
                 case 3://'DDW':
                     
@@ -292,7 +301,6 @@ class PageController extends LoginController
                     $price2 = floatval($change_info['change_money']);//price2  是   K码换算成星积分后的价值
 
                     $res = EthController::ethChange($token, $price1, $price2, $kcode);
-                    print_r($res);
                     # code...
                     break;
                 default:
@@ -303,6 +311,40 @@ class PageController extends LoginController
         elseif ($cash==7) {
             switch ($tag) {
                 case 1://'华夏':
+                    /**
+                     * @ Purpose: 1.2 礼包推送接口
+                     * @param [] $parmArr 若参数值为空 不传
+                     * e.g. $parmArr = [
+                        'phone' =>   '13795000060',
+                        'kcodeType' =>   'W2',
+                        'kcode' => 'am123',
+                        'kcodeSn' => 'mm1234',
+                        'deviceSn' => 'sb1234',
+                        'bingSn' => 'bd123',
+                        'Amount' => '999'
+                     * ];
+                     * @return []
+                     */
+                    $param = array(
+                        'phone' => '13333333333', //手机号
+                        'kcodeType' => 'S7', //产品型号
+                        'kcode' => 'am123', //暗码
+                        'kcodeSn' => 'mm1234', //明码
+                        'deviceSn' => 'sb1234',//设备码
+                        'bingSn' => 'bd123',  //绑定码
+                        'Amount' => '666'  //礼包金额
+                    );
+                    $res = ExGiftController::pushGift($param, 'hxwj_push_gift', 'hxwj_key');
+                    $res['error'] = $res['rescode']=='0000'?'0':$res['rescode'];
+                    // 0000 礼包生成成功
+                    // 1000 用户不存在或未实名
+                    // 2000 无兑换资格，请先投资兑换相应k码资格
+                    // 3000  该k码礼包已生成
+                    // 4000   k码类型不存在
+                    // 5000  data数据有误
+                    // 6000  请求繁忙
+                    // 7000 推送礼包失败
+
                     break;
                 case 2://'骏和':
                     
@@ -313,8 +355,8 @@ class PageController extends LoginController
             }
         }
         
-
-        if (true) {
+        print_r($res);
+        if ($res['error']==='0') {
             //变更状态--已兑换
         }else{
             //变更状态--已分配

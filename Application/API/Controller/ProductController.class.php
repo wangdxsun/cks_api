@@ -184,7 +184,7 @@ class ProductController extends Controller
         if(!empty($secretcd)){
             $where["secretcd"]=$secretcd;
         }
-       $data=M("relation")->field("status as kstatus")->where($where)->find();
+       $data=M("relation")->field("status as kstatus,last_return_time,money,channel1")->where($where)->find();
         if(!$data){
             exit(json_encode(array("status"=>false,"message"=>"查无数据")));
         }

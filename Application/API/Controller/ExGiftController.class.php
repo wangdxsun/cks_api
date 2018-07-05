@@ -75,7 +75,7 @@ class ExGiftController extends Controller
           'Kcodetype' =>   'W2',
           'amount' => '999'
         ];
-        $this->inquireUserExStatus($arr, 'jh', 'key');
+        $this->inquireUserExStatus($arr, 'jh', 'hxwj_key');
     }
 
     public function testPushGift()
@@ -89,7 +89,7 @@ class ExGiftController extends Controller
             'bingSn' => 'bd123',
             'Amount' => '999'
         ];
-        $this->pushGift($arr, 'jh_push_gift', 'key');
+        $this->pushGift($arr, 'jh_push_gift', 'hxwj_key');
     }
 
 }
