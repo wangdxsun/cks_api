@@ -50,7 +50,8 @@ class TuiController extends Controller
             return array('status'=>false,"message"=>"请求推啥失败,请检查原因");
         }else{
             //插入兑换记录数据库
-            $result_status=CommonController::ChangeLog($kcode,$rate,$dhtotal,$mobile,1,$channel,$exratio);
+            $lastreturntime=$result_arr["data"]["lastReturnTime"];
+            $result_status=CommonController::ChangeLog($kcode,$rate,$dhtotal,$mobile,1,$channel,$exratio,$lastreturntime);
             if($result_status){
                 return array("status"=>true);
             }else{
