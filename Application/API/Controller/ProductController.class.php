@@ -95,13 +95,13 @@ class ProductController extends Controller
                $save["orderid"] = $order_no;
                $save["status"]=1;
                if($channel=="TUI"){
-                   $save["channel1"]="1-2";
+                   $save["channel3"]="1-2";
                }else if($channel=="ETH"){
-                   $save["channel1"]="1-4";
+                   $save["channel3"]="1-4";
                    $save["sn"]=$v["sn"];
                    $result["secretcd"]=$data["secretcd"];
                }else{
-                   $save["channel1"]="YP";
+                   $save["channel3"]="YP";
                }
 
                $result["money"] = $save["money"] = $v["money"];
@@ -218,7 +218,7 @@ class ProductController extends Controller
         if(!empty($secretcd)){
             $where["secretcd"]=$secretcd;
         }
-       $data=M("relation")->field("status as kstatus,last_return_time,money,channel1")->where($where)->find();
+       $data=M("relation")->field("status as kstatus,last_return_time,money,channel3")->where($where)->find();
 
         if(!$data){
             exit(json_encode(array("status"=>false,"message"=>"查无数据")));
@@ -272,12 +272,12 @@ class ProductController extends Controller
         if($clearcd_str){
             $cards=json_decode($clearcd_str,true);
             $where["clearcd"]=array("in",$cards);
-            $data=M("relation")->field("clearcd,secretcd,channel1,status,last_return_time")->where($where)->select();
+            $data=M("relation")->field("clearcd,secretcd,channel3,status,last_return_time")->where($where)->select();
         }
         if($secretcd_str){
             $cards=json_decode($secretcd_str,true);
             $where["secretcd"]=array("in",$cards);
-            $data=M("relation")->field("clearcd,secretcd,channel1,status,last_return_time")->where($where)->select();
+            $data=M("relation")->field("clearcd,secretcd,channel3,status,last_return_time")->where($where)->select();
         }
 
         foreach($data as $kk=>$vv){
@@ -296,7 +296,7 @@ class ProductController extends Controller
                $clearcd=$data[0]["clearcd"];
                $secretcd=$data[0]["secretcd"];
                M()->startTrans();
-               $res=self::chooseMethod($data[0]["channel1"],$clearcd,$secretcd,$method);
+               $res=self::chooseMethod($data[0]["channel3"],$clearcd,$secretcd,$method);
 
 
                if($res===false){
@@ -328,7 +328,7 @@ class ProductController extends Controller
                 }else{
                     $clearcd=$item["clearcd"];
                     $secretcd=$item["secretcd"];
-                    $res=self::chooseMethod($item["channel1"],$clearcd,$secretcd,$method);
+                    $res=self::chooseMethod($item["channel3"],$clearcd,$secretcd,$method);
                     array_push($status_pool,$res);
                 }
             }
@@ -421,7 +421,7 @@ class ProductController extends Controller
         $phone=M("relation")->where(["clearcd"=>$clearcd])->getField("rephone");
 
         $uids=BaseController::getUidByPhone($phone);
-       
+
         if($uids["err"]>0){
             return false;
         }

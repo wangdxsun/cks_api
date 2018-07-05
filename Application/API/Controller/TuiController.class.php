@@ -51,7 +51,7 @@ class TuiController extends Controller
         }else{
             //插入兑换记录数据库
             $lastreturntime=date("Y-m-d H:i:s",$result_arr["data"]["lastReturnTime"]);
-            $result_status=CommonController::ChangeLog($kcode,$rate,$dhtotal,$mobile,1,$channel,$exratio,$lastreturntime);
+            $result_status=CommonController::ChangeLog($kcode,$rate,$dhtotal,$mobile,1,"1-2",$exratio,$lastreturntime);
             if($result_status){
                 return array("status"=>true);
             }else{
