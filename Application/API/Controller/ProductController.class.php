@@ -32,11 +32,17 @@ class ProductController extends Controller
 
             //判断金额料号金额金额是否大于总的k码价值
             foreach ($products as $k => $v) {
-                $where["channel1"] = $channel;
+                //$where["channel1"] = $channel;
+                if($v["sn"]){
+                    $where["sn"]=$v["sn"];
+                }
                 $where["pnumber"] = $v["pnumber"];
                 $where["pname"] = $v["pname"];
                 $where["status"] = 1;
                 $pmoneys = M("relation")->where($where)->field("pmoney")->select();
+                if(empty($pmoneys)){
+                    exit(json_encode(array("status" => false, "message" => "找不到合适的产品")));
+                }
                 foreach ($pmoneys as $kk => $money) {
                     if ($money < $v["money"]) {
                         exit(json_encode(array("status" => false, "message" => "传递产品金额大于实际产品金额")));
@@ -121,18 +127,31 @@ class ProductController extends Controller
     protected function getEresult($order_no, $products,$phone)
     {
         $response = array();
+        $sns=array();
+        M()->startTrans();
+        $status_pool=array();
+
         foreach ($products as $k => $v) {
             $where["sn"] = $v["sn"];
             $save["orderid"] = $order_no;
             $save["money"] = $v["money"];
-            M("relation")->where($where)->save($save);
-            $new_result = M("relation")->where($where)->field("clearcd,money,secretcd")->find();
-            array_push($response, $new_result);
+            $save["status"]=2;
+            $save["channel1"]="ETH";
+            $status=M("relation")->where($where)->save($save);
+            array_push($status_pool,$status);
+            array_push($sns,$v["sn"]);
         }
+        if(in_array(false,$status_pool)){
+            M()->rollback();
+            return array("status"=>false,"message"=>"分配K码失败");
+        }
+        M()->commit();
+        $new_where["sn"]=array("in",$sns);
+        $new_result = M("relation")->where($new_where)->field("clearcd,money,secretcd")->find();
         $result["status"]=true;
         $result["order_no"]=$order_no;
         $result["phone"]=$phone;
-        $result["products"]=$response;
+        $result["products"]=$new_result;
         return $result;
 
     }
