@@ -148,7 +148,7 @@
                     //$('.ui-autocomplete').show();
                     var htmls = '';
                     //var resulte = JSON.parse(data);
-                    if (data.data) {
+                    if (data.data.length >0) {
                         var field = data.field;
                         for (var i in data.data)
                             htmls = htmls + "<p>" + data.data[i][data.field] + "</p>";

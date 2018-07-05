@@ -59,7 +59,7 @@ class KcodeProduceController extends BaseController
     public function imProductInitialData(){
 
         $pdata = json_decode($_POST['data'],true);
-        $this->verifyChannelName($pdata['channel_name']);//验证渠道名是否存在
+        //$this->verifyChannelName($pdata['channel_name']);//验证渠道名是否存在
         $this->verifyPnumberByPname($pdata['pnumber'], $pdata['pname']);//验证料号和名称是否对应
 
         $postData = $this->checkPost($pdata);//待添加数据
@@ -69,9 +69,9 @@ class KcodeProduceController extends BaseController
 
             //生成k码
             $postData['clearcd'] ='ph'.$this->createKcode('ph');
-            $postData['hcode'] =$this->createKcode('am');
+            $postData['secretcd'] =$this->createKcode('am');
             if($pdata['pname'] == 'N1' || $pdata['pname'] == 'N1M')
-                $postData['secretcd'] ='BD'.$this->createKcode('BD');
+                $postData['hcode'] ='BD'.$this->createKcode('BD');
 
             $res = BaseModel::addData([
                 'table' => KcodeProduceModel::$table[2],
@@ -102,7 +102,7 @@ class KcodeProduceController extends BaseController
     }
 
     //验证 渠道 是否存在
-    public function  verifyChannelName($channelName){
+    /*public function  verifyChannelName($channelName){
 
         if(BaseModel::getDbData([
             'table' => KcodeProduceModel::$table[1],
@@ -114,7 +114,7 @@ class KcodeProduceController extends BaseController
 
             $this->ajaxReturn(['status' => 0, 'info' => '渠道名不存在,请重新填写']);
 
-    }
+    }*/
 
     //验证  料号产品名是否对应
     public function  verifyPnumberByPname($pnumber, $pname){
