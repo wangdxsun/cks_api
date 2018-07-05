@@ -12,9 +12,10 @@ use Admin\Model\BaseModel;
 class IndexController extends BaseController
 {
 
-    private $table = ['user', 'admin', 'role', 'article', 'affix', 'comment', 'acomment'];
+    private $table = ['relation'];
 
-    private $echartsName = ['用户', '评论'];
+    private $echartsName = ['今日新增', '今日分配', '今日激活'];
+    //private $echartsName = ['今日分配', '今日激活'];
 
     private $echartsType = 'line';
 
@@ -47,17 +48,24 @@ class IndexController extends BaseController
 
     public function main(){
 
-        //用户总数
-        $this->assign('userCount', $this->getCount($this->table[0]));
+        //产品总数
+        $this->assign('productCount', $this->getCount($this->table[0]));
 
-        //今日新增
-        $this->assign('userTodayCount', $this->getCount($this->table[0], ['create_time' => ['between', [startTime(), endTime()]]]));
+        //未分配
+        $this->assign('productUndistributed', $this->getCount($this->table[0], ['status' => 0]));
 
-        //文章、公告浏览量
-        $this->assign('viewCount', $this->getSum($this->table[3], 'views') + $this->getSum($this->table[4], 'views'));
+        //已分配
+        $this->assign('productAllocated', $this->getCount($this->table[0], ['status' => 1]));
 
-        //文章、公告评论总量
-        $this->assign('commentCount', $this->getCount($this->table[4]) + $this->getCount($this->table[5]));
+        //已激活
+        $this->assign('productActivated', $this->getCount($this->table[0], ['status' => 2]));
+
+
+        //总量最多型号
+        $this->assign('modelCountMax', $this->getMaxModelCount($this->table[0],'im_model'));
+
+        //激活最多
+        $this->assign('activateCountMax', $this->getMaxActivateCount($this->table[0],'im_model'));
 
         //echart图表日期
         $sevenDays = $this->getDateFromRange(date("Y-m-d",strtotime('-6 day')), date("Y-m-d",time()));
@@ -65,20 +73,17 @@ class IndexController extends BaseController
         //一周日期
         $this->assign('sevenDays', json_encode($sevenDays));
 
-        //一周每天的用户数
-        $this->assign('sevenDaysUserIncNum', $this->getDayIncNum($this->echartsName[0], $sevenDays, $this->table[0]));
+        //今日新增
+        $this->assign('sevenDaysUndistributedIncNum', $this->getDayIncNum($this->echartsName[0], $sevenDays, $this->table[0], 0, 'im_time'));
 
-        //一周内的每天评论数量
-        $this->assign('sevenDaysCommentIncNum', $this->getDayIncNum($this->echartsName[1], $sevenDays, [$this->table[5], $this->table[6]]));
+        //今日分配
+        $this->assign('sevenDaysAllocatedIncNum', $this->getDayIncNum($this->echartsName[1], $sevenDays, $this->table[0], 1, 'allot_time'));
+
+        //今日激活
+        $this->assign('sevenDaysActivatedIncNum', $this->getDayIncNum($this->echartsName[2], $sevenDays, $this->table[0], 2, 'im_time'));
 
         //echart设置信息
         $this->assign('echartsName', json_encode($this->echartsName));
-
-        //最受欢迎文章
-        $this->assign('mostLikeArticle', $this->getMostArticle('likes'));
-
-        //最多浏览
-        $this->assign('mostViewArticle', $this->getMostArticle('views'));
 
         //系统信息
         $this->assign('systemInfo', $this->getSystemInfo());
@@ -137,26 +142,36 @@ class IndexController extends BaseController
 
     }
 
+    //总量最多型号 1 比 * 效率高
+    private  function  getMaxModelCount($table, $field){
+
+        $sql = "select  {$field}, count(1) AS counts FROM {$table} GROUP BY {$field} order by counts desc limit 1";
+
+        return M()->query($sql);
+
+    }
+
+    //激活最多型号
+    private  function  getMaxActivateCount($table, $field){
+
+        $sql = "select  {$field}, count(1) AS counts FROM {$table} where status = 2 GROUP BY {$field} order by counts desc limit 1";
+
+        return M()->query($sql);
+
+    }
+
     //获取总数
     private function getCount($table, $where=null){
-        return BaseModel::getCount([
+          return BaseModel::getCount([
             'table' => $table,
             'where' => $where
         ]);
+
     }
 
-
-    //获取总和
-    private function getSum($table, $field){
-
-        return BaseModel::getSum([
-            'table' => $table,
-            'field' => $field
-        ]);
-    }
 
     //获取一周内每一天的用户增长---画图
-    private function getDayIncNum($name, $date, $table){
+    private function getDayIncNum($name, $date, $table, $status, $field){
 
         $data = [];
         $data['name'] = $name;
@@ -164,38 +179,15 @@ class IndexController extends BaseController
         $data['data'] = [];
 
         foreach($date as $val)
-
-            if($table == $this->table[0])
-
                 array_push($data['data'], $this->getCount($table, [
-                    'create_time' => [
-                        'between', [startTime(strtotime($val)), endTime(strtotime($val)) ]
+                    'status' => $status,
+                    $field => [ 'between', [startTime(strtotime($val)), endTime(strtotime($val)) ],
                     ]
                 ])?:0);
-
-            else
-                array_push($data['data'], ($this->getCount($table[0], [
-                    'create_time' => [
-                        'between', [startTime(strtotime($val)), endTime(strtotime($val)) ]
-                    ]
-                ]) + $this->getCount($table[1], [
-                    'create_time' => [
-                        'between', [startTime(strtotime($val)), endTime(strtotime($val)) ]
-                    ]
-                ])) ? : 0);
 
         return json_encode($data);
     }
 
-    //最受欢迎文章
-    private function getMostArticle($field){
-
-         return BaseModel::getDbData([
-            'table' => $this->table[3],
-            'where' => [$field => M($this->table[3])->max($field)]
-        ], false);
-
-    }
 
     /**
      * 用户退出
@@ -237,7 +229,7 @@ class IndexController extends BaseController
 
         return [
 
-            '版本信息' => 'Page__'.C('version'),
+            '版本信息' => 'CKS__'.C('version'),
             '网站域名' => $_SERVER['HTTP_HOST'],
             '服务器IP' => getServerIp(),
             '系统信息' => php_uname(),

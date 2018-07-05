@@ -25,9 +25,9 @@
 				</div>
 				<div class="value">
 					<a href="#">
-						<h1 id="count1">{$userCount}</h1>
+						<h1 id="count1">{$productCount}</h1>
 					</a>
-					<p>用户总量</p>
+					<p>产品总数</p>
 				</div>
 			</section>
 		</div>
@@ -37,9 +37,9 @@
 				</div>
 				<div class="value">
 					<a href="#">
-						<h1 id="count2">{$userTodayCount}</h1>
+						<h1 id="count2">{$productUndistributed}</h1>
 					</a>
-					<p>今日新增用户</p>
+					<p>未分配</p>
 				</div>
 			</section>
 		</div>
@@ -50,9 +50,9 @@
 				</div>
 				<div class="value">
 					<a href="#">
-						<h1 id="count3">{$viewCount}</h1>
+						<h1 id="count3">{$productAllocated}</h1>
 					</a>
-					<p>文章浏览量</p>
+					<p>已分配</p>
 				</div>
 			</section>
 		</div>
@@ -63,9 +63,9 @@
 				</div>
 				<div class="value">
 					<a href="#">
-						<h1 id="count4">{$commentCount}</h1>
+						<h1 id="count4">{$productActivated}</h1>
 					</a>
-					<p>评论总数</p>
+					<p>已激活</p>
 				</div>
 			</section>
 		</div>
@@ -102,16 +102,15 @@
 		     <!-- 快捷操作 -->
              <section class="panel">
                   <header class="panel-heading bm0">
-                        <span class='span-title'>最受欢迎</span>
+                        <span class='span-title'>最多产品</span>
                         <span class="tools pull-right"><a href="javascript:;" class="iconpx-chevron-down"></a></span>
                   </header>
                   <div class="panel-body">
                         <table class="table table-hover personal-task shortcut">
                             <tr style="background: #FFFFFF">
                             	<td>
-                            		<div class="c1" style="text-align: left;font-size:29px;">{$mostLikeArticle.title}<!--<i class="iconpx-file-word-o" style="float: right;margin-top: 35px;margin-right: 10px">{$mostLikeArticle.likes}</i>--></div>
-									<i class="fa fa-thumbs-o-up" aria-hidden="true" ></i>
-									{$mostLikeArticle.likes}
+                            		<div class="c1" style="text-align: left;font-size:29px;"><?php echo $modelCountMax[0]['im_model']?><!--<i class="iconpx-file-word-o" style="float: right;margin-top: 35px;margin-right: 10px">{$mostLikeArticle.likes}</i>--></div>
+									<?php echo $modelCountMax[0]['counts']?>
                             	</td>
                             </tr>
 
@@ -121,16 +120,15 @@
           <!-- 系统公告 -->
              <section class="panel">
                  <header class="panel-heading bm0">
-                        <span class='span-title'>最多浏览</span>
+                        <span class='span-title'>最受欢迎</span>
                         <span class="tools pull-right"><a href="javascript:;" class="iconpx-chevron-down"></a></span>
                   </header>
                   <div class="panel-body">
                         <table class="table table-hover personal-task shortcut">
                             <tr style="background: #FFFFFF">
                               <td>
-                                <div class="c1" style="text-align: left;font-size:29px;">{$mostViewArticle.title}<!--<i class="iconpx-file-word-o-v" style="float: right;margin-top: 35px;margin-right: 10px">{$mostLikeArticle.views}</i>--></div>
-								  <i class="fa fa-eye" aria-hidden="true"></i>
-								  {$mostLikeArticle.views}
+                                <div class="c1" style="text-align: left;font-size:29px;"><?php echo $activateCountMax[0]['im_model']?><!--<i class="iconpx-file-word-o-v" style="float: right;margin-top: 35px;margin-right: 10px">{$mostLikeArticle.views}</i>--></div>
+								  <?php echo $activateCountMax[0]['counts']?>
                               </td>
                             </tr>
                         </table>
@@ -232,7 +230,7 @@
                     }
                 ],
 
-                series:  [{$sevenDaysUserIncNum},{$sevenDaysCommentIncNum} ]
+                series:  [{$sevenDaysUndistributedIncNum}, {$sevenDaysAllocatedIncNum},{$sevenDaysActivatedIncNum} ]
             };
 
             // 为echarts对象加载数据

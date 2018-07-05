@@ -133,13 +133,13 @@ function judgeItem($id,$ids) {
 //一天开始
 function startTime($t = null){
     $time = $t ?:time();
-    return mktime(0,0,0,date("m", $time),date("d", $time),date("Y", $time));
+    return date("Y-m-d H:i:s", mktime(0,0,0,date("m", $time),date("d", $time),date("Y", $time)));
 }
 
 //一天结束
 function endTime($t = null){
     $time =  $t ? :time();
-    return mktime(23,59,59,date("m", $time),date("d", $time),date("Y", $time));
+    return date("Y-m-d H:i:s", mktime(23,59,59,date("m", $time),date("d", $time),date("Y", $time)));
 }
 
 //页面跳转
