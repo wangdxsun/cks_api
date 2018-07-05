@@ -95,9 +95,9 @@ class ProductController extends Controller
                $save["orderid"] = $order_no;
                $save["status"]=1;
                if($channel=="TUI"){
-                   $save["channel1"]="TS";
+                   $save["channel1"]="1-2";
                }else if($channel=="ETH"){
-                   $save["channel1"]="ETH";
+                   $save["channel1"]="1-4";
                    $save["sn"]=$v["sn"];
                    $result["secretcd"]=$data["secretcd"];
                }else{
@@ -357,20 +357,29 @@ class ProductController extends Controller
     public   function chooseMethod($channel="DDW",$clearcd,$secretcd,$method){
         switch ($channel)
         {
-            case "DDW":
+            //ddw
+            case "1-3":
                  return self::changeDDW($clearcd,$secretcd,$method);
                 break;
-            case "TS":
+            //推啥商城
+            case "1-2":
                 return self::changeTS($clearcd,$secretcd,$method);
                 break;
-            case "MALL":
-                return self::changeTS($clearcd,$secretcd,$method);
+            //商城
+            case "1-1":
+                return self::changeMall($clearcd,$secretcd,$method);
                 break;
-            case "JH":
-                return self::changeTS($clearcd,$secretcd,$method);
+            //以太星球
+            case "1-4":
+                return self::changeEth($clearcd,$secretcd,$method);
                 break;
-            case "HX":
-                return self::changeTS($clearcd,$secretcd,$method);
+            //骏和
+            case "7-2":
+                return self::changeJh($clearcd,$secretcd,$method);
+                break;
+            //华夏
+            case "7-1":
+                return self::changeHx($clearcd,$secretcd,$method);
                 break;
             default:
                 exit(json_encode(array("status"=>false,"message"=>"渠道参数不对")));
