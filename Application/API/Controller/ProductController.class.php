@@ -24,7 +24,7 @@ class ProductController extends Controller
     //获取电子K码
     public function getKcode()
     {
-        EntryController::index();
+        //EntryController::index();
         if(IS_POST){
             $phone = $_POST["phone"];
             $channel = $_POST["channel"];
@@ -38,10 +38,10 @@ class ProductController extends Controller
                     $where["sn"]=$v["sn"];
                 }*/
                 $where["im_pnumber"] = $v["pnumber"];
-                $where["im_pname"] = $v["pname"];
+                $where["im_model"] = $v["pname"];
                 $where["status"] = 0;
                 $pmoneys = M("relation")->where($where)->field("pmoney")->select();
-                //print_r(M()->getLastSql());die;
+
                 if(empty($pmoneys)){
                     exit(json_encode(array("status" => false, "message" => "找不到合适的产品")));
                 }
@@ -59,6 +59,8 @@ class ProductController extends Controller
             if ($channel == "TUI") {
                 //获取推啥接口
                 $response = $this->getTresult($phone, $order_no, $products,$channel);
+
+                self::sendMessages($channel,$order_no);
             } else if ($channel == 'ETH') {
                 //获取金额
                 $response = $this->getTresult($phone,$order_no, $products,$channel);
@@ -80,15 +82,16 @@ class ProductController extends Controller
         $status_pool=array();
 
        try{
-           M()->startTrans();
+           //M()->startTrans();
            foreach ($products as $k => $v) {
                $where["status"] = 0;
-               $where["im_pmodel"] = $v["pname"];
+               $where["im_model"] = $v["pname"];
                $where["im_pnumber"] = $v["pnumber"];
                //$where["money"] = array("gt", 0);
 
                $data = M("relation")->lock(true)->where($where)->find();
-               if(empty($data)){
+
+              if(empty($data)){
                    return array("status"=>false,"message"=>"查不到对应K码");
                }
                $id = $data["id"];
@@ -129,7 +132,7 @@ class ProductController extends Controller
         $new_response["order_no"]=$order_no;
         $new_response["channel"]=$channel;
         $new_response["products"]=$response;
-        self::sendMessages($channel,$order_no);
+
         return $new_response;
 
     }
@@ -210,13 +213,17 @@ class ProductController extends Controller
 
          foreach($data as $k=>$v){
              $new_sign=$sign.$v["secretcd"]."请妥善保管,30天内有效";
+
              $phone=$v['rephone'];
              $senddata["authorizationcode"]=$auth;
-             $senddata["isCustom"]=true;
+             $senddata["isCustom"]='true';
              $senddata["msg"]=$new_sign;
              $senddata["phonenumber"]=$phone;
              $senddata["verificationtype"]=0;
+
              $url="http://114.141.173.53:80/v1/verificationCode?".http_build_query($senddata);
+             //$url="http://114.141.173.53:80/v1/verificationCode?authorizationcode=$auth&isCustomer=true&phonenumber=$phone&verificationtype=0&msg=$new_sign";
+             //file_put_contents("./Application/Runtime/test.txt",$url,FILE_APPEND);
              Curl::curl_get($url);
              sleep(1);
          }
