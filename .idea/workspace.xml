@@ -2,25 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3d79f8ba-c1a9-424a-a2b3-7f5398ab2efb" name="Default" comment="kk">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/phishop.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Conf/config.php" afterPath="$PROJECT_DIR$/Application/API/Conf/config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Controller/BaseController.class.php" afterPath="$PROJECT_DIR$/Application/API/Controller/BaseController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Controller/CommonController.class.php" afterPath="$PROJECT_DIR$/Application/API/Controller/CommonController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Controller/DdwController.class.php" afterPath="$PROJECT_DIR$/Application/API/Controller/DdwController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Controller/EthController.class.php" afterPath="$PROJECT_DIR$/Application/API/Controller/EthController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Controller/ExGiftController.class.php" afterPath="$PROJECT_DIR$/Application/API/Controller/ExGiftController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Controller/LoginController.class.php" afterPath="$PROJECT_DIR$/Application/API/Controller/LoginController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Controller/MallController.class.php" afterPath="$PROJECT_DIR$/Application/API/Controller/MallController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Controller/PageController.class.php" afterPath="$PROJECT_DIR$/Application/API/Controller/PageController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Controller/ProductController.class.php" afterPath="$PROJECT_DIR$/Application/API/Controller/ProductController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Controller/TuiController.class.php" afterPath="$PROJECT_DIR$/Application/API/Controller/TuiController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/API/Controller/WmsController.class.php" afterPath="$PROJECT_DIR$/Application/API/Controller/WmsController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Admin/Controller/WmsController.class.php" afterPath="$PROJECT_DIR$/Application/Admin/Controller/WmsController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Admin/Model/BaseModel.class.php" afterPath="$PROJECT_DIR$/Application/Admin/Model/BaseModel.class.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Admin/Controller/KcodeProduceController.class.php" afterPath="$PROJECT_DIR$/Application/Admin/Controller/KcodeProduceController.class.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -76,12 +58,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="config.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Application/API/Conf/config.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1892">
               <caret line="86" column="0" lean-forward="false" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KcodeProduceController.class.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/KcodeProduceController.class.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-154">
+              <caret line="74" column="0" lean-forward="true" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+              <folding>
+                <element signature="e#34#65#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -168,7 +162,6 @@
         <option value="$PROJECT_DIR$/Application/Admin/Model/SystemKeysModel.class.php" />
         <option value="$PROJECT_DIR$/Application/Admin/Controller/CksManageController.class.php" />
         <option value="$PROJECT_DIR$/Application/Admin/Model/KcodeProduceModel.class.php" />
-        <option value="$PROJECT_DIR$/Application/Admin/Controller/KcodeProduceController.class.php" />
         <option value="$PROJECT_DIR$/Application/Admin/View/Index/login.html" />
         <option value="$PROJECT_DIR$/Application/Admin/View/Account/index.html" />
         <option value="$PROJECT_DIR$/Application/Admin/View/CksManage/index.html" />
@@ -180,6 +173,7 @@
         <option value="$PROJECT_DIR$/Application/Admin/View/KcodeProduce/index.html" />
         <option value="$PROJECT_DIR$/Application/API/Conf/config.php" />
         <option value="$PROJECT_DIR$/Application/API/Controller/ExGiftController.class.php" />
+        <option value="$PROJECT_DIR$/Application/Admin/Controller/KcodeProduceController.class.php" />
       </list>
     </option>
   </component>
@@ -191,8 +185,8 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="223" />
-    <option name="y" value="72" />
+    <option name="x" value="190" />
+    <option name="y" value="86" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -813,17 +807,18 @@
       <workItem from="1530083036283" duration="3748000" />
       <workItem from="1530174339395" duration="104942000" />
       <workItem from="1530607906775" duration="60458000" />
-      <workItem from="1530754054608" duration="385000" />
+      <workItem from="1530754054608" duration="1226000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="169533000" />
+    <option name="totallyTimeSpent" value="170374000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="223" y="72" width="1936" height="1056" extended-state="0" />
+    <frame x="190" y="86" width="1936" height="1056" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.175" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.175" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1127,16 +1122,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/KcodeProduceController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="93" column="25" lean-forward="false" selection-start-line="93" selection-start-column="25" selection-end-line="93" selection-end-column="25" />
-          <folding>
-            <element signature="e#34#65#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Application/Admin/View/Index/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1254,6 +1239,16 @@
         <state relative-caret-position="1892">
           <caret line="86" column="0" lean-forward="false" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/KcodeProduceController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-154">
+          <caret line="74" column="0" lean-forward="true" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+          <folding>
+            <element signature="e#34#65#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -14,7 +14,7 @@ class KcodeProduceController extends BaseController
 {
 
     public  $arr = [58, 59, 60, 61, 62, 63, 64, 73, 79, 91, 92, 93, 94, 95, 96, 108, 111];
-    public  $type = ['ph' => 8, 'BD' => 8, 'n1' => 10 ];
+    public  $type = ['ph' => 8, 'BD' => 8, 'am' => 10 ];
     public  $randStart = 51;
     public  $randEnd = 122;
 
@@ -69,9 +69,9 @@ class KcodeProduceController extends BaseController
 
             //生成k码
             $postData['clearcd'] ='ph'.$this->createKcode('ph');
-            $postData['secretcd'] ='BD'.$this->createKcode('BD');
+            $postData['hcode'] =$this->createKcode('am');
             if($pdata['pname'] == 'N1' || $pdata['pname'] == 'N1M')
-                $postData['hcode'] =$this->createKcode('n1');
+                $postData['secretcd'] ='BD'.$this->createKcode('BD');
 
             $res = BaseModel::addData([
                 'table' => KcodeProduceModel::$table[2],
