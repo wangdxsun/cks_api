@@ -98,6 +98,7 @@ class ProductController extends Controller
                $result["clearcd"] = $data["clearcd"];
                $save["orderid"] = $order_no;
                $save["status"]=1;
+               $save["allot_time"]=date("Y-m-d H:i:s",time());
                if($channel=="TUI"){
                    $save["channel3"]="1-2";
                }else if($channel=="ETH"){
