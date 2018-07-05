@@ -46,7 +46,7 @@ class TuiController extends Controller
         unset($arr["token"]);
         $result_str=Curl::curl_post($url,$arr);
         //print_r($result_str);
-        //file_put_contents("./Application/Runtime/test.txt",$result_str);
+        file_put_contents("./Application/Runtime/test.txt",$result_str);
         $result_arr=json_decode($result_str,true);
         if($result_arr["err"]>0){
             return array('status'=>false,"message"=>"请求推啥失败,请检查原因");
