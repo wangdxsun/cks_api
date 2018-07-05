@@ -47,13 +47,9 @@ class MallController extends Controller
         $result = Curl::curl_header_post($url, $param, $header);
         $result = json_decode($result, true);
         if ($result['status']) {
-            //更新K码状态、明显、log
-
             $res = array('error' => '0');
         }
         else{
-            //更新K码状态、明显、log
-
             $res = array('error' => '110');
         }
         $result['data']['last_return_time'] = date("Y-m-d H:i:s",$result['data']['operable_time']);

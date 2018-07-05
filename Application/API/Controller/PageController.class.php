@@ -299,11 +299,11 @@ class PageController extends LoginController
             exit(BaseController::returnMsg($user_info));
         }
         
-        //跟新流水号，变更状态--锁定-to do 
+        //变更状态--锁定-to do 
         M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>5));
-
+        //第一大类策略
         if ($cash==1) {
-            $rate=1;
+            $rate=1;//汇率
             $change_info = $this->getChangeMoney($tag,$kcode_info);
             switch ($tag) {
                 case 1://'商城':
@@ -313,10 +313,14 @@ class PageController extends LoginController
                     $res = MallController::mallChange($token,$kcode,$sku_bn,$amount,$radio);
                     break;
                 case 2://'推啥':
-                    $res=TuiController::index("TS",$kcode,$user_info['phonenumber'],round($change_info['last_rate'], 2),1);
-                    if ($res['status']) {
-                        # code...
+                    $result = TuiController::index("TS",$kcode,$user_info['phonenumber'],round($change_info['last_rate'], 2),1);
+                    if ($result['status']) {
+                        $res = array('error' => '0', 'data' => array('last_return_time' => $result['last_return_time']));
                     }
+                    else{
+                        $res = array('error' => '110');
+                    }
+                    print_r($res);
                     break;
                 case 3://'DDW':
                     $rate=1;
@@ -351,6 +355,7 @@ class PageController extends LoginController
                 M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>1));
             }
         }
+        //第七大类策略
         elseif ($cash==7) {
             $gift_info = $this->getGiftMoney($tag, $kcode_info['money']);
             switch ($tag) {
@@ -384,6 +389,23 @@ class PageController extends LoginController
                 default:
                     # code...
                     break;
+            }
+            if ($res['error']==='0') {
+                //变更状态--已兑换
+                // * $kcode, 暗码值
+                //  * $rate=1, 兑换比例
+                //  * $dhtotal, 兑换了多少个
+                //  * $phone,   手机号
+                //  * $status,  状态0 表示成功1 表示失败
+                //  * $channel, 兑换通道
+                //  * exratio   兑换比例
+                $result = CommonController::ChangeLog($kcode,$rate,$change_info['change_money'],$user_info['phonenumber'],1,$cash."-".$tag,round($change_info['last_rate'], 2),md5($kcode),$res['data']['last_return_time'],$cash,$tag,$change_info['rate_str']);
+                if ($result) {
+                    $data['error'] = '0';
+                }
+            }else{
+                //变更状态--已分配
+                M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>1));
             }
         }
         exit(BaseController::returnMsg($res));
