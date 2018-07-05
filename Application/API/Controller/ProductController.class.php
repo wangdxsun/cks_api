@@ -24,6 +24,7 @@ class ProductController extends Controller
     //获取电子K码
     public function getKcode()
     {
+        EntryController::index();
         if(IS_POST){
             $phone = $_POST["phone"];
             $channel = $_POST["channel"];
