@@ -74,9 +74,10 @@ return array(
 
     //华夏、骏和,固定参数
     'hxwj' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//1.1用户信息与兑换资格查询接口地址
+    'hxwj1' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//1.2 推送礼包
     'jh' => 'http://newtest.wanjiajinfu.com/',
     'parter_code' => '103',
     'sign_type' => 'MD5',
-    'key' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
+    'hxkey' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
 
 );

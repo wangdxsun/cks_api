@@ -56,8 +56,8 @@ class ExGiftController extends Controller
      */
     public function inquireUserExStatus($paramArr, $source, $key){
 
-        return $this->curlPostSend($paramArr, $source, $key);
-        //p($this->curlPostSend($paramArr, $source));
+       //return $this->curlPostSend($paramArr, $source, $key);
+        p($this->curlPostSend($paramArr, $source,$key));
 
     }
 
@@ -65,7 +65,7 @@ class ExGiftController extends Controller
      * @ Purpose: 1.2 礼包推送接口
      * @param [] $parmArr 若参数值为空 不传
      * e.g. $parmArr = [
-     * 'phone' => 13333333333 //手机号
+     * 'phone' => '13333333333' //手机号
      * 'kcodeType' => 'S7' //产品型号
      * 'kcode' => 'am123' //暗码
      * 'kcodeSn' => 'mm1234' //明码
@@ -77,7 +77,14 @@ class ExGiftController extends Controller
      */
     public  function pushGift($paramArr, $source, $key){
 
-        return $this->curlPostSend($paramArr, $source, $key);
+        //return $this->curlPostSend($paramArr, $source, $key);
+        p($this->curlPostSend($paramArr, $source, $key));
+    }
+
+    public  function pushGift1($paramArr, $source, $key){
+
+        //return $this->curlPostSend($paramArr, $source, $key);
+        p($this->curlPostSend($paramArr, $source, $key));
     }
 
 
@@ -94,12 +101,22 @@ class ExGiftController extends Controller
 
     //test
     public function test(){
-        $arr = [
+        /*$arr = [
           'Phone' =>   '18109069773',
           'Kcodetype' =>   'W2',
-          'amount' => '66.66'
-        ];
-        $this->inquireUserExStatus($arr, 'hxwj', 'key');
+          'amount' => '66.66',
+        ];*/
+        $parmArr = [
+            'phone' => '18109069773',
+            'kcodeType' => 'N1',
+            'kcode' => '??',
+            'kcodeSn' => '!!',
+            'deviceSn' => 'eee',
+            'bingSn' => 'jj',
+            'Amount' => '666',
+      ];
+        //$this->inquireUserExStatus($parmArr, 'hxwj', 'hxkey');
+        $this->pushGift($parmArr, 'hxwj1', 'hxkey');
     }
 
 

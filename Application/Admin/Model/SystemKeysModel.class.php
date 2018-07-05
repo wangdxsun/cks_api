@@ -22,7 +22,7 @@ class SystemKeysModel extends  BaseModel{
         return BaseModel::getDbData([
 
             'table' => SystemKeysModel::$table[0],
-            'fields' => ['key2', 'value1', 'value2'],
+            'fields' => ['key2', 'value1', 'value2', 'value3'],
             'order' => $order,
             'where' => ['key1' => $field ]
 

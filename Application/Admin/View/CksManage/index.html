@@ -13,10 +13,10 @@
     <link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
     <!-- 引入jQuery UI的css文件 -->
     <link rel="stylesheet" href="__PUBLIC__/css/plugins/datapicker/datepicker3.css">
-    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/js/bootstrap3.37/css/bootstrap.min.css">
     <script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
     <script src="__PUBLIC__/js/layui/layui.js"></script>
-    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="__PUBLIC__/js/bootstrap3.37/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/global.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/plugins/datapicker/bootstrap-datepicker.js"></script>
     <!-- 引入jQuery UI的js文件 -->
@@ -167,15 +167,18 @@
 
         $('#describe').on('input propertychange', function() {
             $("#aaresults").html('');
-            $.get("/index.php/Admin/CksManage/dimSearch.html?tag=<?php echo $tag?>&describe="+$('#describe').val(),function(data){
+            $.post("{:U('dimSearch')}",  {tag:"<?php echo$tag?>",describe:$('#describe').val()}, function(data){
                 //$('.ui-autocomplete').show();
                 var htmls = '';
-                var resulte = JSON.parse(data);
-                for(var i in resulte) {
-                    htmls = htmls + "<p>"+resulte[i].label+"</p>";
+                //var resulte = JSON.parse(data);
+                if(data.data){
+                    var field =  data.field;
+                    for(var i in data.data)
+                        htmls = htmls + "<p>"+data.data[i][data.field]+"</p>";
+                    $("#aaresults").html(htmls);
+                    $("#aaresults").show();
                 }
-                $("#aaresults").html(htmls);
-                $("#aaresults").show();
+
             });
         });
 

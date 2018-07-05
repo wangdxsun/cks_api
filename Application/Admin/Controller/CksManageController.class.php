@@ -5,7 +5,7 @@ use Admin\Model\SystemKeysModel;
 use Admin\Model\BaseModel;
 
 /**
- * 角色管理
+ * 策略管理
  * @author jan
  *
  */
@@ -171,25 +171,7 @@ class CksManageController extends BaseController
     //模糊搜索
     public function dimSearch(){
 
-        echo
-        $render = [];
-        $data = BaseModel::getDbData([
-
-            'table' => CksManageModel::$table[$_GET['tag']],
-            'fields' => [CksManageModel::$field[$_GET['tag']]],
-            'where' => [ CksManageModel::$field[$_GET['tag']] => ['like', "%".$_GET['describe']."%"]  ],
-
-        ]);
-        //echo M(CksManageModel::$table[$_GET['tag']])->getLastSql();
-        foreach ($data as $val){
-           $render[] = [
-               'label' => $val[CksManageModel::$field[$_GET['tag']]],
-               'value' => 'channel'
-           ];
-        }
-
-        //p($render);
-        echo json_encode($render);
+        $this->ajaxReturn(CksManageModel::getDimSearchData(I('post.tag'), I('post.describe')));
 
     }
 

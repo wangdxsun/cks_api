@@ -37,6 +37,7 @@ class BaseModel extends  Model{
     @return []
      **/
     public static function getDbData($condition, $tag = true){
+
         //p($condition);die;
         $condition['where'] = $condition['where'] ? $condition['where'] : null;
         $condition['fields'] = $condition['fields'] ? $condition['fields'] : '*';
