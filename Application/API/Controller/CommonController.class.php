@@ -22,7 +22,7 @@ class CommonController extends Controller
      * $channel, 兑换通道
      * exratio   兑换比例
     */
-    public static function ChangeLog($kcode,$rate=1,$dhtotal,$phone,$status,$channel,$exratio,$cksSnsNo,$last_return_time){
+    public static function ChangeLog($kcode,$rate=1,$dhtotal,$phone,$status,$channel,$exratio,$cksSnsNo,$last_return_time,$cash){
             if($status==1){
                 $data=M("relation")->field("money,orderid")->where(["secretcd"=>$kcode])->find();
                 $save["status"]=2;
@@ -42,6 +42,7 @@ class CommonController extends Controller
                 $add["exratio"]=$exratio;
                 $add["exrate"]=$rate;
                 $add["dhtotal"]=$dhtotal;
+                $add["cash"]=$cash;
                 $result2=M("use_details")->add($add);
                 if($result2===false || $result1===false){
                     M()->rollback();
