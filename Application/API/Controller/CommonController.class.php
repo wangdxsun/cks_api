@@ -29,6 +29,7 @@ class CommonController extends Controller
                 $save["channel1"]=$channel;
                 $save["cks_sns_no"]=$cksSnsNo;
                 $save["last_return_time"]=$last_return_time;
+                $save["rephone"]=$phone;
                 M()->startTrans();
                 $result1=M("relation")->where(["secretcd"=>$kcode])->save($save);
                 //新增兑换记录
@@ -42,6 +43,7 @@ class CommonController extends Controller
                 $add["exratio"]=$exratio;
                 $add["exrate"]=$rate;
                 $add["dhtotal"]=$dhtotal;
+                $add["gift_end_time"]=$last_return_time;
                 $add["cash"]=$cash;
                 $add["tag"]=$tag;
                 $add["process"]=$process;

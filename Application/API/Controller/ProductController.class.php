@@ -289,6 +289,7 @@ class ProductController extends Controller
 
         //获取到data，对data进行遍历
        if(count($data)==1){
+
            if($data[0]["status"]<2){
                exit(json_encode(array("status"=>true,"message"=>"未激活K码，直接退款")));
            }else{
@@ -296,6 +297,8 @@ class ProductController extends Controller
                $secretcd=$data[0]["secretcd"];
                M()->startTrans();
                $res=self::chooseMethod($data[0]["channel1"],$clearcd,$secretcd,$method);
+
+
                if($res===false){
                    M()->rollback();
                    exit(json_encode(array("status"=>false,"message"=>"调用接口失败")));
@@ -367,6 +370,7 @@ class ProductController extends Controller
                 break;
             //商城
             case "1-1":
+
                 return self::changeMall($clearcd,$secretcd,$method);
                 break;
             //以太星球
@@ -415,8 +419,9 @@ class ProductController extends Controller
             $new_method="cancel";
         }
         $phone=M("relation")->where(["clearcd"=>$clearcd])->getField("rephone");
-        $uids=BaseController::getUidByPhone($phone);
 
+        $uids=BaseController::getUidByPhone($phone);
+       
         if($uids["err"]>0){
             return false;
         }
