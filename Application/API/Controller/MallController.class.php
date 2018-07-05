@@ -46,6 +46,7 @@ class MallController extends Controller
         $header = array("Content-type: application/json;charset=UTF-8", "timestamp:$timestamp", "method:$method", "sign:$sign");
         $result = Curl::curl_header_post($url, $param, $header);
         $result = json_decode($result, true);
+
         if ($result['status']) {
             $res = array('error' => '0');
         }
@@ -53,7 +54,7 @@ class MallController extends Controller
             $res = array('error' => '110');
         }
         $result['data']['last_return_time'] = date("Y-m-d H:i:s",$result['data']['operable_time']);
-        $res['data'] = $result['data'];
+        $res = array_merge($res, $result);
         return $res;
     }
 
