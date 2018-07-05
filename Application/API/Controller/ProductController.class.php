@@ -147,9 +147,10 @@ class ProductController extends Controller
     {
         $phone = $_POST["phone"];
         $order_no = $_POST["order_no"];
+        $channel=$_POST["channel"];
         $data = M("relation")->where(["orderid" => $order_no, "status" => 1])->field("secretcd,money,pname")->select();
         //发消息接口
-
+        self::sendMessages($channel,$order_no);
         exit(json_encode(array("status"=>true)));
     }
 
