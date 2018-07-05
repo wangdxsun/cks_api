@@ -30,7 +30,7 @@ class TuiController extends Controller
         $where["secretcd"]=$kcode;
         $where["status"]=1;
         $money=M("relation")->where($where)->getField("money");
-        $arr["channel"]="TS";
+        $arr["channel"]="1-2";
         $arr["cksSnsNo"]=md5($kcode);
         $arr["diamondValue"]=$dhtotal=number_format(round($money*$exratio,2),2);
         $arr["kcode"]=$kcode;
