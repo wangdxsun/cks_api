@@ -88,7 +88,7 @@ return array(
     'hxwj_push_gift' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//1.2
     'jh' => 'http://180.167.58.6:8206/CKSKM/QueryUserAndKCode',
     'jh_push_gift' => 'http://180.167.58.6:8206/CKSKM/ActivateKcode',
-    'jh_deal_status' => 'http://180.167.58.6:8206/CKSKM/DealKCodeStatus',
+    'jh_change_status' => 'http://180.167.58.6:8206/CKSKM/DealKCodeStatus',
     'parter_code' => '103',
     'sign_type' => 'MD5',
     'hxwj_key' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',

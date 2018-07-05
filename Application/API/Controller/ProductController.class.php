@@ -98,6 +98,7 @@ class ProductController extends Controller
                $result["clearcd"] = $data["clearcd"];
                $save["orderid"] = $order_no;
                $save["status"]=1;
+               $save["allot_time"]=date("Y-m-d H:i:s",time());
                if($channel=="TUI"){
                    $save["channel3"]="1-2";
                }else if($channel=="ETH"){
@@ -146,9 +147,10 @@ class ProductController extends Controller
     {
         $phone = $_POST["phone"];
         $order_no = $_POST["order_no"];
+        $channel=$_POST["channel"];
         $data = M("relation")->where(["orderid" => $order_no, "status" => 1])->field("secretcd,money,pname")->select();
         //发消息接口
-
+        self::sendMessages($channel,$order_no);
         exit(json_encode(array("status"=>true)));
     }
 
@@ -259,7 +261,7 @@ class ProductController extends Controller
 
             }
         }
-
+        //print_r($data);die;
         //获取到data，对data进行遍历
        if(count($data)==1){
 
@@ -375,8 +377,37 @@ class ProductController extends Controller
     }
 
     //改变推啥
-    protected  function changeTS($clearcd,$secretcd,$method){
-        return "ts";
+    public   function changeTS($clearcd,$secretcd,$method){
+       //进行判断
+        $url="http://172.17.44.98:8082/cks/blackDiamond/state";
+        if($method==1){
+            $kcodeState=2;
+        }elseif($method==2){
+            $kcodeState=1;
+        }else{
+            $kcodeState=$method;
+        }
+        $data=M("relation")->where(["clearcd"=>$clearcd,"secretcd"=>$secretcd])->find();
+        $arr["cksSnsNo"]=$data["cks_sns_no"];
+        $arr["channel"]="TUI";
+        $arr["mobile"]=$data["rephone"];
+        $arr["kcode"]=$secretcd;
+        $arr["kcodeState"]=$kcodeState;
+        $arr["timeStamp"]=$time=time();
+        $arr["token"]="PHICOMMCKS2018";
+        ksort($arr);
+        $sign=strtoupper(md5(sha1(http_build_query($arr))));
+        $arr["signature"]=$sign;
+        unset($arr["token"]);
+        $result_str=Curl::curl_post($url,$arr);
+        file_put_contents("./Application/Runtime/test.txt",$result_str.'--'.date("Y-m-d H:i:s",time()),FILE_APPEND);
+        $result_arr=json_decode($result_str,true);
+        //print_r($result_arr);die;
+        if($result_arr["err"]>0){
+            return false;
+        }else{
+            return true;
+        }
 
 
     }
