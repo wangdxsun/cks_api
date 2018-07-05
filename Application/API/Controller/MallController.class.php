@@ -49,14 +49,15 @@ class MallController extends Controller
         if ($result['status']) {
             //更新K码状态、明显、log
 
-            $res['data']['last_return_time'] = $res['data']['operable_time'];
-            $res = array('error' => '0', 'message' => $result['message']);
+            $res = array('error' => '0');
         }
         else{
             //更新K码状态、明显、log
 
-            $res = array('error' => '110', 'message' => $result['message']);
+            $res = array('error' => '110');
         }
+        $result['data']['last_return_time'] = date("Y-m-d H:i:s",$result['data']['operable_time']);
+        $res['data'] = $result['data'];
         return $res;
     }
 

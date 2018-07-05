@@ -342,7 +342,7 @@ class PageController extends LoginController
                 //  * $status,  状态0 表示成功1 表示失败
                 //  * $channel, 兑换通道
                 //  * exratio   兑换比例
-                $result = CommonController::ChangeLog($kcode,$rate,$change_info['change_money'],$user_info['phonenumber'],1,$change_info['describe'],round($change_info['last_rate'], 2),md5($kcode),date('Y-m-d H:i:s',$res['data']['last_return_time']),$cash,$tag);
+                $result = CommonController::ChangeLog($kcode,$rate,$change_info['change_money'],$user_info['phonenumber'],1,$cash."-".$tag,round($change_info['last_rate'], 2),md5($kcode),$res['data']['last_return_time'],$cash,$tag,$change_info['rate_str']);
                 if ($result) {
                     $data['error'] = '0';
                 }
