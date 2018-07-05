@@ -7,6 +7,7 @@ use API\Controller\BaseController;
 use API\Controller\EthController;
 use API\Controller\MallController;
 use Admin\Model\BaseModel;
+use API\Controller\CommonController;
 /**
  * 页面操作类
  * 
@@ -214,6 +215,7 @@ class PageController extends LoginController
 
         if ($cash==1) {
             $change_info = $this->getChangeMoney($tag,$kcode_info);
+            $change_info['account_number'] = $user_info['phonenumber'];
             exit(BaseController::returnMsg(array('error' => '0', 'data'=>$change_info)));
         }
         elseif ($cash==7) {
@@ -226,22 +228,43 @@ class PageController extends LoginController
                     // * 'amount' => '66.66' //金额
                     // * ];
                     $param = array(
-                        'Phone' => $user_info['phonenumber'],
-                        'Kcodetype' => $kcode_info['im_model'],
-                        'amount' => strval($gift_info['change_money'])
+                        'Phone' => '18109069773',//$user_info['phonenumber'],
+                        'Kcodetype' => 'W2',// $kcode_info['im_model'],
+                        'amount' => strval($kcode_info['money'])
                     );
+                    //print_r($param);
                     $res = ExGiftController::inquireUserExStatus($param, 'hxwj', 'hxwj_key');
+                    //{"message":"用户不存在或未实名","data":null,"rescode":"1000","error":"1000"}
                     //'0000'成功 rescode
                     // 1000 用户不存在或未实名
                     // 2000 k码类型不存在
                     // 4000 data数据有误
                     // 5000 签名不正确
                     $res = json_decode($res, true);
-                    $res['error'] = $res['rescode']=='0000'?'0':$res['rescode'];
+                    if ($res['rescode']=='0000') {
+                        $res['data'] = array_merge($gift_info, $res['data']);
+                        $res['data']['account_number'] = $res['data']['phone'];
+                        if ($res['data']['exchangPlanAmount']) {
+                            $plan_info = explode(',', $res['data']['exchangPlanAmount']);
+                            foreach ($plan_info as $key => $value) {
+                                $res['data']['plan_detail'][] = explode('-', $value)[0];
+                            }
+                            
+                        }
+                    }
+                    $res['error'] = $res['rescode']=='0000'?'0':'110';
                     
                     break;
                 case 2://'骏和':
-                    
+                    $param = array(
+                        'Phone' => $user_info['phonenumber'],
+                        'Kcodetype' => $kcode_info['im_model'],
+                        'amount' => strval($kcode_info['money'])
+                    );
+                    print_r($param);
+                    $res = ExGiftController::inquireUserExStatus($param, 'jh', 'hxwj_key');
+                    $res = json_decode($res, true);
+                    $res['error'] = $res['rescode']=='0000'?'0':'110';
                     break;
                 default:
                     # code...
@@ -277,8 +300,10 @@ class PageController extends LoginController
         }
         
         //跟新流水号，变更状态--锁定-to do 
+        M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>5));
 
         if ($cash==1) {
+            $rate=1;
             $change_info = $this->getChangeMoney($tag,$kcode_info);
             switch ($tag) {
                 case 1://'商城':
@@ -294,7 +319,7 @@ class PageController extends LoginController
                     }
                     break;
                 case 3://'DDW':
-                    
+                    $rate=1;
                     break;
                 case 4://'以太星球':
                     $price1 = floatval($kcode_info['money']);//price1  是   k码对应的人民币价值
@@ -307,35 +332,42 @@ class PageController extends LoginController
                     # code...
                     break;  
             }
+          
+            if ($res['error']==='0') {
+                //变更状态--已兑换
+                // * $kcode, 暗码值
+                //  * $rate=1, 兑换比例
+                //  * $dhtotal, 兑换了多少个
+                //  * $phone,   手机号
+                //  * $status,  状态0 表示成功1 表示失败
+                //  * $channel, 兑换通道
+                //  * exratio   兑换比例
+                $result = CommonController::ChangeLog($kcode,$rate,$change_info['change_money'],$user_info['phonenumber'],1,$change_info['describe'],round($change_info['last_rate'], 2),md5($kcode),date('Y-m-d H:i:s',$res['data']['last_return_time']),$cash,$tag);
+                if ($result) {
+                    $data['error'] = '0';
+                }
+            }else{
+                //变更状态--已分配
+                M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>1));
+            }
         }
         elseif ($cash==7) {
+            $gift_info = $this->getGiftMoney($tag, $kcode_info['money']);
             switch ($tag) {
+                
                 case 1://'华夏':
-                    /**
-                     * @ Purpose: 1.2 礼包推送接口
-                     * @param [] $parmArr 若参数值为空 不传
-                     * e.g. $parmArr = [
-                        'phone' =>   '13795000060',
-                        'kcodeType' =>   'W2',
-                        'kcode' => 'am123',
-                        'kcodeSn' => 'mm1234',
-                        'deviceSn' => 'sb1234',
-                        'bingSn' => 'bd123',
-                        'Amount' => '999'
-                     * ];
-                     * @return []
-                     */
                     $param = array(
-                        'phone' => '13333333333', //手机号
-                        'kcodeType' => 'S7', //产品型号
-                        'kcode' => 'am123', //暗码
-                        'kcodeSn' => 'mm1234', //明码
-                        'deviceSn' => 'sb1234',//设备码
-                        'bingSn' => 'bd123',  //绑定码
-                        'Amount' => '666'  //礼包金额
+                        'phone' => $user_info['phonenumber'],//'18770031847', //手机号
+                        'kcodeType' => $kcode_info['im_model'],//'S7', //产品型号
+                        'kcode' => $kcode_info['secretcd'],//'am123', //暗码
+                        'kcodeSn' => $kcode_info['clearcd'],//'mm1234', //明码
+                        'deviceSn' => $kcode_info['clearcd'],//'sb1234',//设备码
+                        'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
+                        'Amount' => strval($kcode_info['money']),//'666'  //礼包金额
                     );
                     $res = ExGiftController::pushGift($param, 'hxwj_push_gift', 'hxwj_key');
                     $res['error'] = $res['rescode']=='0000'?'0':$res['rescode'];
+
                     // 0000 礼包生成成功
                     // 1000 用户不存在或未实名
                     // 2000 无兑换资格，请先投资兑换相应k码资格
@@ -354,13 +386,7 @@ class PageController extends LoginController
                     break;
             }
         }
-        
-        print_r($res);
-        if ($res['error']==='0') {
-            //变更状态--已兑换
-        }else{
-            //变更状态--已分配
-        }
+        exit(BaseController::returnMsg($res));
     }
 
 }

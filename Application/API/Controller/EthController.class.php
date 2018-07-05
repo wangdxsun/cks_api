@@ -43,7 +43,7 @@ class EthController extends Controller
         else{
             //更新K码状态、明显、log
 
-            $res = array('error' => '1', 'message' => '兑换失败');
+            $res = array('error' => '110', 'message' => '兑换失败');
         }
         return $res;
     }
