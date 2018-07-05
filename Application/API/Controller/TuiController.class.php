@@ -25,8 +25,8 @@ class TuiController extends Controller
     $arr["exratio"]=1.1;
     $arr["timeStamp"]=$time=time();
      */
-    public function index($channel="TUI",$kcode="iqKPJJmNWM",$mobile="18770031847",$exratio=1.1,$rate=1){
-        file_put_contents("./Application/Runtime/test.txt",$channel.'-'.$kcode.'-'.$mobile.'-'.$exratio.'-'.$rate,FILE_APPEND);
+    public function index($channel="TUI",$kcode="vtMeyKmDqp",$mobile="18770031847",$exratio=1.1,$rate=1){
+        //file_put_contents("./Application/Runtime/test.txt",$channel.'-'.$kcode.'-'.$mobile.'-'.$exratio.'-'.$rate,FILE_APPEND);
         $url="http://172.17.44.98:8082/cks/blackDiamond";
         $where["secretcd"]=$kcode;
         $where["status"]=1;
@@ -47,7 +47,7 @@ class TuiController extends Controller
         unset($arr["token"]);
         $result_str=Curl::curl_post($url,$arr);
         //print_r($result_str);
-        file_put_contents("./Application/Runtime/test.txt",$result_str,FILE_APPEND);
+        //file_put_contents("./Application/Runtime/test.txt",$result_str,FILE_APPEND);
         $result_arr=json_decode($result_str,true);
         if($result_arr["err"]>0){
             return array('status'=>false,"message"=>"请求推啥失败,请检查原因");
@@ -63,9 +63,9 @@ class TuiController extends Controller
 
     }
 
-    public function say(){
-        echo "hello world";
-    }
+   /* public function say(){
+        self::index("TUI","978vcmxWeA","18770031847",102.9,2);
+    }*/
 
 
 }
