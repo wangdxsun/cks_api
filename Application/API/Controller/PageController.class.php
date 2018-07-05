@@ -177,7 +177,7 @@ class PageController extends LoginController
         $page = $_POST['page'];
         $data = BaseModel::joinSecListData([
             'table' => 'use_details',
-            'fields' => ['use_details.dhtotal','relation.secretcd','relation.money','relation.im_model,allot_policy.describe,use_details.cash,use_details.tag'],
+            'fields' => ['use_details.dhtotal','use_details.activate_time','relation.secretcd','relation.money','relation.im_model,allot_policy.describe,use_details.cash,use_details.tag'],
             'joinWhere' => 'LEFT JOIN relation ON use_details.secretcd = relation.secretcd LEFT JOIN allot_policy ON (allot_policy.cash = use_details.cash AND allot_policy.tag = use_details.tag)',
             'where' => ['atvphone' => $info['phonenumber']],
             'order' => 'activate_time',
