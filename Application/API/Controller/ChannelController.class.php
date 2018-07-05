@@ -15,7 +15,7 @@ class ChannelController extends Controller
 {
 
     public function changerate(){
-        //EntryController::index();
+        EntryController::index();
         $channel=$_POST["channel"];
         $exratio=$_POST["exratio"];
         if($channel!="华夏万家"&&$channel!="骏和"){

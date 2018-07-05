@@ -24,6 +24,7 @@ class ProductController extends Controller
     //获取电子K码
     public function getKcode()
     {
+        //EntryController::index();
         if(IS_POST){
             $phone = $_POST["phone"];
             $channel = $_POST["channel"];
@@ -37,10 +38,10 @@ class ProductController extends Controller
                     $where["sn"]=$v["sn"];
                 }*/
                 $where["im_pnumber"] = $v["pnumber"];
-                $where["im_pname"] = $v["pname"];
+                $where["im_model"] = $v["pname"];
                 $where["status"] = 0;
                 $pmoneys = M("relation")->where($where)->field("pmoney")->select();
-                //print_r(M()->getLastSql());die;
+
                 if(empty($pmoneys)){
                     exit(json_encode(array("status" => false, "message" => "找不到合适的产品")));
                 }
@@ -58,6 +59,8 @@ class ProductController extends Controller
             if ($channel == "TUI") {
                 //获取推啥接口
                 $response = $this->getTresult($phone, $order_no, $products,$channel);
+
+                self::sendMessages($channel,$order_no);
             } else if ($channel == 'ETH') {
                 //获取金额
                 $response = $this->getTresult($phone,$order_no, $products,$channel);
@@ -79,15 +82,16 @@ class ProductController extends Controller
         $status_pool=array();
 
        try{
-           M()->startTrans();
+           //M()->startTrans();
            foreach ($products as $k => $v) {
                $where["status"] = 0;
-               $where["im_pname"] = $v["pname"];
+               $where["im_model"] = $v["pname"];
                $where["im_pnumber"] = $v["pnumber"];
                //$where["money"] = array("gt", 0);
 
                $data = M("relation")->lock(true)->where($where)->find();
-               if(empty($data)){
+
+              if(empty($data)){
                    return array("status"=>false,"message"=>"查不到对应K码");
                }
                $id = $data["id"];
@@ -95,13 +99,13 @@ class ProductController extends Controller
                $save["orderid"] = $order_no;
                $save["status"]=1;
                if($channel=="TUI"){
-                   $save["channel1"]="1-2";
+                   $save["channel3"]="1-2";
                }else if($channel=="ETH"){
-                   $save["channel1"]="1-4";
+                   $save["channel3"]="1-4";
                    $save["sn"]=$v["sn"];
                    $result["secretcd"]=$data["secretcd"];
                }else{
-                   $save["channel1"]="YP";
+                   $save["channel3"]="YP";
                }
 
                $result["money"] = $save["money"] = $v["money"];
@@ -128,43 +132,13 @@ class ProductController extends Controller
         $new_response["order_no"]=$order_no;
         $new_response["channel"]=$channel;
         $new_response["products"]=$response;
+
         return $new_response;
 
     }
 
 
-    //获取ETH result
-   /* protected function getEresult($order_no, $products,$phone)
-    {
-        $response = array();
-        $sns=array();
-        M()->startTrans();
-        $status_pool=array();
 
-        foreach ($products as $k => $v) {
-            $where["sn"] = $v["sn"];
-            $save["orderid"] = $order_no;
-            $save["money"] = $v["money"];
-            $save["status"]=2;
-            $save["channel1"]="ETH";
-            $status=M("relation")->where($where)->save($save);
-            array_push($status_pool,$status);
-            array_push($sns,$v["sn"]);
-        }
-        if(in_array(false,$status_pool)){
-            M()->rollback();
-            return array("status"=>false,"message"=>"分配K码失败");
-        }
-        M()->commit();
-        $new_where["sn"]=array("in",$sns);
-        $new_result = M("relation")->where($new_where)->field("clearcd,money,secretcd")->find();
-        $result["status"]=true;
-        $result["order_no"]=$order_no;
-        $result["phone"]=$phone;
-        $result["products"]=$new_result;
-        return $result;
-
-    }*/
 
 
     //发送短信
@@ -218,7 +192,7 @@ class ProductController extends Controller
         if(!empty($secretcd)){
             $where["secretcd"]=$secretcd;
         }
-       $data=M("relation")->field("status as kstatus,last_return_time,money,channel1")->where($where)->find();
+       $data=M("relation")->field("status as kstatus,last_return_time,money,channel3")->where($where)->find();
 
         if(!$data){
             exit(json_encode(array("status"=>false,"message"=>"查无数据")));
@@ -239,17 +213,16 @@ class ProductController extends Controller
 
          foreach($data as $k=>$v){
              $new_sign=$sign.$v["secretcd"]."请妥善保管,30天内有效";
+
              $phone=$v['rephone'];
              $senddata["authorizationcode"]=$auth;
-             $senddata["isCustom"]=true;
+             $senddata["isCustom"]='true';
              $senddata["msg"]=$new_sign;
              $senddata["phonenumber"]=$phone;
              $senddata["verificationtype"]=0;
              $url="http://114.141.173.53:80/v1/verificationCode?".http_build_query($senddata);
-
-             $result=Curl::curl_get($url);
-             sleep(60);
-             var_dump($result);
+             Curl::curl_get($url);
+             //sleep(1);
          }
 
 
@@ -272,12 +245,12 @@ class ProductController extends Controller
         if($clearcd_str){
             $cards=json_decode($clearcd_str,true);
             $where["clearcd"]=array("in",$cards);
-            $data=M("relation")->field("clearcd,secretcd,channel1,status,last_return_time")->where($where)->select();
+            $data=M("relation")->field("clearcd,secretcd,channel3,status,last_return_time")->where($where)->select();
         }
         if($secretcd_str){
             $cards=json_decode($secretcd_str,true);
             $where["secretcd"]=array("in",$cards);
-            $data=M("relation")->field("clearcd,secretcd,channel1,status,last_return_time")->where($where)->select();
+            $data=M("relation")->field("clearcd,secretcd,channel3,status,last_return_time")->where($where)->select();
         }
 
         foreach($data as $kk=>$vv){
@@ -296,12 +269,12 @@ class ProductController extends Controller
                $clearcd=$data[0]["clearcd"];
                $secretcd=$data[0]["secretcd"];
                M()->startTrans();
-               $res=self::chooseMethod($data[0]["channel1"],$clearcd,$secretcd,$method);
+               $res=self::chooseMethod($data[0]["channel3"],$clearcd,$secretcd,$method);
 
 
                if($res===false){
                    M()->rollback();
-                   exit(json_encode(array("status"=>false,"message"=>"调用接口失败")));
+                   exit(json_encode(array("status"=>false,"message"=>"调用接口失败1")));
                } else{
                    if($method==1){
                        $save["status"]=3;
@@ -311,7 +284,8 @@ class ProductController extends Controller
                        $save["status"]=4;
                    }
                    $result_relat=M("relation")->where(["clearcd"=>$clearcd])->save($save);
-                   if($result_relat===false){
+                   $result_result1=M("use_details")->where(["secretcd"=>$secretcd])->save($save);
+                   if($result_relat===false || $result_result1===false){
                        M()->rollback();
                        exit(json_encode(array("status"=>false,"message"=>"修改本地接口失败")));
                    }else{
@@ -328,12 +302,12 @@ class ProductController extends Controller
                 }else{
                     $clearcd=$item["clearcd"];
                     $secretcd=$item["secretcd"];
-                    $res=self::chooseMethod($item["channel1"],$clearcd,$secretcd,$method);
+                    $res=self::chooseMethod($item["channel3"],$clearcd,$secretcd,$method);
                     array_push($status_pool,$res);
                 }
             }
          if(in_array(false,$status_pool)){
-             exit(json_encode(array("status"=>false,"message"=>"调用接口失败")));
+             exit(json_encode(array("status"=>false,"message"=>"调用接口失败2")));
          }else{
              M()->startTrans();
              if($method==1){
@@ -344,7 +318,8 @@ class ProductController extends Controller
                  $save["status"]=4;
              }
              $result_status=M("relation")->where($where)->save($save);
-             if($result_status===false){
+             $result_status1=M("use_details")->where($where)->save($save);
+             if($result_status===false||$result_status1===false){
                  M()->rollback();
                  exit(json_encode(array("status"=>false,"message"=>"修改数据失败")));
              }else{
@@ -421,7 +396,7 @@ class ProductController extends Controller
         $phone=M("relation")->where(["clearcd"=>$clearcd])->getField("rephone");
 
         $uids=BaseController::getUidByPhone($phone);
-       
+
         if($uids["err"]>0){
             return false;
         }

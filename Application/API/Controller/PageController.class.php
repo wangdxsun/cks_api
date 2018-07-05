@@ -15,7 +15,24 @@ use API\Controller\CommonController;
  *
  */
 class PageController extends LoginController
-{
+{   
+    public $token = "";
+    public $user_info = array();
+    //初始操作
+    public function _initialize()
+    {
+        parent::_initialize();
+        $this->token = $_POST['token'];
+        if (empty(isset($this->token))) {
+            exit(BaseController::returnMsg(array('error' => '103')));
+        }
+        //验证token 获取手机号等信息
+        $info = BaseController::getInfoByToken($this->token);
+        if ($info['error']!='0') {
+            exit(BaseController::returnMsg($info));
+        }
+        $this->user_info = $user_info;
+    }
     /**
         @功能:前端查询K码，获取可兑换信息
         @author:yy
@@ -164,20 +181,17 @@ class PageController extends LoginController
         @date:2018-07-01
     **/
     public function getHistoryInfo(){
-        $token = $_POST['token'];
+        $token = $this->token;
         if (empty(isset($token))) {
             exit(BaseController::returnMsg(array('error' => '103')));
         }
         //验证token 获取手机号等信息
-        $info = BaseController::getInfoByToken($token);
-        if ($info['error']!='0') {
-            exit(BaseController::returnMsg($info));
-        }
+        $info = $this->user_info;
         
         $page = $_POST['page'];
         $data = BaseModel::joinSecListData([
             'table' => 'use_details',
-            'fields' => ['use_details.dhtotal','relation.secretcd','relation.money','relation.im_model,allot_policy.describe,use_details.cash,use_details.tag'],
+            'fields' => ['use_details.dhtotal','use_details.activate_time','relation.secretcd','relation.money','relation.im_model,allot_policy.describe,use_details.cash,use_details.tag'],
             'joinWhere' => 'LEFT JOIN relation ON use_details.secretcd = relation.secretcd LEFT JOIN allot_policy ON (allot_policy.cash = use_details.cash AND allot_policy.tag = use_details.tag)',
             'where' => ['atvphone' => $info['phonenumber']],
             'order' => 'activate_time',
@@ -197,7 +211,7 @@ class PageController extends LoginController
         @date:2018-07-01
     **/
     public function butnChange(){
-        $token = $_POST['token'];
+        $token = $this->token;
         $tag = $_POST['tag'];
         $kcode = $_POST['kcode'];
         $cash = $_POST['cash'];
@@ -208,10 +222,7 @@ class PageController extends LoginController
         ];
         $kcode_info = BaseModel::getDbData($condition, false);
         //验证token 并获取uid 手机
-        $user_info = BaseController::getInfoByToken($token);
-        if ($user_info['error']!='0') {
-            exit(BaseController::returnMsg($user_info));
-        }
+        $user_info = $this->user_info;
 
         if ($cash==1) {
             $change_info = $this->getChangeMoney($tag,$kcode_info);
@@ -283,7 +294,7 @@ class PageController extends LoginController
         // tag     是   渠道代码 tag: 1：商城 2：推啥 3：DDW 4：以太星球
         // kcode   是   K码值，暗码
         // cash    是   策略类别，1：渠道兑付策略 7：礼包平台策略
-        $token = $_POST['token'];
+        $token = $this->token;
         $tag = $_POST['tag'];
         $kcode = $_POST['kcode'];
         $cash = $_POST['cash'];
@@ -293,17 +304,13 @@ class PageController extends LoginController
             'where' => ['secretcd' => $kcode]
         ];
         $kcode_info = BaseModel::getDbData($condition, false);
-        //验证token 并获取uid 手机
-        $user_info = BaseController::getInfoByToken($token);
-        if ($user_info['error']!='0') {
-            exit(BaseController::returnMsg($user_info));
-        }
+        $user_info = $this->user_info;
         
-        //跟新流水号，变更状态--锁定-to do 
+        //变更状态--锁定-to do 
         M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>5));
-
+        //第一大类策略
         if ($cash==1) {
-            $rate=1;
+            $rate=1;//汇率
             $change_info = $this->getChangeMoney($tag,$kcode_info);
             switch ($tag) {
                 case 1://'商城':
@@ -313,10 +320,14 @@ class PageController extends LoginController
                     $res = MallController::mallChange($token,$kcode,$sku_bn,$amount,$radio);
                     break;
                 case 2://'推啥':
-                    $res=TuiController::index("TS",$kcode,$user_info['phonenumber'],round($change_info['last_rate'], 2),1);
-                    if ($res['status']) {
-                        # code...
+                    $result = TuiController::index("TS",$kcode,$user_info['phonenumber'],round($change_info['last_rate'], 2),1);
+                    if ($result['status']) {
+                        $res = array('error' => '0', 'data' => array('last_return_time' => $result['last_return_time']));
                     }
+                    else{
+                        $res = array('error' => '110');
+                    }
+                    print_r($res);
                     break;
                 case 3://'DDW':
                     $rate=1;
@@ -342,7 +353,7 @@ class PageController extends LoginController
                 //  * $status,  状态0 表示成功1 表示失败
                 //  * $channel, 兑换通道
                 //  * exratio   兑换比例
-                $result = CommonController::ChangeLog($kcode,$rate,$change_info['change_money'],$user_info['phonenumber'],1,$change_info['describe'],round($change_info['last_rate'], 2),md5($kcode),date('Y-m-d H:i:s',$res['data']['last_return_time']),$cash,$tag);
+                $result = CommonController::ChangeLog($kcode,$rate,$change_info['change_money'],$user_info['phonenumber'],1,$cash."-".$tag,round($change_info['last_rate'], 2),md5($kcode),$res['data']['last_return_time'],$cash,$tag,$change_info['rate_str']);
                 if ($result) {
                     $data['error'] = '0';
                 }
@@ -351,6 +362,7 @@ class PageController extends LoginController
                 M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>1));
             }
         }
+        //第七大类策略
         elseif ($cash==7) {
             $gift_info = $this->getGiftMoney($tag, $kcode_info['money']);
             switch ($tag) {
@@ -384,6 +396,23 @@ class PageController extends LoginController
                 default:
                     # code...
                     break;
+            }
+            if ($res['error']==='0') {
+                //变更状态--已兑换
+                // * $kcode, 暗码值
+                //  * $rate=1, 兑换比例
+                //  * $dhtotal, 兑换了多少个
+                //  * $phone,   手机号
+                //  * $status,  状态0 表示成功1 表示失败
+                //  * $channel, 兑换通道
+                //  * exratio   兑换比例
+                $result = CommonController::ChangeLog($kcode,$rate,$change_info['change_money'],$user_info['phonenumber'],1,$cash."-".$tag,round($change_info['last_rate'], 2),md5($kcode),$res['data']['last_return_time'],$cash,$tag,$change_info['rate_str']);
+                if ($result) {
+                    $data['error'] = '0';
+                }
+            }else{
+                //变更状态--已分配
+                M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>1));
             }
         }
         exit(BaseController::returnMsg($res));

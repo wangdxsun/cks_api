@@ -48,8 +48,9 @@
             <th>暗码</th>
             <th>绑定码</th>
             <th>K码状态</th>
-            <th>导入型号</th>
             <th>导入料号</th>
+            <th>导入型号</th>
+            <th>渠道名称</th>
             <th>导入时间</th>
             <th>导入人员</th>
             <th>产品金额</th>
@@ -65,8 +66,9 @@
             <td><?php echo $val['secretcd'];?></td>
             <td><?php echo $val['hcode'];?></td>
             <td><?php echo $val['status'];?></td>
-            <td><?php echo $val['im_model'];?></td>
             <td><?php echo $val['im_pnumber'];?></td>
+            <td><?php echo $val['im_model'];?></td>
+            <td><?php echo $val['im_channel'];?></td>
             <td><?php echo $val['im_time'];?></td>
             <td><?php echo $val['im_staff'];?></td>
             <td><?php echo $val['money'];?></td>
@@ -146,7 +148,7 @@
                     //$('.ui-autocomplete').show();
                     var htmls = '';
                     //var resulte = JSON.parse(data);
-                    if (data.data) {
+                    if (data.data.length >0) {
                         var field = data.field;
                         for (var i in data.data)
                             htmls = htmls + "<p>" + data.data[i][data.field] + "</p>";

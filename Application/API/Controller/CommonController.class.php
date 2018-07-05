@@ -26,7 +26,7 @@ class CommonController extends Controller
             if($status==1){
                 $data=M("relation")->field("money,orderid")->where(["secretcd"=>$kcode])->find();
                 $save["status"]=2;
-                $save["channel1"]=$channel;
+                $save["channel3"]=$channel;
                 $save["cks_sns_no"]=$cksSnsNo;
                 $save["last_return_time"]=$last_return_time;
                 $save["rephone"]=$phone;
