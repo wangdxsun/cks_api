@@ -11,10 +11,9 @@ use Admin\Model\BaseModel;
  */
 class IndexController extends BaseController
 {
-
-
-    private $table = ['relation', 'admin', 'role'];
     
+    private $table = ['relation', 'admin', 'role'];
+
     private $echartsName = ['今日新增', '今日分配', '今日激活'];
     //private $echartsName = ['今日分配', '今日激活'];
 
