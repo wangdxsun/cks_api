@@ -15,7 +15,24 @@ use API\Controller\CommonController;
  *
  */
 class PageController extends LoginController
-{
+{   
+    public $token = "";
+    public $user_info = array();
+    //初始操作
+    public function _initialize()
+    {
+        parent::_initialize();
+        $this->token = $_POST['token'];
+        if (empty(isset($this->token))) {
+            exit(BaseController::returnMsg(array('error' => '103')));
+        }
+        //验证token 获取手机号等信息
+        $info = BaseController::getInfoByToken($this->token);
+        if ($info['error']!='0') {
+            exit(BaseController::returnMsg($info));
+        }
+        $this->user_info = $user_info;
+    }
     /**
         @功能:前端查询K码，获取可兑换信息
         @author:yy
@@ -164,15 +181,12 @@ class PageController extends LoginController
         @date:2018-07-01
     **/
     public function getHistoryInfo(){
-        $token = $_POST['token'];
+        $token = $this->token;
         if (empty(isset($token))) {
             exit(BaseController::returnMsg(array('error' => '103')));
         }
         //验证token 获取手机号等信息
-        $info = BaseController::getInfoByToken($token);
-        if ($info['error']!='0') {
-            exit(BaseController::returnMsg($info));
-        }
+        $info = $this->user_info;
         
         $page = $_POST['page'];
         $data = BaseModel::joinSecListData([
@@ -197,7 +211,7 @@ class PageController extends LoginController
         @date:2018-07-01
     **/
     public function butnChange(){
-        $token = $_POST['token'];
+        $token = $this->token;
         $tag = $_POST['tag'];
         $kcode = $_POST['kcode'];
         $cash = $_POST['cash'];
@@ -208,10 +222,7 @@ class PageController extends LoginController
         ];
         $kcode_info = BaseModel::getDbData($condition, false);
         //验证token 并获取uid 手机
-        $user_info = BaseController::getInfoByToken($token);
-        if ($user_info['error']!='0') {
-            exit(BaseController::returnMsg($user_info));
-        }
+        $user_info = $this->user_info;
 
         if ($cash==1) {
             $change_info = $this->getChangeMoney($tag,$kcode_info);
@@ -283,7 +294,7 @@ class PageController extends LoginController
         // tag     是   渠道代码 tag: 1：商城 2：推啥 3：DDW 4：以太星球
         // kcode   是   K码值，暗码
         // cash    是   策略类别，1：渠道兑付策略 7：礼包平台策略
-        $token = $_POST['token'];
+        $token = $this->token;
         $tag = $_POST['tag'];
         $kcode = $_POST['kcode'];
         $cash = $_POST['cash'];
@@ -293,11 +304,7 @@ class PageController extends LoginController
             'where' => ['secretcd' => $kcode]
         ];
         $kcode_info = BaseModel::getDbData($condition, false);
-        //验证token 并获取uid 手机
-        $user_info = BaseController::getInfoByToken($token);
-        if ($user_info['error']!='0') {
-            exit(BaseController::returnMsg($user_info));
-        }
+        $user_info = $this->user_info;
         
         //变更状态--锁定-to do 
         M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>5));
