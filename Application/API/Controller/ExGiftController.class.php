@@ -75,7 +75,7 @@ class ExGiftController extends Controller
           'Kcodetype' =>   'W2',
           'amount' => '999'
         ];
-        $this->inquireUserExStatus($arr, 'jh', 'hxwj_key');
+        p($this->inquireUserExStatus($arr, 'jh', 'hxwj_key'));
     }
 
     public function testPushGift()
@@ -89,7 +89,21 @@ class ExGiftController extends Controller
             'bingSn' => 'bd123',
             'Amount' => '999'
         ];
-        $this->pushGift($arr, 'jh_push_gift', 'hxwj_key');
+        p($this->pushGift($arr, 'jh_push_gift', 'hxwj_key'));
+    }
+
+    /**
+     * status: invalid 失效，freeze 冻结，解冻 unfreeze
+     * statusName
+     */
+    public function testChangeGiftStatus()
+    {
+        $arr = [
+            'kcode' => 'am123',
+            'status' => 'invalid',
+            'statusName' => 'invalid'
+        ];
+        p($this->changeGiftStatus($arr, 'jh_change_status', 'hxwj_key'));
     }
 
 }
