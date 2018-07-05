@@ -2,7 +2,7 @@
 namespace Admin\Controller;
 
 use Admin\Model\BaseModel;
-use Admin\Model\RoleModel;
+use Think\Controller;
 
 /**
  * wms
@@ -10,11 +10,8 @@ use Admin\Model\RoleModel;
  * @author mxj
  *
  */
-class WmsController extends BaseController
+class WmsController extends Controller
 {
-    public function index(){
-        $this->display();
-    }
 
     public function allot()
     {
