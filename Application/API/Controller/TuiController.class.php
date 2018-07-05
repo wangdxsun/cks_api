@@ -52,9 +52,9 @@ class TuiController extends Controller
             //插入兑换记录数据库
             $result_status=CommonController::ChangeLog($kcode,$rate,$dhtotal,$mobile,1,$channel,$exratio);
             if($result_status){
-                return array("status"=>"true");
+                return array("status"=>true);
             }else{
-                return array("status"=>"false","message"=>"修改状态失败");
+                return array("status"=>false,"message"=>"修改状态失败");
             }
         }
 
