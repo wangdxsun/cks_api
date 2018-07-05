@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3d79f8ba-c1a9-424a-a2b3-7f5398ab2efb" name="Default" comment="kk">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Admin/Controller/IndexController.class.php" afterPath="$PROJECT_DIR$/Application/Admin/Controller/IndexController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Admin/View/Index/login.html" afterPath="$PROJECT_DIR$/Application/Admin/View/Index/login.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Admin/View/Index/main.html" afterPath="$PROJECT_DIR$/Application/Admin/View/Index/main.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Application/Common/Common/function.php" afterPath="$PROJECT_DIR$/Application/Common/Common/function.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -42,38 +38,28 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="IndexController.class.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="IndexController.class.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/IndexController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="542">
-              <caret line="231" column="26" lean-forward="false" selection-start-line="231" selection-start-column="26" selection-end-line="231" selection-end-column="26" />
+            <state relative-caret-position="352">
+              <caret line="16" column="4" lean-forward="false" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
               <folding>
-                <marker date="1530765208327" expanded="true" signature="3938:4035" ph="select ${{$f... " />
-                <marker date="1530765208327" expanded="true" signature="4073:4502" ph="select max()... SELECT" />
-                <marker date="1530765208327" expanded="true" signature="4170:4284" ph="select ${{$f... " />
+                <marker date="1530769463134" expanded="true" signature="3960:4057" ph="select ${{$f... " />
+                <marker date="1530769463134" expanded="true" signature="4095:4524" ph="select max()... SELECT" />
+                <marker date="1530769463134" expanded="true" signature="4192:4306" ph="select ${{$f... " />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="function.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="function.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Application/Common/Common/function.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="613">
-              <caret line="141" column="99" lean-forward="false" selection-start-line="141" selection-start-column="99" selection-end-line="141" selection-end-column="99" />
+            <state relative-caret-position="591">
+              <caret line="140" column="25" lean-forward="false" selection-start-line="140" selection-start-column="25" selection-end-line="140" selection-end-column="25" />
               <folding>
                 <marker date="1530763404454" expanded="true" signature="3558:3699" ph="..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="date.php" pinned="false" current-in-tab="false">
-        <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/date/date.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="305">
-              <caret line="455" column="9" lean-forward="false" selection-start-line="455" selection-start-column="9" selection-end-line="455" selection-end-column="9" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -141,6 +127,7 @@
       <find>客户渠道策略</find>
       <find>read</find>
       <find>$params['readdress']</find>
+      <find>table</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -185,8 +172,8 @@
         <option value="$PROJECT_DIR$/Application/Admin/Controller/KcodeProduceController.class.php" />
         <option value="$PROJECT_DIR$/Application/Common/Common/function.php" />
         <option value="$PROJECT_DIR$/Application/Admin/View/Index/main.html" />
-        <option value="$PROJECT_DIR$/Application/Admin/Controller/IndexController.class.php" />
         <option value="$PROJECT_DIR$/Application/Admin/View/Index/login.html" />
+        <option value="$PROJECT_DIR$/Application/Admin/Controller/IndexController.class.php" />
       </list>
     </option>
   </component>
@@ -820,12 +807,12 @@
       <workItem from="1530083036283" duration="3748000" />
       <workItem from="1530174339395" duration="104942000" />
       <workItem from="1530607906775" duration="60458000" />
-      <workItem from="1530754054608" duration="9112000" />
+      <workItem from="1530754054608" duration="10415000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="178260000" />
+    <option name="totallyTimeSpent" value="179563000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1250,18 +1237,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/IndexController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="542">
-          <caret line="231" column="26" lean-forward="false" selection-start-line="231" selection-start-column="26" selection-end-line="231" selection-end-column="26" />
-          <folding>
-            <marker date="1530765208327" expanded="true" signature="3938:4035" ph="select ${{$f... " />
-            <marker date="1530765208327" expanded="true" signature="4073:4502" ph="select max()... SELECT" />
-            <marker date="1530765208327" expanded="true" signature="4170:4284" ph="select ${{$f... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Application/Admin/View/Index/login.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="301">
@@ -1272,10 +1247,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Application/Common/Common/function.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="613">
-          <caret line="141" column="99" lean-forward="false" selection-start-line="141" selection-start-column="99" selection-end-line="141" selection-end-column="99" />
+        <state relative-caret-position="591">
+          <caret line="140" column="25" lean-forward="false" selection-start-line="140" selection-start-column="25" selection-end-line="140" selection-end-column="25" />
           <folding>
             <marker date="1530763404454" expanded="true" signature="3558:3699" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/IndexController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="16" column="4" lean-forward="false" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
+          <folding>
+            <marker date="1530769463134" expanded="true" signature="3960:4057" ph="select ${{$f... " />
+            <marker date="1530769463134" expanded="true" signature="4095:4524" ph="select max()... SELECT" />
+            <marker date="1530769463134" expanded="true" signature="4192:4306" ph="select ${{$f... " />
           </folding>
         </state>
       </provider>
