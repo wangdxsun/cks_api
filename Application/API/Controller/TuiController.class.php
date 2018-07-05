@@ -26,7 +26,7 @@ class TuiController extends Controller
     $arr["timeStamp"]=$time=time();
      */
     public function index($channel="TS",$kcode="V83xkje3",$mobile="17717689858",$exratio=1.1,$rate=1){
-        $url="http://a842a093.ngrok.io/cks/blackDiamond";
+        $url="http://172.17.44.98:8082";
         $where["secretcd"]=$kcode;
         $where["status"]=1;
         $money=M("relation")->where($where)->getField("money");

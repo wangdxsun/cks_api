@@ -220,12 +220,9 @@ class ProductController extends Controller
              $senddata["msg"]=$new_sign;
              $senddata["phonenumber"]=$phone;
              $senddata["verificationtype"]=0;
-
              $url="http://114.141.173.53:80/v1/verificationCode?".http_build_query($senddata);
-             //$url="http://114.141.173.53:80/v1/verificationCode?authorizationcode=$auth&isCustomer=true&phonenumber=$phone&verificationtype=0&msg=$new_sign";
-             //file_put_contents("./Application/Runtime/test.txt",$url,FILE_APPEND);
              Curl::curl_get($url);
-             sleep(1);
+             //sleep(1);
          }
 
 
