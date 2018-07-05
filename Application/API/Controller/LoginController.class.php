@@ -18,9 +18,9 @@ class LoginController extends Controller
     {
         $this->allowOrigin(); 
         $is_sign = $this->verifyEncryptSign();
-        if ($is_sign) {
-            return json_encode(array('error' => 1,'message' => '验证失败'),JSON_UNESCAPED_UNICODE);
-        }
+        // if (!$is_sign) {
+        //     exit(json_encode(array('error' => 1,'message' => '验证失败'),JSON_UNESCAPED_UNICODE));
+        // }
     }
     public function allowOrigin(){
         header("Access-Control-Allow-Origin: *");
@@ -51,7 +51,7 @@ class LoginController extends Controller
         $randomStr = $_POST['randomStr'];
         $signature = $_POST['signature']; // $signature 客户端请求地址中携带的签名,与服务端生成的签名进行比对
         //根据客户端请求过来的数据生成的签名 与$signature 进行对比
-        return $this -> arithmetic($timeStamp,$randomStr) != $signature ? 1 : 0;
+        return $this -> arithmetic($timeStamp,$randomStr) != $signature ? 0 : 1;
 
     }
 

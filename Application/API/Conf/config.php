@@ -3,7 +3,15 @@ return array(
 
 	//'配置项'=>'配置值'
    'token' => '2fae188df0878bafcd73f16b1a8e0386',
-
+   //各个渠道货币单位：策略表cash-tag
+   'channel_unit' => array(
+   		'1-1' => 'K值',
+   		'1-2' => 'K值',
+   		'1-3' => 'DDW',
+   		'1-4' => 'DDW',
+   		'7-1' => '元',
+   		'7-2' => '元'
+   	),
     //华夏、骏和 加密key
     'SECRET_KEY' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
 
@@ -31,8 +39,10 @@ return array(
     'cloud_verifyToken' =>  "/v1/verifyToken",
     //验收是否可被注册
     'cloud_checkPhonenumber' => '/v1/checkPhonenumber',
+    //
+    'cloud_uidInfo' => '/v1/uidInfo',
 
-    //云账号错误信息
+    //错误信息
     'error_msg' => array(
     	'0' => '成功',
     	'1' => '验证码错误',
@@ -74,10 +84,12 @@ return array(
 
     //华夏、骏和,固定参数
     'hxwj' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//1.1用户信息与兑换资格查询接口地址
-    'hxwj1' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//1.2 推送礼包
-    'jh' => 'http://newtest.wanjiajinfu.com/',
+    'hxwj_push_gift' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//1.2
+    'jh' => 'http://180.167.58.6:8206/CKSKM/QueryUserAndKCode',
+    'jh_push_gift' => 'http://180.167.58.6:8206/CKSKM/ActivateKcode',
+    'jh_deal_status' => 'http://180.167.58.6:8206/CKSKM/DealKCodeStatus',
     'parter_code' => '103',
     'sign_type' => 'MD5',
-    'hxkey' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
+    'hxwj_key' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
 
 );

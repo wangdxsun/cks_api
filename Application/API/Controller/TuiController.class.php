@@ -25,12 +25,12 @@ class TuiController extends Controller
     $arr["exratio"]=1.1;
     $arr["timeStamp"]=$time=time();
      */
-    public function index($channel="TUI",$kcode="V83xkje3",$mobile="17717689858",$exratio=1.1,$rate=1){
+    public function index($channel="TS",$kcode="V83xkje3",$mobile="17717689858",$exratio=1.1,$rate=1){
         $url="http://a842a093.ngrok.io/cks/blackDiamond";
         $where["secretcd"]=$kcode;
         $where["status"]=1;
         $money=M("relation")->where($where)->getField("money");
-        $arr["channel"]="TUI";
+        $arr["channel"]="TS";
         $arr["cksSnsNo"]=md5($kcode);
         $arr["diamondValue"]=$dhtotal=number_format(round($money*$exratio,2),2);
         $arr["kcode"]=$kcode;
@@ -47,14 +47,14 @@ class TuiController extends Controller
         $result_str=Curl::curl_post($url,$arr);
         $result_arr=json_decode($result_str,true);
         if($result_arr["err"]>0){
-            exit(json_encode(array('status'=>false,"message"=>"请求推啥失败,请检查原因"),JSON_UNESCAPED_UNICODE));
+            return array('status'=>false,"message"=>"请求推啥失败,请检查原因");
         }else{
             //插入兑换记录数据库
             $result_status=CommonController::ChangeLog($kcode,$rate,$dhtotal,$mobile,1,$channel,$exratio);
             if($result_status){
-                exit(json_encode(array("status"=>"true")));
+                return array("status"=>true);
             }else{
-                exit(json_encode(array("status"=>"false","message"=>"修改状态失败")));
+                return array("status"=>false,"message"=>"修改状态失败");
             }
         }
 
