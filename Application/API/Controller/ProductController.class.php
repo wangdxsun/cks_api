@@ -82,7 +82,7 @@ class ProductController extends Controller
            M()->startTrans();
            foreach ($products as $k => $v) {
                $where["status"] = 0;
-               $where["im_pname"] = $v["pname"];
+               $where["im_pmodel"] = $v["pname"];
                $where["im_pnumber"] = $v["pnumber"];
                //$where["money"] = array("gt", 0);
 
@@ -311,7 +311,8 @@ class ProductController extends Controller
                        $save["status"]=4;
                    }
                    $result_relat=M("relation")->where(["clearcd"=>$clearcd])->save($save);
-                   if($result_relat===false){
+                   $result_result1=M("use_details")->where(["secretcd"=>$secretcd])->save($save);
+                   if($result_relat===false || $result_result1===false){
                        M()->rollback();
                        exit(json_encode(array("status"=>false,"message"=>"修改本地接口失败")));
                    }else{
@@ -344,7 +345,8 @@ class ProductController extends Controller
                  $save["status"]=4;
              }
              $result_status=M("relation")->where($where)->save($save);
-             if($result_status===false){
+             $result_status1=M("use_details")->where($where)->save($save);
+             if($result_status===false||$result_status1===false){
                  M()->rollback();
                  exit(json_encode(array("status"=>false,"message"=>"修改数据失败")));
              }else{
