@@ -93,7 +93,7 @@ class KcodeProduceController extends BaseController
         $data['im_model'] = $pdata['pname'];
         $data['im_pnumber'] = $pdata['pnumber'];
         $data['im_time'] = date('Y:m:d H:i:s', time());
-        $data['im_staff'] = BaseModel::uid();
+        $data['im_staff'] = BaseModel::username();
         $data['money'] = $pdata['money'];
         $data['close_time'] = 999;
         $data['status'] = 0;
