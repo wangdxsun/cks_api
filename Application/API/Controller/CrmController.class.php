@@ -17,8 +17,11 @@ class CrmController extends Controller
         if (!is_array($params)) {
             exit(json_encode(['status' => 'false', 'msg' => '参数格式不对'], JSON_UNESCAPED_UNICODE));
         }
-        if (empty($params['oldClearCd']) || empty($params['newClearCd']) ||empty($params['model'])|| empty($params['channel2']) || empty($params['channel1'])) {
+        if (empty($params['oldClearCd']) || empty($params['newClearCd']) ||empty($params['operator'])||empty($params['model'])|| empty($params['channel2']) || empty($params['channel1'])) {
             exit(json_encode(['status' => 'false', 'msg' => '参数不完整'], JSON_UNESCAPED_UNICODE));
+        }
+        if($params['operator'] != 'crm'){
+            exit(json_encode(['status' => 'false', 'msg' => '请求来源非法'], JSON_UNESCAPED_UNICODE));
         }
         $oldcd = BaseModel::getDbData(['table' => 'relation', 'where' => ['clearcd' => $params['oldClearCd']]], false);
         $newcd = BaseModel::getDbData(['table' => 'relation', 'where' => ['clearcd' => $params['newClearCd']]], false);
