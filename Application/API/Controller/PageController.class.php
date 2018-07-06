@@ -53,7 +53,7 @@ class PageController extends LoginController
 
         //status 状态 0未分配 1已分配 2已兑换 
         if ($res['status']!=1) {
-            exit(BaseController::returnMsg(array('error'=>'102')));
+            exit(BaseController::returnMsg(array('error'=>'110', 'message' => C('kcdoe_stauts')[$res['status']])));
         }
         
         $condition2 = [
@@ -240,7 +240,7 @@ class PageController extends LoginController
             switch ($tag) {
                 case 1://'华夏':
                     $param = array(
-                        'Phone' => '15184475786',//$user_info['phonenumber'],//手机号
+                        'Phone' => '18981976763',//$user_info['phonenumber'],//手机号
                         'Kcodetype' => 'W2',// $kcode_info['im_model'],//产品型号
                         'amount' => strval($kcode_info['money'])//金额
                     );
@@ -324,7 +324,7 @@ class PageController extends LoginController
         $kcode_info = BaseModel::getDbData($condition, false);
         //判断kcode状态
         if ($kcode_info['status']!=1) {
-            # code...
+            exit(BaseController::returnMsg(array('error'=>'110', 'message' => C('kcdoe_stauts')[$kcode_info['status']])));
         }
         $user_info = $this->user_info;
 
@@ -383,23 +383,23 @@ class PageController extends LoginController
                 
                 case 1://'华夏':
                     $param = array(
-                        'phone' => '15184475786',//$user_info['phonenumber'],//手机号//手机号
+                        'phone' => '18981976763',//$user_info['phonenumber'],//手机号//手机号
                         'kcodeType' => 'W2',//$kcode_info['im_model'], //产品型号
                         'kcode' => $kcode_info['secretcd'],//'am123', //暗码
                         'kcodeSn' => $kcode_info['clearcd'],//'mm1234', //明码
                         'deviceSn' => $kcode_info['clearcd'],//'sb1234',//设备码
-                        //'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
-                        'Amount' => strval($kcode_info['money']),//'666'  //礼包金额
+                        'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
+                        'Amount' => '100'//strval($kcode_info['money']),//'666'  //礼包金额
                     );var_dump($param);
-                    $param =   [
-                        'phone' =>   '15184475786',
-                        'kcodeType' =>   'W2',
-                        'kcode' => 'uqcJ5uT44f',
-                        'kcodeSn' => 'mm1234',
-                        'deviceSn' => 'sb1234',
-                        'bingSn' => 'bd123',
-                        'Amount' => '100.00'
-                    ];
+                    // $param =   [
+                    //     'phone' =>   '18981976763',
+                    //     'kcodeType' =>   'W2',
+                    //     'kcode' => 'uqcJ5uT44f',
+                    //     'kcodeSn' => 'mm1234',
+                    //     'deviceSn' => 'sb1234',
+                    //     'bingSn' => 'bd123',
+                    //     'Amount' => '100'
+                    // ];
 
                     var_dump($param);
                     $res = ExGiftController::pushGift($param, 'hxwj_push_gift', 'hxwj_key');
