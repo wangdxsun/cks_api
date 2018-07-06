@@ -146,6 +146,9 @@ class ProductController extends Controller
         $order_no = $_POST["order_no"];
         $channel=$_POST["channel"];
         $data = M("relation")->where(["orderid" => $order_no, "status" => 1])->field("secretcd,money,pname")->select();
+        if(empty($data)){
+            exit(json_encode(array("status"=>false,"message"=>"找到不到对应的订单")));
+        }
         //发消息接口
         self::sendMessages($channel,$order_no);
         exit(json_encode(array("status"=>true)));
