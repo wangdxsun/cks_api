@@ -140,7 +140,8 @@ class PageController extends LoginController
         if (empty($num_1)||empty($num_2)) {
             return false;
         }
-        eval("\$value = $num_1 $operator $num_2;");
+        $value = null;
+        eval("$value = $num_1 $operator $num_2;");
         return $value?true:false;
     }
 
@@ -253,7 +254,7 @@ class PageController extends LoginController
                             $plan_info = explode(',', $res['data']['exchangPlanAmount']);
                             foreach ($plan_info as $key => $value) {
                                 $res['data']['plan_detail'][] = explode('-', $value)[0];
-                            }   
+                            }
                         }
                     }
                     elseif ($res['rescode']=='1000') {
@@ -327,7 +328,6 @@ class PageController extends LoginController
         M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>5));
         //第一大类策略
         if ($cash==1) {
-           
             $change_info = $this->getChangeMoney($tag,$kcode_info);
             switch ($tag) {
                 case 1://'商城':

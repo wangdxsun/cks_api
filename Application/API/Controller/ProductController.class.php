@@ -139,10 +139,6 @@ class ProductController extends Controller
 
     }
 
-
-
-
-
     //发送短信，暂时没人调
     public function sendMsg()
     {
