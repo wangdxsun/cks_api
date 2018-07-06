@@ -503,7 +503,7 @@ class ProductController extends Controller
             $url="https://uat.phimall.com/openapi/vcprice/unfroze";
             $new_method="unfroze";
         }else{
-            $url="https://uat.phimall.com/openapi/vcprice/unfroze";
+            $url="https://uat.phimall.com/openapi/vcprice/cancel";
             $new_method="cancel";
         }
         $phone=M("relation")->where(["clearcd"=>$clearcd])->getField("rephone");
