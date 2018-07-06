@@ -195,23 +195,27 @@ class ProductController extends Controller
 
     //查看K码状态
     public function getstatus(){
+        if(IS_POST){
+            $clearcd=$_POST["clearcd"];
+            $secretcd=$_POST["secretcd"];
+            $where=array();
+            if(($clearcd)){
+                $where["clearcd"]=$clearcd;
+            }
+            if(($secretcd)){
+                $where["secretcd"]=$secretcd;
+            }
 
-        $clearcd=$_POST["clearcd"];
-        $secretcd=$_POST["secretcd"];
-        $where=array();
-        if(($clearcd)){
-            $where["clearcd"]=$clearcd;
-        }
-        if(($secretcd)){
-            $where["secretcd"]=$secretcd;
+            $data=M("relation")->field("status as kstatus,last_return_time,money,channel3")->where($where)->find();
+
+            if(!$data){
+                exit(json_encode(array("status"=>false,"message"=>"查无数据")));
+            }
+            exit(json_encode(array("status"=>true,"kstatus"=>$data["kstatus"])));
+        }else{
+            exit(json_encode(array("status"=>false,"message"=>"请求方式错误")));
         }
 
-       $data=M("relation")->field("status as kstatus,last_return_time,money,channel3")->where($where)->find();
-
-        if(!$data){
-            exit(json_encode(array("status"=>false,"message"=>"查无数据")));
-        }
-        exit(json_encode(array("status"=>true,"kstatus"=>$data["kstatus"])));
     }
 
 
