@@ -261,20 +261,45 @@ class ProductController extends Controller
         //print_r($data);die;
         //获取到data，对data进行遍历
        if(count($data)==1){
-
-           if($data[0]["status"]>4){
+           $old_status=$data[0]["status"];
+           if($old_status>4){
                exit(json_encode(array("status"=>false,"message"=>"K码状态不对")));
            }else{
                $clearcd=$data[0]["clearcd"];
                $secretcd=$data[0]["secretcd"];
-               if($data[0]["status"]==1){
-                   if($method==1){
-                      $status1=3;
-                   }elseif ($method==2){
-                       $status1=2;
-                   }else{
-                       $status1=4;
+               if($old_status==2||$old_status==3){
+                   //如果为2就表示已兑换走正常逻辑，冻结变3解冻变4
+                   M()->startTrans();
+                   $res=self::chooseMethod($data[0]["channel3"],$clearcd,$secretcd,$method);
+                   if($res===false){
+                       M()->rollback();
+                       exit(json_encode(array("status"=>false,"message"=>"调用接口失败1")));
+                   } else{
+                       if($method==1){
+                           $save["status"]=3;
+                       }elseif ($method==2){
+                           $save["status"]=2;
+                       }else{
+                           $save["status"]=4;
+                       }
+                       $result_relat=M("relation")->where(["clearcd"=>$clearcd])->save($save);
+                       $result_result1=M("use_details")->where(["secretcd"=>$secretcd])->save($save);
+                       if($result_relat===false || $result_result1===false){
+                           M()->rollback();
+                           exit(json_encode(array("status"=>false,"message"=>"修改本地接口失败")));
+                       }else{
+                           M()->commit();
+                           exit(json_encode(array("status"=>true,"message"=>"操作成功")));
+                       }
                    }
+               }else{
+                  if($method==1){
+                      $status1=3;
+                  }else if($method==2){
+                      $status1=1;
+                  }else{
+                      $status1=4;
+                  }
                    $status1_result=M("relation")->where(["clearcd"=>$clearcd])->save(["status"=>$status1]);
                    if($status1_result===false){
                        exit(json_encode(array("status"=>false,"message"=>"操作失败")));
@@ -282,30 +307,7 @@ class ProductController extends Controller
                        exit(json_encode(array("status"=>true,"message"=>"操作成功")));
                    }
                }
-               M()->startTrans();
-               $res=self::chooseMethod($data[0]["channel3"],$clearcd,$secretcd,$method);
 
-               if($res===false){
-                   M()->rollback();
-                   exit(json_encode(array("status"=>false,"message"=>"调用接口失败1")));
-               } else{
-                   if($method==1){
-                       $save["status"]=3;
-                   }elseif ($method==2){
-                       $save["status"]=2;
-                   }else{
-                       $save["status"]=4;
-                   }
-                   $result_relat=M("relation")->where(["clearcd"=>$clearcd])->save($save);
-                   $result_result1=M("use_details")->where(["secretcd"=>$secretcd])->save($save);
-                   if($result_relat===false || $result_result1===false){
-                       M()->rollback();
-                       exit(json_encode(array("status"=>false,"message"=>"修改本地接口失败")));
-                   }else{
-                       M()->commit();
-                       exit(json_encode(array("status"=>true,"message"=>"操作成功")));
-                   }
-               }
            }
        }else{
            $status_pool=array();
@@ -327,23 +329,50 @@ class ProductController extends Controller
          if(in_array(false,$status_pool)){
              exit(json_encode(array("status"=>false,"message"=>"调用接口失败2")));
          }else{
+             $status11_pool=array();
+            //开始修改数据
              M()->startTrans();
-             if($method==1){
-                 $save["status"]=3;
-             }elseif ($method==2){
-                 $save["status"]=2;
-             }else{
-                 $save["status"]=4;
-             }
-             $result_status=M("relation")->where($where)->save($save);
-             $result_status1=M("use_details")->where($where)->save($save);
-             if($result_status===false||$result_status1===false){
+           foreach($data as $kk=>$vv){
+               //开始遍历数据
+               if($vv["status"]==1){
+                   //如果原先就是1，来判断method
+                   if($method==1){
+                       $status1=3;
+                   }else if($method==2){
+                       $status1=1;
+                   }else{
+                       $status1=4;
+                   }
+                   $where11["clearcd"]=$vv["clearcd"];
+                   $save11["status"]=$status1;
+                   $result11=M("relation")->where($where)->save($save11);
+                   array_push($status11_pool,$result11);
+               }else{
+                       if($method==1){
+                           $status11=3;
+                       }else if($method==2){
+                           $status11=2;
+                       }else{
+                           $status11=4;
+                       }
+                  $where12["secretcd"]=$vv["secretcd"];
+                  $save12["stauts"]=$status11;
+                   $result12=M("relation")->where($where12)->save($save12);
+                   $result123=M("use_details")->where($where12)->save($save12);
+                    array_push($status11_pool,$result12);
+                   array_push($status11_pool,$result123);
+               }
+
+           }
+             if(in_array(false,$status11_pool)){
                  M()->rollback();
-                 exit(json_encode(array("status"=>false,"message"=>"修改数据失败")));
+                 exit(json_encode(array("status"=>false,"message"=>"调用接口失败2")));
              }else{
                  M()->commit();
-                 exit(json_encode(array("status"=>true,"message"=>"修改数据成功")));
+                 exit(json_encode(array("status"=>true,"message"=>"调用接口成功")));
              }
+
+
          }
 
        }
