@@ -45,6 +45,12 @@ class MallController extends Controller
 
         $header = array("Content-type: application/json;charset=UTF-8", "timestamp:$timestamp", "method:$method", "sign:$sign");
         $result = Curl::curl_header_post($url, $param, $header);
+        //log
+        $add["url"]=$url;
+        $add["request"]=$param;
+        $add["response"]=$result;
+        $add["create_at"]=date("Y-m-d H:i:s",time());
+        M("loglist")->add($add);
         $result = json_decode($result, true);
 
         if ($result['status']) {
