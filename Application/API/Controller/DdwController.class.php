@@ -96,7 +96,7 @@ class DdwController extends Controller
             }
             array_push($pnames,$v["pname"]);
         }
-        exit(json_encode(array("status"=>true,"datalist"=>$pnames)));
+        exit(json_encode(array("status"=>true,"panmes"=>$pnames)));
     }
 
 
