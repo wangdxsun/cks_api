@@ -24,7 +24,7 @@ class ChannelController extends Controller
         if(empty($exratio)){
             exit(json_encode(array("status"=>false,"message"=>"兑换比例参数传递错误")));
         }
-        $tag=$channel=="华夏万家"?1:2;
+        $tag=$channel=="HXWJ"?1:2;
         $data=M("allot_policy")->where(["cash"=>7,"describe"=>$channel])->find();
         if($data){
             //修改
