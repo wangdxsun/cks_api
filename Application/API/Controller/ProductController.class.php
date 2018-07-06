@@ -145,7 +145,12 @@ class ProductController extends Controller
         $phone = $_POST["phone"];
         $order_no = $_POST["order_no"];
         $channel=$_POST["channel"];
-        $data = M("relation")->where(["orderid" => $order_no, "status" => 1])->field("secretcd,money,pname")->select();
+        if($channel=="TUI"){
+            $where["channel3"]="1-2";
+        }
+        $where["orderid"]=$order_no;
+        $where["status"]=1;
+        $data = M("relation")->where($where)->field("secretcd,money,pname")->select();
         if(empty($data)){
             exit(json_encode(array("status"=>false,"message"=>"找到不到对应的订单")));
         }
