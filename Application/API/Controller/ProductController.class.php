@@ -262,8 +262,8 @@ class ProductController extends Controller
         //获取到data，对data进行遍历
        if(count($data)==1){
 
-           if($data[0]["status"]<2){
-               exit(json_encode(array("status"=>true,"message"=>"未激活K码，直接退款")));
+           if($data[0]["status"]>4){
+               exit(json_encode(array("status"=>false,"message"=>"K码状态不对")));
            }else{
                $clearcd=$data[0]["clearcd"];
                $secretcd=$data[0]["secretcd"];
@@ -296,8 +296,8 @@ class ProductController extends Controller
        }else{
            $status_pool=array();
             foreach($data as $k=>$item){
-                if($item["status"]<2){
-                    array_push($status_pool,1);
+                if($item["status"]>4){
+                    array_push($status_pool,false);
                 }else{
                     $clearcd=$item["clearcd"];
                     $secretcd=$item["secretcd"];
