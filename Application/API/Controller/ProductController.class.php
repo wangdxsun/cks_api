@@ -516,10 +516,8 @@ class ProductController extends Controller
         }else{
             $new_method="invalid";
         }
-        $url=C("jh_change_status");
-        $key=C("hxwj_key");
         $postparmas=array("kcode"=>$secretcd,"status"=>$new_method,"statusname"=>"status");
-        $result_str=ExGiftController::changeGiftStatus($postparmas,$url,$key);
+        $result_str=ExGiftController::changeGiftStatus($postparmas,'jh_change_status', 'hxwj_key'));
         $result_arr=json_decode($result_str,true);
         if($result_arr["message"]=="success"){
             return true;
