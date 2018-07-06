@@ -27,7 +27,7 @@ class TuiController extends Controller
      */
     public function index($channel="TUI",$kcode="vtMeyKmDqp",$mobile="18770031847",$exratio=1.1,$rate=1){
         //file_put_contents("./Application/Runtime/test.txt",$channel.'-'.$kcode.'-'.$mobile.'-'.$exratio.'-'.$rate,FILE_APPEND);
-        $url="http://172.17.44.98:8082/cks/blackDiamond";
+        $url=" https://treceive-service.phi-go.com/cks/blackDiamond";
         $where["secretcd"]=$kcode;
         $where["status"]=1;
         $money=M("relation")->where($where)->getField("money");
