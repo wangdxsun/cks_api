@@ -63,8 +63,9 @@ class TuiController extends Controller
 
     }
 
-   /* public function say(){
-        self::index("TUI","978vcmxWeA","18770031847",102.9,2);
+  /* public function say(){
+        $result=M("use_details")->where(["secretcd"=>"2M9MstpTNa"])->save(["status"=>2]);
+       var_dump($result);
     }*/
 
 

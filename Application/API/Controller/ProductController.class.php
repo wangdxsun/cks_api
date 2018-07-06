@@ -279,7 +279,7 @@ class ProductController extends Controller
                    if($status1_result===false){
                        exit(json_encode(array("status"=>false,"message"=>"操作失败")));
                    }else{
-                       exit(json_encode(array("status"=>true,"message"=>"调用失败")));
+                       exit(json_encode(array("status"=>true,"message"=>"操作成功")));
                    }
                }
                M()->startTrans();
@@ -315,8 +315,13 @@ class ProductController extends Controller
                 }else{
                     $clearcd=$item["clearcd"];
                     $secretcd=$item["secretcd"];
-                    $res=self::chooseMethod($item["channel3"],$clearcd,$secretcd,$method);
-                    array_push($status_pool,$res);
+                    if($item["status"]==1){
+                        array_push($status_pool,1);
+                    }else{
+                        $res=self::chooseMethod($item["channel3"],$clearcd,$secretcd,$method);
+                        array_push($status_pool,$res);
+                    }
+
                 }
             }
          if(in_array(false,$status_pool)){
