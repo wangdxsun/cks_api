@@ -140,7 +140,8 @@ class PageController extends LoginController
         if (empty($num_1)||empty($num_2)) {
             return false;
         }
-        eval("\$value = $num_1 $operator $num_2;");
+        $value = null;
+        eval("$value = $num_1 $operator $num_2;");
         return $value?true:false;
     }
 
@@ -242,11 +243,7 @@ class PageController extends LoginController
                     //print_r($param);
                     $res = ExGiftController::inquireUserExStatus($param, 'hxwj', 'hxwj_key');
                     //{"message":"用户不存在或未实名","data":null,"rescode":"1000","error":"1000"}
-                    //'0000'成功 rescode
-                    // 1000 用户不存在或未实名
-                    // 2000 k码类型不存在
-                    // 4000 data数据有误
-                    // 5000 签名不正确
+                    //'0000'成功 rescode 1000 用户不存在或未实名 2000 k码类型不存在 4000 data数据有误 5000 签名不正确
                     $res = json_decode($res, true);
                     if ($res['rescode']=='0000') {
                         $res['data'] = array_merge($gift_info, $res['data']);
@@ -258,7 +255,6 @@ class PageController extends LoginController
                             foreach ($plan_info as $key => $value) {
                                 $res['data']['plan_detail'][] = explode('-', $value)[0];
                             }
-                            
                         }
                     }
                     elseif ($res['rescode']=='1000') {
@@ -287,7 +283,6 @@ class PageController extends LoginController
                             foreach ($plan_info as $key => $value) {
                                 $res['data']['plan_detail'][] = explode('-', $value)[0];
                             }
-                            
                         }
                     }
                     elseif ($res['rescode']=='1000') {
@@ -316,6 +311,7 @@ class PageController extends LoginController
         $tag = $_POST['tag'];
         $kcode = $_POST['kcode'];
         $cash = $_POST['cash'];
+        $rate=1;//汇率
         $condition = [
             'table' => 'relation',
             'fields' => '*',
@@ -332,7 +328,6 @@ class PageController extends LoginController
         M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>5));
         //第一大类策略
         if ($cash==1) {
-            $rate=1;//汇率
             $change_info = $this->getChangeMoney($tag,$kcode_info);
             switch ($tag) {
                 case 1://'商城':
@@ -370,13 +365,6 @@ class PageController extends LoginController
           
             if ($res['error']==='0') {
                 //变更状态--已兑换
-                // * $kcode, 暗码值
-                //  * $rate=1, 兑换比例
-                //  * $dhtotal, 兑换了多少个
-                //  * $phone,   手机号
-                //  * $status,  状态0 表示成功1 表示失败
-                //  * $channel, 兑换通道
-                //  * exratio   兑换比例
                 $result = CommonController::ChangeLog($kcode,$rate,$change_info['change_money'],$user_info['phonenumber'],1,$cash."-".$tag,round($change_info['last_rate'], 2),md5($kcode),$res['data']['last_return_time'],$cash,$tag,$change_info['rate_str']);
                 if ($result) {
                     $data['error'] = '0';
@@ -403,16 +391,10 @@ class PageController extends LoginController
                     );
                     print_r($param);
                     $res = ExGiftController::pushGift($param, 'hxwj_push_gift', 'hxwj_key');
-                    $res['error'] = $res['rescode']=='0000'?'0':$res['rescode'];
+                    $res = json_decode($res,true);
+                    $res['error'] = $res['rescode']=='0000'?'0':'110';
 
-                    // 0000 礼包生成成功
-                    // 1000 用户不存在或未实名
-                    // 2000 无兑换资格，请先投资兑换相应k码资格
-                    // 3000  该k码礼包已生成
-                    // 4000   k码类型不存在
-                    // 5000  data数据有误
-                    // 6000  请求繁忙
-                    // 7000 推送礼包失败
+                    // 0000 礼包生成成功 1000 用户不存在或未实名 2000 无兑换资格，请先投资兑换相应k码资格 3000  该k码礼包已生成 4000   k码类型不存在 5000  data数据有误 // 6000  请求繁忙 // 7000 推送礼包失败
 
                     break;
                 case 2://'骏和':
@@ -428,22 +410,17 @@ class PageController extends LoginController
                     print_r($param);
                     $res = ExGiftController::pushGift($param, 'jh_push_gift', 'hxwj_key');
                     //{"rescode":"0000","message":"礼包生成成功","data":{"fristExpireDate":"2018-08-04","name":"李三毛","phone":"13795000061"}}
-                    $res['error'] = $res['rescode']=='0000'?'0':$res['rescode'];
+                    $res = json_decode($res,true);
+                    $res['error'] = $res['rescode']=='0000'?'0':'110';
                     break;
                 default:
                     # code...
                     break;
             }
+
             if ($res['error']==='0') {
                 //变更状态--已兑换
-                // * $kcode, 暗码值
-                //  * $rate=1, 兑换比例
-                //  * $dhtotal, 兑换了多少个
-                //  * $phone,   手机号
-                //  * $status,  状态0 表示成功1 表示失败
-                //  * $channel, 兑换通道
-                //  * exratio   兑换比例
-                $result = CommonController::ChangeLog($kcode,$rate,$change_info['change_money'],$user_info['phonenumber'],1,$cash."-".$tag,round($change_info['last_rate'], 2),md5($kcode),$res['data']['last_return_time'],$cash,$tag,$change_info['rate_str']);
+                $result = CommonController::ChangeLog($kcode,$rate,$gift_info['change_money'],$user_info['phonenumber'],1,$cash."-".$tag,round($gift_info['last_rate'], 2),md5($kcode),$res['data']['last_return_time'],$cash,$tag,$gift_info['rate_str']);
                 if ($result) {
                     $data['error'] = '0';
                 }
