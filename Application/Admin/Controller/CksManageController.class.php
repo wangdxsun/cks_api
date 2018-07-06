@@ -119,7 +119,7 @@ class CksManageController extends BaseController
         if($pdata['sign'] == 1 || $pdata['sign'] == 7)$data['data']['tag'] = $this->mapping($pdata['describe']);
         $data['data']['exratio'] = trim($pdata['ratio']);
         $data['data']['cash'] = trim($pdata['sign']);
-        $data['data']['operator'] = trim($pdata['operator']) ? trim($pdata['operator']) : '=';
+        $data['data']['operator'] = trim($pdata['operator']) ? trim($pdata['operator']) : '==';
         $data['data']['create_time'] = date('Y-m-d H:i:s',time());
 
         //添加、修改去重规则
