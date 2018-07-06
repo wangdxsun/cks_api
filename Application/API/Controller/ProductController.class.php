@@ -192,14 +192,17 @@ class ProductController extends Controller
 
     //查看K码状态
     public function getstatus(){
+
         $clearcd=$_POST["clearcd"];
         $secretcd=$_POST["secretcd"];
-        if(!empty($clearcd)){
+        $where=array();
+        if(($clearcd)){
             $where["clearcd"]=$clearcd;
         }
-        if(!empty($secretcd)){
+        if(($secretcd)){
             $where["secretcd"]=$secretcd;
         }
+        
        $data=M("relation")->field("status as kstatus,last_return_time,money,channel3")->where($where)->find();
 
         if(!$data){
