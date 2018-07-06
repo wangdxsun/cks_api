@@ -93,7 +93,7 @@ return array(
     'jh' => 'http://180.167.58.6:8206/CKSKM/QueryUserAndKCode',
     'jh_push_gift' => 'http://180.167.58.6:8206/CKSKM/ActivateKcode',
     'jh_change_status' => 'http://180.167.58.6:8206/CKSKM/DealKCodeStatus',
-    'parter_code' => '103',
+    'parter_code' => 'phicomm',
     'sign_type' => 'MD5',
     'hxwj_key' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
 
