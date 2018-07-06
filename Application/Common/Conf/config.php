@@ -3,10 +3,10 @@ return array(
     //'配置项'=>'配置值'
     //数据库配置信息
     'DB_TYPE' => "mysql", // 数据库类型
-    'DB_HOST' => "172.17.188.6", //
+    'DB_HOST' => "192.168.170.41", //
     'DB_NAME' => "phicomm_kcode", // 数据库名
-    'DB_USER' => "weixindev", // 用户名
-    'DB_PWD' => "weixin*123", // 密码
+    'DB_USER' => "kcode_dev", // 用户名
+    'DB_PWD' => "4#a&kl82sfbfb", // 密码
     'DB_PORT' => 3306, // 端口
     'DB_PREFIX' => "", // 数据库表前缀
     'DB_CHARSET' => "utf8", // 字符集
