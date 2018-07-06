@@ -8,7 +8,7 @@ return array(
    		'1-1' => 'VC',
    		'1-2' => '黑钻',
    		'1-3' => 'DDW',
-   		'1-4' => '云算力',
+   		'1-4' => '星力',
    		'7-1' => '元',
    		'7-2' => '元'
    	),
@@ -16,7 +16,7 @@ return array(
     'SECRET_KEY' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
 
     //云账号域名地址
-    'cloud_url' => 'http://114.141.173.41:48080',//'https://accountsym.phicomm.com'
+    'cloud_url' => 'https://accountsymtest.phicomm.com',//'http://114.141.173.41:48080',//'https://accountsym.phicomm.com'
 	//K码兑换H5
 	'h5_client_id' => '1569234',
 	'h5_client_secret' => '6FE32D94BE97DBB120E7B1C54FC0B239',

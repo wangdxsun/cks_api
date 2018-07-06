@@ -90,7 +90,7 @@ class PageController extends LoginController
         ];
 
         $info = BaseModel::getDbData($condition2,false);
-        if(!empty($info) && self::compareOperat(strtotime($res['allot_time']), strtotime($info['describe']), $info['operator'])){
+        if(!empty($info) && self::compareOperat(strtotime($res['allot_time']), strtotime(date('Y-m-d 23:59:59',strtotime($info['describe']))), $info['operator'])){
             $rate = $rate * $info['exratio'];
             $rate_str = $rate_str.'-'.$info['id'].':'.$info['exratio'];
         }
@@ -101,7 +101,7 @@ class PageController extends LoginController
             'where' => ['cash' => 3]
         ];
         $info = BaseModel::getDbData($condition2,false);
-        if(!empty($info) && self::compareOperat(strtotime(date('Y-m-d')), strtotime($info['describe']), $info['operator'])){
+        if(!empty($info) && self::compareOperat(strtotime(date('Y-m-d')), strtotime(date('Y-m-d 23:59:59',strtotime($info['describe']))), $info['operator'])){
             $rate = $rate * $info['exratio'];
             $rate_str = $rate_str.'-'.$info['id'].':'.$info['exratio'];
         }
@@ -120,7 +120,7 @@ class PageController extends LoginController
         //5料号策略
         $condition2 = [
             'table' => 'allot_policy',
-            'where' => ['cash' => 5, 'describe' => $res['pnumber']]
+            'where' => ['cash' => 5, 'describe' => $res['im_pnumber']]
         ];
         $info = BaseModel::getDbData($condition2,false);
         if(!empty($info)){
@@ -244,7 +244,7 @@ class PageController extends LoginController
                         'Kcodetype' => 'W2',// $kcode_info['im_model'],//产品型号
                         'amount' => strval($kcode_info['money'])//金额
                     );
-                    print_r($param);
+                    //print_r($param);
                     $res = ExGiftController::inquireUserExStatus($param, 'hxwj', 'hxwj_key');
                     //{"message":"用户不存在或未实名","data":null,"rescode":"1000","error":"1000"}
                     //'0000'成功 rescode 1000 用户不存在或未实名 2000 k码类型不存在 4000 data数据有误 5000 签名不正确
@@ -316,12 +316,15 @@ class PageController extends LoginController
         $kcode = $_POST['kcode'];
         $cash = $_POST['cash'];
         $rate=1;//汇率
-        $condition = [
-            'table' => 'relation',
-            'fields' => '*',
-            'where' => ['secretcd' => $kcode]
-        ];
-        $kcode_info = BaseModel::getDbData($condition, false);
+        // $condition = [
+        //     'table' => 'relation',
+        //     'fields' => '*',
+        //     'where' => ['secretcd' => $kcode]
+        // ];
+        //$kcode_info = BaseModel::getDbData($condition, false);
+        M()->startTrans();//开启事务
+        $where['secretcd'] = $kcode;
+        $kcode_info = M('relation')->lock(true)->where($where)->find();
         //判断kcode状态
         if ($kcode_info['status']!=1) {
             exit(BaseController::returnMsg(array('error'=>'110', 'message' => C('kcdoe_stauts')[$kcode_info['status']])));
@@ -329,13 +332,23 @@ class PageController extends LoginController
         $user_info = $this->user_info;
 
         //变更状态--锁定-to do 
-        M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>5));
+        $save_data['status'] = 5;
+        $result = M('relation')->where(["secretcd"=>$kcode])->save($save_data);
+
+        if ($result) {
+            M()->commit();//事务提交
+        }
+        else{
+            M()->rollback();
+            exit(BaseController::returnMsg(array('error'=>'110', 'message' => '系统错误')));
+        }
+        
         //第一大类策略
         if ($cash==1) {
             $change_info = $this->getChangeMoney($tag,$kcode_info);
             switch ($tag) {
                 case 1://'商城':
-                    $sku_bn = $kcode_info['pnumber'];//料号
+                    $sku_bn = $kcode_info['im_pnumber'];//料号
                     $amount = round($kcode_info['money'], 2);//K码金额
                     $radio = round($change_info['last_rate'], 2);//兑换浮动比例
                     $res = MallController::mallChange($token,$kcode,$sku_bn,$amount,$radio);
@@ -383,25 +396,15 @@ class PageController extends LoginController
                 
                 case 1://'华夏':
                     $param = array(
-                        'phone' => '18981976763',//$user_info['phonenumber'],//手机号//手机号
-                        'kcodeType' => 'W2',//$kcode_info['im_model'], //产品型号
+                        'phone' => $user_info['phonenumber'],//手机号//手机号
+                        'kcodeType' => $kcode_info['im_model'], //产品型号
                         'kcode' => $kcode_info['secretcd'],//'am123', //暗码
                         'kcodeSn' => $kcode_info['clearcd'],//'mm1234', //明码
-                        'deviceSn' => $kcode_info['clearcd'],//'sb1234',//设备码
+                        'deviceSn' => $kcode_info['sn'],//'sb1234',//设备码
                         'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
                         'Amount' => '100'//strval($kcode_info['money']),//'666'  //礼包金额
-                    );var_dump($param);
-                    // $param =   [
-                    //     'phone' =>   '18981976763',
-                    //     'kcodeType' =>   'W2',
-                    //     'kcode' => 'uqcJ5uT44f',
-                    //     'kcodeSn' => 'mm1234',
-                    //     'deviceSn' => 'sb1234',
-                    //     'bingSn' => 'bd123',
-                    //     'Amount' => '100'
-                    // ];
-
-                    var_dump($param);
+                    );
+                    //print_r($param);
                     $res = ExGiftController::pushGift($param, 'hxwj_push_gift', 'hxwj_key');
                     $res = json_decode($res,true);
                     $res['error'] = $res['rescode']=='0000'?'0':'110';
@@ -411,15 +414,15 @@ class PageController extends LoginController
                     break;
                 case 2://'骏和':
                     $param = array(
-                        'phone' => '13795000061',//$user_info['phonenumber'],//手机号//手机号
-                        'kcodeType' => 'W2',//$kcode_info['im_model'], //产品型号
+                        'phone' => $user_info['phonenumber'],//手机号//手机号
+                        'kcodeType' => $kcode_info['im_model'], //产品型号
                         'kcode' => $kcode_info['secretcd'],//'am123', //暗码
                         'kcodeSn' => $kcode_info['clearcd'],//'mm1234', //明码
-                        'deviceSn' => $kcode_info['clearcd'],//'sb1234',//设备码
+                        'deviceSn' => $kcode_info['sn'],//'sb1234',//设备码
                         'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
                         'Amount' => strval($kcode_info['money']),//'666'  //礼包金额
                     );
-                    print_r($param);
+                    //print_r($param);
                     $res = ExGiftController::pushGift($param, 'jh_push_gift', 'hxwj_key');
                     //{"rescode":"0000","message":"礼包生成成功","data":{"fristExpireDate":"2018-08-04","name":"李三毛","phone":"13795000061"}}
                     $res = json_decode($res,true);
