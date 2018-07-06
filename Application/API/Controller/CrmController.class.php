@@ -22,7 +22,7 @@ class CrmController extends Controller
         }
         if($params['operator'] != 'crm'){
             exit(json_encode(['status' => 'false', 'msg' => '请求来源非法'], JSON_UNESCAPED_UNICODE));
-        }
+        }//来源必须为crm
         $oldcd = BaseModel::getDbData(['table' => 'relation', 'where' => ['clearcd' => $params['oldClearCd']]], false);
         $newcd = BaseModel::getDbData(['table' => 'relation', 'where' => ['clearcd' => $params['newClearCd']]], false);
         if (!$oldcd) {
