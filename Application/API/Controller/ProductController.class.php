@@ -450,7 +450,12 @@ class ProductController extends Controller
         $arr["signature"]=$sign;
         unset($arr["token"]);
         $result_str=Curl::curl_post($url,$arr);
-        file_put_contents("./Application/Runtime/test.txt",$result_str.'--'.date("Y-m-d H:i:s",time()),FILE_APPEND);
+        $add["url"]=$url;
+        $add["request"]=json_encode($arr,JSON_UNESCAPED_UNICODE);
+        $add["response"]=$result_str;
+        $add["create_at"]=date("Y-m-d H:i:s",time());
+        M("loglist")->add($add);
+        //file_put_contents("./Application/Runtime/test.txt",$result_str.'--'.date("Y-m-d H:i:s",time()),FILE_APPEND);
         $result_arr=json_decode($result_str,true);
         //print_r($result_arr);die;
         if($result_arr["err"]>0){
@@ -495,6 +500,11 @@ class ProductController extends Controller
 
 
         $result_str= Curl::curl_header_post($url, $param, $header);
+        $add["url"]=$url;
+        $add["request"]=json_encode($post,JSON_UNESCAPED_UNICODE);
+        $add["response"]=$result_str;
+        $add["create_at"]=date("Y-m-d H:i:s",time());
+        M("loglist")->add($add);
         $result_arr=json_decode($result_str,true);
 
         return $result_arr["status"];
@@ -514,6 +524,12 @@ class ProductController extends Controller
         $key=C("hxwj_key");
         $postparmas=array("kcode"=>$secretcd,"status"=>$new_method,"statusname"=>"status");
         $result_str=ExGiftController::changeGiftStatus($postparmas,$url,$key);
+
+        $add["url"]=$url;
+        $add["request"]=json_encode($postparmas,JSON_UNESCAPED_UNICODE);
+        $add["response"]=$result_str;
+        $add["create_at"]=date("Y-m-d H:i:s",time());
+        M("loglist")->add($add);
         $result_arr=json_decode($result_str,true);
         if($result_arr["message"]=="success"){
             return true;
@@ -533,7 +549,13 @@ class ProductController extends Controller
         $url="xxxxx";
         $key="1111111";
         $postparmas=array("kcode"=>$secretcd,"status"=>$new_method,"statusname"=>"status");
+
         $result_str=ExGiftController::changeGiftStatus($postparmas,$url,$key);
+        $add["url"]=$url;
+        $add["request"]=json_encode($postparmas,JSON_UNESCAPED_UNICODE);
+        $add["response"]=$result_str;
+        $add["create_at"]=date("Y-m-d H:i:s",time());
+        M("loglist")->add($add);
         $result_arr=json_decode($result_str,true);
         if($result_arr["message"]=="success"){
             return true;
