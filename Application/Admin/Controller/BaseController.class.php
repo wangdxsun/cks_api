@@ -3,7 +3,6 @@
 namespace Admin\Controller;
 
 use Admin\Model\BaseModel;
-use Admin\Model\HelpModel;
 use Think\Controller;
 
 /**
@@ -80,7 +79,7 @@ class BaseController extends Controller
     }
 
     //上传单个图片
-    public function upload(){
+    /*public function upload(){
          $this->ajaxReturn(HelpModel::upload($_GET['path']));
-    }
+    }*/
 }

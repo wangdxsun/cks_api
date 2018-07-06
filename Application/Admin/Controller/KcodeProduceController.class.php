@@ -13,13 +13,23 @@ use Admin\Model\BaseModel;
 class KcodeProduceController extends BaseController
 {
 
-    public  $arr = [58, 59, 60, 61, 62, 63, 64, 73, 79, 91, 92, 93, 94, 95, 96, 108, 111];
-    public  $type = ['ph' => 8, 'BD' => 8, 'am' => 10 ];
-    public  $randStart = 51;
-    public  $randEnd = 122;
-
-
-
+    public  $arr = [58, 59, 60, 61, 62, 63, 64, 73, 79, 91, 92, 93, 94, 95, 96, 108, 111];//去除ascii特殊字符
+    public  $type = ['ph' => 8, 'BD' => 8, 'am' => 10 ]; //ph、am 明码暗码 bd绑定码
+    public  $randStart = 51;//随机数开始
+    public  $randEnd = 122;//随机数结束
+    public  $expTitle = '导入数据'; //导出标题
+    public  $expCellName =  [
+                ['clearcd', '明码'],
+                ['secretcd', '暗码'],
+                ['hcode', '绑定码'],
+                ['im_pnumber', '料号'],
+                ['im_model', '产品名称'],
+                ['im_staff', '导入人员'],
+                ['im_time', '导入时间'],
+                ['status', '状态'],
+                ['pmoney', '金额'],
+                ['close_time', '截止日期']
+        ];//excel导出
 
     //列表
     public function  index(){
@@ -94,7 +104,7 @@ class KcodeProduceController extends BaseController
         $data['im_pnumber'] = $pdata['pnumber'];
         $data['im_time'] = date('Y:m:d H:i:s', time());
         $data['im_staff'] = BaseModel::username();
-        $data['money'] = $pdata['money'];
+        $data['pmoney'] = $pdata['money'];
         $data['close_time'] = 999;
         $data['status'] = 0;
         $data['readdress'] = '';
@@ -128,6 +138,34 @@ class KcodeProduceController extends BaseController
         else
 
             $this->ajaxReturn(['status' => 0, 'info' => '料号与产品名没有对应']);
+
+
+    }
+
+    public function exportProductInitialData(){
+        $pdata = json_decode($_POST['data'],true);
+
+        $this->verifyPnumberByPname($pdata['pnumbers'], $pdata['pnames']);//验证料号和名称是否对应
+
+        $exportExcelData =  BaseModel::getDbData([
+            'table' => KcodeProduceModel::$table[2],
+            'field' => ['id', 'clearcd', 'secretcd', 'hcode', 'im_pnumber', 'im_model','im_staff','im_time', 'status', 'pmoney', 'close_time'],
+            'where' => ['im_pnumber' => $pdata['pnumbers'], 'im_model' => $pdata['pnames']]
+        ]);
+
+        //echo M()->getLastSql();die;
+
+        //echo KcodeProduceModel::exportExcel($this->expTitle, $this->expCellName, $exportExcelData);die;
+        if($exportExcelData)
+
+            $this->ajaxReturn([
+               'status' => 1,
+               'url' => KcodeProduceModel::exportExcel($this->expTitle, $this->expCellName, $exportExcelData),
+               'info' => '导出成功'
+            ]);
+        else
+
+            $this->ajaxReturn(['status' => 0, 'info' => '数据不存在' ]);
 
 
     }
