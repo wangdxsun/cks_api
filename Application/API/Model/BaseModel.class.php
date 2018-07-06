@@ -1,5 +1,5 @@
 <?php
-namespace Admin\Model;
+namespace API\Model;
 use Think\Model;
 
 /**
