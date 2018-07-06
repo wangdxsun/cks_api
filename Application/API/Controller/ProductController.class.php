@@ -21,7 +21,7 @@ class ProductController extends Controller
         }*/
 
 
-    //获取电子K码
+    //获取电子K码，云盘等平台调我们，给产品加上K码
     public function getKcode()
     {
         //EntryController::index();
@@ -65,7 +65,8 @@ class ProductController extends Controller
                 //获取金额
                 $response = $this->getTresult($phone,$order_no, $products,$channel);
             } else {
-
+                $response = $this->getTresult($phone, $order_no, $products,$channel);
+                //todo 要发短信
             }
             exit(json_encode($response));
            // exit(print_r($response));
@@ -142,7 +143,7 @@ class ProductController extends Controller
 
 
 
-    //发送短信
+    //发送短信，暂时没人调
     public function sendMsg()
     {
         $phone = $_POST["phone"];
@@ -155,7 +156,7 @@ class ProductController extends Controller
     }
 
 
-
+    //DDW点兑换跳他们的页面，所以需要回调我们
     public function dhresult(){
         //exit(json_encode(array("stautus"=>true,"msg"=>"11111111111"),JSON_UNESCAPED_UNICODE));
         $phone=$_POST["phone"];
@@ -230,7 +231,7 @@ class ProductController extends Controller
 
      }
 
-    //改变K码状态接口
+    //改变K码状态接口，后台调
     public function changekcode(){
         $clearcd_str=$_POST["clearcd"];
         $secretcd_str=$_POST["secretcd"];
@@ -334,6 +335,7 @@ class ProductController extends Controller
 
     }
 
+    //给后台用，退货后等情况下更新其他平台的状态
     public   function chooseMethod($channel="DDW",$clearcd,$secretcd,$method){
         switch ($channel)
         {
@@ -369,10 +371,10 @@ class ProductController extends Controller
     }
 
 
-    //改变ddw
+    //改变ddw，找呵呵哒对接
     protected  function changeDDW($clearcd,$secretcd,$method){
 
-            return "ddw";
+        //todo changeDDW
 
     }
 
