@@ -80,7 +80,7 @@ return array(
     ),
 
     //商城api
-    'mall_url' => 'http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/exchange',
+    'mall_url' => 'https://uat.phimall.com/openapi/vcprice/exchange',//'http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/exchange',
     'mall_interface' => 'vmcshop_vcprice_interface',
     //推啥api……
     //DDW

@@ -6,7 +6,7 @@ use Think\Controller;
 use API\Controller\BaseController;
 use API\Controller\EthController;
 use API\Controller\MallController;
-use Admin\Model\BaseModel;
+use API\Model\BaseModel;
 use API\Controller\CommonController;
 /**
  * 页面操作类

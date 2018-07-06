@@ -471,13 +471,13 @@ class ProductController extends Controller
     //改变商城
     public  function changeMall($clearcd,$secretcd,$method){
         if($method==1){
-            $url="http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/froze";
+            $url="https://uat.phimall.com/openapi/vcprice/froze";
             $new_method="froze";
         }elseif ($method==2){
-            $url="http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/unfroze";
+            $url="https://uat.phimall.com/openapi/vcprice/unfroze";
             $new_method="unfroze";
         }else{
-            $url="http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/cancel";
+            $url="https://uat.phimall.com/openapi/vcprice/unfroze";
             $new_method="cancel";
         }
         $phone=M("relation")->where(["clearcd"=>$clearcd])->getField("rephone");

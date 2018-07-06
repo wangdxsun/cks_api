@@ -2,7 +2,7 @@
 namespace API\Controller;
 
 use Think\Controller;
-use Admin\Model\BaseModel;
+use API\Model\BaseModel;
 
 /*
  * Crm
