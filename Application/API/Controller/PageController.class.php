@@ -141,7 +141,7 @@ class PageController extends LoginController
             return false;
         }
         $value = null;
-        eval("$value = $num_1 $operator $num_2;");
+        eval("\$value = $num_1 $operator $num_2;");
         return $value?true:false;
     }
 
@@ -229,6 +229,10 @@ class PageController extends LoginController
             $change_info = $this->getChangeMoney($tag,$kcode_info);
             $change_info['account_number'] = $user_info['phonenumber'];
             $change_info['is_account'] = '0';
+            if($tag==3)
+            {
+                exit(BaseController::returnMsg(array('error' => '0', 'data'=>array('url' => C('ddw_h5').'?token='.$token.'&kcode='.$kcode))));
+            }
             exit(BaseController::returnMsg(array('error' => '0', 'data'=>$change_info)));
         }
         elseif ($cash==7) {
@@ -236,11 +240,11 @@ class PageController extends LoginController
             switch ($tag) {
                 case 1://'华夏':
                     $param = array(
-                        'Phone' => '18109069773',//$user_info['phonenumber'],//手机号
+                        'Phone' => '15184475786',//$user_info['phonenumber'],//手机号
                         'Kcodetype' => 'W2',// $kcode_info['im_model'],//产品型号
                         'amount' => strval($kcode_info['money'])//金额
                     );
-                    //print_r($param);
+                    print_r($param);
                     $res = ExGiftController::inquireUserExStatus($param, 'hxwj', 'hxwj_key');
                     //{"message":"用户不存在或未实名","data":null,"rescode":"1000","error":"1000"}
                     //'0000'成功 rescode 1000 用户不存在或未实名 2000 k码类型不存在 4000 data数据有误 5000 签名不正确
@@ -337,7 +341,6 @@ class PageController extends LoginController
                     $res = MallController::mallChange($token,$kcode,$sku_bn,$amount,$radio);
                     break;
                 case 2://'推啥':
-                    print_r($user_info);echo $kcode.$user_info['phonenumber'].round($change_info['last_rate'],2);
                     $result = TuiController::index("TS",$kcode,$user_info['phonenumber'],sprintf('%.2f', $change_info['last_rate']),1);
                     
                     if ($result['status']) {
@@ -346,7 +349,6 @@ class PageController extends LoginController
                     else{
                         $res = array('error' => '110');
                     }
-                    print_r($res);
                     break;
                 case 3://'DDW':
                     $rate=1;
@@ -381,15 +383,25 @@ class PageController extends LoginController
                 
                 case 1://'华夏':
                     $param = array(
-                        'phone' => '18109069773',//$user_info['phonenumber'],//手机号//手机号
+                        'phone' => '15184475786',//$user_info['phonenumber'],//手机号//手机号
                         'kcodeType' => 'W2',//$kcode_info['im_model'], //产品型号
                         'kcode' => $kcode_info['secretcd'],//'am123', //暗码
                         'kcodeSn' => $kcode_info['clearcd'],//'mm1234', //明码
                         'deviceSn' => $kcode_info['clearcd'],//'sb1234',//设备码
-                        'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
+                        //'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
                         'Amount' => strval($kcode_info['money']),//'666'  //礼包金额
-                    );
-                    print_r($param);
+                    );var_dump($param);
+                    $param =   [
+                        'phone' =>   '15184475786',
+                        'kcodeType' =>   'W2',
+                        'kcode' => 'uqcJ5uT44f',
+                        'kcodeSn' => 'mm1234',
+                        'deviceSn' => 'sb1234',
+                        'bingSn' => 'bd123',
+                        'Amount' => '100.00'
+                    ];
+
+                    var_dump($param);
                     $res = ExGiftController::pushGift($param, 'hxwj_push_gift', 'hxwj_key');
                     $res = json_decode($res,true);
                     $res['error'] = $res['rescode']=='0000'?'0':'110';
