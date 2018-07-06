@@ -566,17 +566,20 @@ class ProductController extends Controller
     protected  function changeHX($clearcd,$secretcd,$method){
         if($method==1){
             $new_method="freeze";
+            $statusName = "freeze";
         }elseif ($method==2){
             $new_method="unfreeze";
+            $statusName = "unfreeze";
         }else{
             $new_method="invalid";
+            $statusName = "invalid";
         }
-        $url="xxxxx";
-        $key="1111111";
-        $postparmas=array("kcode"=>$secretcd,"status"=>$new_method,"statusname"=>"status");
+        //$url="xxxxx";
+        //$key="1111111";
+        $postparmas=array("kcode"=>$secretcd,"status"=>$new_method,"statusName"=>$statusName);
 
-        $result_str=ExGiftController::changeGiftStatus($postparmas,$url,$key);
-        $add["url"]=$url;
+        $result_str=ExGiftController::changeGiftStatus($postparmas,'hxwj_change_status','hxwj_key');
+        $add["url"]=C('hxwj_change_status');
         $add["request"]=json_encode($postparmas,JSON_UNESCAPED_UNICODE);
         $add["response"]=$result_str;
         $add["create_at"]=date("Y-m-d H:i:s",time());

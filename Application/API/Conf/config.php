@@ -95,6 +95,7 @@ return array(
     //华夏、骏和,固定参数
     'hxwj' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//1.1用户信息与兑换资格查询接口地址
     'hxwj_push_gift' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//1.2
+    'hxwj_change_status' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_state_change_req',//1.2
     'jh' => 'http://180.167.58.6:8206/CKSKM/QueryUserAndKCode',
     'jh_push_gift' => 'http://180.167.58.6:8206/CKSKM/ActivateKcode',
     'jh_change_status' => 'http://180.167.58.6:8206/CKSKM/DealKCodeStatus',
