@@ -240,8 +240,8 @@ class PageController extends LoginController
             switch ($tag) {
                 case 1://'华夏':
                     $param = array(
-                        'Phone' => '18981976763',//$user_info['phonenumber'],//手机号
-                        'Kcodetype' => 'W2',// $kcode_info['im_model'],//产品型号
+                        'Phone' => $user_info['phonenumber'],//手机号
+                        'Kcodetype' => $kcode_info['im_model'],//产品型号
                         'amount' => strval($kcode_info['money'])//金额
                     );
                     //print_r($param);
@@ -269,8 +269,8 @@ class PageController extends LoginController
                     break;
                 case 2://'骏和':
                     $param = array(
-                        'Phone' => '13795000060',//$user_info['phonenumber'],//手机号
-                        'Kcodetype' => 'W2',// $kcode_info['im_model'],//产品型号
+                        'Phone' => $user_info['phonenumber'],//手机号
+                        'Kcodetype' => $kcode_info['im_model'],//产品型号
                         'amount' => strval($kcode_info['money'])//金额
                     );
                     //print_r($param);
@@ -402,7 +402,7 @@ class PageController extends LoginController
                         'kcodeSn' => $kcode_info['clearcd'],//'mm1234', //明码
                         'deviceSn' => $kcode_info['sn'],//'sb1234',//设备码
                         'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
-                        'Amount' => '100'//strval($kcode_info['money']),//'666'  //礼包金额
+                        'Amount' => strval($kcode_info['money']),//'666'  //礼包金额
                     );
                     //print_r($param);
                     $res = ExGiftController::pushGift($param, 'hxwj_push_gift', 'hxwj_key');
