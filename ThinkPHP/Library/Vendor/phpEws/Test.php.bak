@@ -1,0 +1,13 @@
+<?php
+
+use \jamesiarmes\PhpEws\Client;
+
+    $server = 'mail.phicomm.com';
+    $username = 'jianjia.zheng@phicomm.com';
+    $password = 'jj321++';
+
+    $ews = new \jamesiarmes\PhpEws\Client($server, $username, $password);
+
+    $res = $ews->FindPeople();
+    var_dump($res);
+

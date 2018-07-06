@@ -1,0 +1,48 @@
+.probSub_main {
+    height: 530px;
+}
+
+.probSub_content {
+    width: 400px;
+    margin: 0 auto;
+}
+
+.probSub_content * {
+    font-size: 16px;
+}
+
+.probSub_content span {
+    width: 85px;
+    display: inline-block;
+}
+
+span.proSub_spe {
+    vertical-align: top;
+}
+
+.probSub_content input,
+.probSub_content select,
+.probSub_content textarea {
+    margin-bottom: 15px;
+    width: 300px;
+    height: 40px;
+    border-radius: 3px;
+    border: 1px solid #999;
+}
+
+.probSub_content select {
+    margin-left: -5px;
+    width: 302px;
+}
+
+.probSub_content textarea {
+    resize: none;
+    height: 150px;
+}
+
+.proSub_submit {
+    width: 140px;
+    height: 40px;
+    line-height: 40px;
+    margin: 0 auto;
+}

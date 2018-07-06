@@ -1,0 +1,49 @@
+.section_basicInfo_gallary{
+            margin-top: 20px;
+        }
+        .gallary_main {
+            margin:30px auto;
+            width: 560px;
+            position: relative;
+        }
+
+        .gallary_btn_left,
+        .gallary_btn_right {
+            cursor: pointer;
+            width: 70px;
+            height: 120px;
+            font-size: 50px;
+            line-height: 120px;
+            position: absolute;
+            text-align: center;
+            color:#999;
+            vertical-align: middle;
+        }
+        .gallary_btn_left{
+            top:0;
+            left:20px;
+        }
+        .gallary_btn_right{
+            top:0;
+            right:20px;
+        }
+        .gallary_box{
+            overflow: hidden;
+            width: 400px;
+            height: 120px;
+            position: relative;
+            margin: 0 auto;
+        }
+        .gallary_imgs {
+            position: absolute;
+            left:0;
+            height: 120px;
+            width: 2000px;
+            white-space: nowrap;
+        }
+        .gallary_img_item {
+            float:left;
+            width: 120px;
+            height: 120px;
+            margin-right:20px;
+        }

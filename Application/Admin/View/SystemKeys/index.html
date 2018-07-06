@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>系统键值</title>
+
+    <link rel="stylesheet" href="__PUBLIC__/css/content.css" />
+    <link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
+    <link rel="stylesheet" href="__PUBLIC__/js/bootstrap3.37/css/bootstrap.min.css">
+    <script src="__PUBLIC__/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/js/layui/layui.js"></script>
+    <script src="__PUBLIC__/js/bootstrap3.37/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/global.js"></script>
+</head>
+<style>
+    .panel-primary{
+        border-color: #1ab394;
+    }
+    a{
+        text-decoration: none !important;
+    }
+</style>
+
+<body>
+<div class="container-fluid" style="margin-top: 10px">
+    <div class="panel panel-primary">
+        <div class="panel-heading" style="background-color: #1ab394;border-color: #1ab394;">
+            <span class="badge" style=" color: #1ab394;" >系统键值表</span>
+                <i id="add-manager" class="layui-icon" style="float:right;font-size: 20px;margin-top:-5px;cursor:pointer">&#xe654;</i>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <table class="layui-table" >
+        <thead>
+        <tr>
+            <td width="40px">ID</td>
+            <td width="80px">key1</td>
+            <td width="80px">key2</td>
+            <td width="120px">value1</td>
+            <td width="120px">value2</td>
+            <td width="120px">value3</td>
+            <td width="120px">node</td>
+            <td width="100px">更改时间</td>
+            <td width="110px">更改人</td>
+            <td width="80px">操作</td>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($data['data'] as $key => $val):?>
+        <tr>
+            <td><?php echo  $val['id'];?></td>
+            <td><?php echo  $val['key1'];?></td>
+            <td><?php echo $val['key2']; ?></td>
+            <td><?php echo $val['value1'];?></td>
+            <td><?php echo  $val['value2'];?></td>
+            <td><?php echo  $val['value3'];?></td>
+            <td><?php echo  $val['node'];?></td>
+            <td><?php echo $val['datetime'];?></td>
+            <td><?php echo $val['uid'];?></td>
+            <td>
+                <a class="edit" attr="<?php echo $val['id']?>" href="#"></a>
+                <a class="delete" attr="<?php echo $val['id']?>" pid="<?php echo $val['pid']?>" href="#"  table="menu"></a>
+            </td>
+        </tr>
+        <?php endforeach ?>
+        </tbody>
+    </table>
+</div>
+<div class="container-fluid">
+    <div id="page"></div>
+</div>
+
+<div class="container-fluid" id="add-manage-popup" style="display:none;margin-left:20px;margin-top:20px">
+    <form class="layui-form layui-form-pane" action="">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">key1</label>
+            <div class="layui-input-inline">
+                <input name="key1"  placeholder="请输入键名" class="layui-input" type="text" id="key1">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">key2</label>
+            <div class="layui-input-inline">
+                <input name="key2"  placeholder="请输入键" class="layui-input" type="text" id="key2">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">value1</label>
+            <div class="layui-input-inline">
+                <input name="value1"  placeholder="请输入对应键值1" class="layui-input" type="text" id="value1">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">value2</label>
+            <div class="layui-input-inline">
+                <input name="value2"  placeholder="请输入对应键值2" class="layui-input" type="text" id="value2">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">value3</label>
+            <div class="layui-input-inline">
+                <input name="value3"  placeholder="请输入对应键值3" class="layui-input" type="text" id="value3">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">node</label>
+            <div class="layui-input-inline">
+                <input name="node"  placeholder="请输入对应说明" class="layui-input" type="text" id="node">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="text-align:center; width:100%;height:100%;margin-left:-28px; " >
+            <div class="layui-btn"  lay-submit="" lay-filter="demo2"  id="sub-btn" attr="">提交</div>
+            <input name="action" type="hidden" class="layui-input" value="add" id="action">
+            <input name="eid" type="hidden" class="layui-input" value="" id="eid">
+        </div>
+    </form>
+
+</div>
+
+</body>
+
+<script>
+    $(function() {
+        //分页
+        globalFn.lypage('page', "{$data['pages']}", "Admin/SystemKeys/index");
+
+        //点击添加系统键值
+        $("#add-manager").click(function(){
+            systemKeysFn.emptyInput();
+            systemKeysFn.addSystemKeys();
+            globalFn.lyPopup('添加策略', ['550px', '580px'],'add-manage-popup',1);
+
+        });
+
+        //点击编辑
+        $(".edit").click(function(){
+            systemKeysFn.emptyInput();
+            systemKeysFn.editSyetemKyes();
+            $.post("{:U('getOneSystemKeysData')}",{id:$(this).attr('attr')},function(data){
+                $("#key1").val(data.key1);
+                $("#key2").val(data.key2);
+                $("#value1").val(data.value1);
+                $("#value2").val(data.value2);
+                $("#value3").val(data.value3);
+                $("#node").val(data.node);
+                $("#eid").val(data.id);
+
+            })
+
+            globalFn.lyPopup('编辑策略', ['550px', '580px'],'add-manage-popup',1);
+        })
+
+        layui.use(['form'], function(){
+            var form = layui.form(),layer = layui.layer;
+            //监听提交
+            form.on('submit(demo2)', function(data){
+                _index = layer.load();
+                $.post("{:U('access')}", {data:JSON.stringify(data.field)},function(res){
+                    res.status == 1 ? globalFn.remind(_index, res.info,"{:U('index')}")
+                        : globalFn.remind(_index, res.info);
+                });
+                return false;
+            });
+        })
+
+        //点击删除
+        $('.delete').click(function(){
+            //询问框
+            var id = $(this).attr('attr');
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.confirm('您确定要删除该账号吗？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    _index1 = layer.load();
+                    $.post("{:U('deleteSystemKeys')}",{id:id},function(res){
+                        res.status == 1 ? globalFn.remind(_index1, res.info,"{:U('index')}")
+                            : globalFn.remind(_index1, res.info);
+                    })
+                });
+            });
+
+        });
+
+        layui.use(['form'], function () {
+        })
+    })
+
+    var systemKeysFn = {
+
+        emptyInput:function(){
+            $('#key1,#key2,#value1,#value2,#value3,#node,#eid').val('');
+            $('#key1,#key2').attr('lay-verify','required');
+
+        },
+
+        addSystemKeys:function(){
+            $('#action').val("add");
+            $('#sub-btn').text('添加');
+
+        },
+
+        editSyetemKyes:function(){
+            $('#action').val("edit");
+            $('#sub-btn').text('编辑');
+
+        },
+
+    }
+
+</script>
+
+</html>
