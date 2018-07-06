@@ -176,7 +176,7 @@ class ProductController extends Controller
             exit(json_encode(array("status"=>false,"msg"=>"流水号错误")));
         }
 
-        $result=CommonController::ChangeLog($kcode,$rate,$dhtotal,$phone,$status,$channel,$exratio,$chkSnsNo,$last_return_time);
+        $result=CommonController::ChangeLog($kcode,$rate,$dhtotal,$phone,$status, '1-3',$exratio,$chkSnsNo,$last_return_time, 1, 3, 'ddw');
         if($result){
             exit(json_encode(array("status"=>true,"msg"=>"插入成功")));
         }else{
