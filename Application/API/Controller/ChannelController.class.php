@@ -18,7 +18,7 @@ class ChannelController extends Controller
         EntryController::index();
         $channel=$_POST["channel"];
         $exratio=$_POST["exratio"];
-        if($channel!="华夏万家"&&$channel!="骏和"){
+        if($channel!="HXWJ"&&$channel!="JH"){
             exit(json_encode(array("status"=>false,"message"=>"渠道参数传递错误")));
         }
         if(empty($exratio)){
