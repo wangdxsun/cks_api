@@ -63,6 +63,7 @@ class DdwController extends Controller
         $exratio=$request["last_rate"];
 
 
+        header('Content-Type: application/json');
         if(empty($data)){
             exit(json_encode(array("status"=>false,"message"=>"没有找到对应的K码")));
         }else{
