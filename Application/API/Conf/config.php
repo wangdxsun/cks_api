@@ -16,7 +16,7 @@ return array(
     'SECRET_KEY' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
 
     //云账号域名地址
-    'cloud_url' => 'https://accountsymtest.phicomm.com',//'http://114.141.173.41:48080',//'https://accountsym.phicomm.com'
+    'cloud_url' => 'http://114.141.173.41:48080',//'https://accountsymtest.phicomm.com',//'https://accountsym.phicomm.com'
 	//K码兑换H5
 	'h5_client_id' => '1569234',
 	'h5_client_secret' => '6FE32D94BE97DBB120E7B1C54FC0B239',
