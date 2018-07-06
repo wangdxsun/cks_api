@@ -29,6 +29,9 @@ class ProductController extends Controller
             $phone = $_POST["phone"];
             $channel = $_POST["channel"];
             $order_no = $_POST["order_no"];
+            if(M("relation")->where(["orderId"=>$order_no])->select()){
+                exit(json_encode(array("status" => false, "message" => "该订单已经存在")));
+            }
             $products = json_decode($_POST["products"],true);
 
             //判断金额料号金额金额是否大于总的k码价值
@@ -202,7 +205,7 @@ class ProductController extends Controller
         if(($secretcd)){
             $where["secretcd"]=$secretcd;
         }
-        
+
        $data=M("relation")->field("status as kstatus,last_return_time,money,channel3")->where($where)->find();
 
         if(!$data){
