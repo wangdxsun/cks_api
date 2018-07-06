@@ -500,7 +500,23 @@ class ProductController extends Controller
 
     //改变骏和
     protected  function chanageJH($clearcd,$secretcd,$method){
-          return "jh";
+        if($method==1){
+            $new_method="freeze";
+        }elseif ($method==2){
+            $new_method="unfreeze";
+        }else{
+            $new_method="invalid";
+        }
+        $url=C("jh_change_status");
+        $key=C("hxwj_key");
+        $postparmas=array("kcode"=>$secretcd,"status"=>$new_method,"statusname"=>"status");
+        $result_str=ExGiftController::changeGiftStatus($postparmas,$url,$key);
+        $result_arr=json_decode($result_str,true);
+        if($result_arr["message"]=="success"){
+            return true;
+        }else{
+            return false;
+        }
     }
     //改变华夏万家
     protected  function changeHX($clearcd,$secretcd,$method){
