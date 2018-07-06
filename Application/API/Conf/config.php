@@ -89,7 +89,7 @@ return array(
     'eth_url' => 'http://testnottobuy.phi-block.com:18000/api/',//https://www.phi-block.com/api/
     'eth_act' => 'cloud_star_points',
     'eth_md5_key' => '1wSn0kMbpxaDCx',
-    'ddw_url' => 'http://172.17.84.239:8090/aftersales/v1/returngoods',//开发环境
+    'ddw_url' => 'https://accountsymtest.phicomm.com/aftersales/v1/returngoods',//'http://172.17.84.239:8090/aftersales/v1/returngoods',//开发环境
     'ddw_secret' => 'a',
 
     //华夏、骏和,固定参数
