@@ -66,7 +66,7 @@ class ProductController extends Controller
                 $response = $this->getTresult($phone,$order_no, $products,$channel);
             } else {
                 $response = $this->getTresult($phone, $order_no, $products,$channel);
-                //todo 要发短信
+                self::sendMessages($channel,$order_no);
             }
             exit(json_encode($response));
            // exit(print_r($response));
@@ -173,6 +173,7 @@ class ProductController extends Controller
         }
 
         $result=CommonController::ChangeLog($kcode,$rate,$dhtotal,$phone,$status, '1-3',$exratio,$chkSnsNo,$last_return_time, 1, 3, 'ddw');
+        header('Content-Type: application/json');
         if($result){
             exit(json_encode(array("status"=>true,"msg"=>"插入成功")));
         }else{
@@ -202,8 +203,8 @@ class ProductController extends Controller
 
     //发送短信接口
      public function sendMessages($channel="TUI",$order_no="80200001"){
-        set_time_limit(0);
-         $auth=$channel=="TUI"?"feixun*123.SH_9913651":"";
+         set_time_limit(0);
+         $auth=$channel=="TUI"?"feixun*123.SH_9913651":"feixun*123.SH_7070483";
 
          $channel_name=$channel=="TUI"?"推啥":"云盘";
          $sign="尊敬的用户您好,您通过".$channel_name."获取的K码是";
@@ -223,8 +224,6 @@ class ProductController extends Controller
              Curl::curl_get($url);
              //sleep(1);
          }
-
-
      }
 
     //改变K码状态接口，后台调
@@ -416,10 +415,14 @@ class ProductController extends Controller
 
 
     //改变ddw，找呵呵哒对接
-    protected  function changeDDW($clearcd,$secretcd,$method){
-
-        //todo changeDDW
-
+    protected  function changeDDW($clearcd, $secretcd, $method){
+        $sign = md5("$method&$secretcd&".C('ddw_secret'));
+        $data = [
+            'actionType' => $method,//actionType:1冻结，2取消冻结，3注销
+            'kcode' => $secretcd,
+            'sign' => $sign
+        ];
+        Curl::curl_header_post(C('ddw_url'), $data, 'Content-Type: application/x-www-form-urlencoded');
     }
 
     //改变推啥
