@@ -270,10 +270,13 @@ class ProductController extends Controller
         }
 
         foreach($data as $kk=>$vv){
-            if($vv["last_return_time"]<date("Y-m-d H:i:s",time())){
-                exit(json_encode(array("status"=>false,"message"=>"已超过最晚退货时间"),JSON_UNESCAPED_UNICODE));
+            if(($vv["last_return_time"]!="0000-00-00 00:00:00")){
+                if($vv["last_return_time"]<date("Y-m-d H:i:s",time())){
+                    exit(json_encode(array("status"=>false,"message"=>"已超过最晚退货时间"),JSON_UNESCAPED_UNICODE));
 
+                }
             }
+
         }
         //print_r($data);die;
         //获取到data，对data进行遍历
