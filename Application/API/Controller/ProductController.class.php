@@ -267,9 +267,23 @@ class ProductController extends Controller
            }else{
                $clearcd=$data[0]["clearcd"];
                $secretcd=$data[0]["secretcd"];
+               if($data[0]["status"]==1){
+                   if($method==1){
+                      $status1=3;
+                   }elseif ($method==2){
+                       $status1=2;
+                   }else{
+                       $status1=4;
+                   }
+                   $status1_result=M("relation")->where(["clearcd"=>$clearcd])->save(["status"=>$status1]);
+                   if($status1_result===false){
+                       exit(json_encode(array("status"=>false,"message"=>"操作失败")));
+                   }else{
+                       exit(json_encode(array("status"=>true,"message"=>"调用失败")));
+                   }
+               }
                M()->startTrans();
                $res=self::chooseMethod($data[0]["channel3"],$clearcd,$secretcd,$method);
-
 
                if($res===false){
                    M()->rollback();
