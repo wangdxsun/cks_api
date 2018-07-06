@@ -422,7 +422,13 @@ class ProductController extends Controller
             'kcode' => $secretcd,
             'sign' => $sign
         ];
-        Curl::curl_header_post(C('ddw_url'), $data, 'Content-Type: application/x-www-form-urlencoded');
+        $result = Curl::curl_header_post(C('ddw_url'), $data, 'Content-Type: application/x-www-form-urlencoded');
+        $result=json_decode($result, true);
+        if($result["err"]>0){
+            return false;
+        }else{
+            return true;
+        }
     }
 
     //改变推啥
