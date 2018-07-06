@@ -526,12 +526,10 @@ class ProductController extends Controller
         }else{
             $new_method="invalid";
         }
-        $url=C("jh_change_status");
-        $key=C("hxwj_key");
         $postparmas=array("kcode"=>$secretcd,"status"=>$new_method,"statusname"=>"status");
-        $result_str=ExGiftController::changeGiftStatus($postparmas,$url,$key);
+        $result_str=ExGiftController::changeGiftStatus($postparmas,'jh_change_status', 'hxwj_key');
 
-        $add["url"]=$url;
+        $add["url"]=C('jh_change_status');
         $add["request"]=json_encode($postparmas,JSON_UNESCAPED_UNICODE);
         $add["response"]=$result_str;
         $add["create_at"]=date("Y-m-d H:i:s",time());
