@@ -261,7 +261,7 @@ class ProductController extends Controller
         //获取到data，对data进行遍历
        if(count($data)==1){
            $old_status=$data[0]["status"];
-           if($old_status>4){
+           if(($old_status>=4)&&($old_status<6)){
                exit(json_encode(array("status"=>false,"message"=>"K码状态不对")));
            }else{
                $clearcd=$data[0]["clearcd"];
@@ -293,7 +293,7 @@ class ProductController extends Controller
                    }
                }else{
                   if($method==1){
-                      $status1=3;
+                      $status1=6;
                   }else if($method==2){
                       $status1=1;
                   }else{
@@ -311,7 +311,7 @@ class ProductController extends Controller
        }else{
            $status_pool=array();
             foreach($data as $k=>$item){
-                if($item["status"]>4){
+                if(($item["status"]>=4)&&($item["status"]<6)){
                     array_push($status_pool,false);
                 }else{
                     $clearcd=$item["clearcd"];
@@ -336,7 +336,7 @@ class ProductController extends Controller
                if($vv["status"]==1){
                    //如果原先就是1，来判断method
                    if($method==1){
-                       $status1=3;
+                       $status1=6;
                    }else if($method==2){
                        $status1=1;
                    }else{
@@ -502,7 +502,7 @@ class ProductController extends Controller
     }
 
     //改变骏和
-    protected  function chanageJH($clearcd,$secretcd,$method){
+    protected  function changeJH($clearcd,$secretcd,$method){
         if($method==1){
             $new_method="freeze";
         }elseif ($method==2){
