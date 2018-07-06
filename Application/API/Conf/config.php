@@ -78,10 +78,14 @@ return array(
     'mall_url' => 'http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/exchange',
     'mall_interface' => 'vmcshop_vcprice_interface',
     //推啥api……
+    //DDW
+    'ddw_h5' => 'https://accountsymtest.phicomm.com/ddwh5/index.html#/conversion',
     //以太星球
     'eth_url' => 'http://testnottobuy.phi-block.com:18000/api/',//https://www.phi-block.com/api/
     'eth_act' => 'cloud_star_points',
     'eth_md5_key' => '1wSn0kMbpxaDCx',
+    'ddw_url' => 'http://172.17.84.239:8090/aftersales/v1/returngoods',//开发环境
+    'ddw_secret' => 'a',
 
     //华夏、骏和,固定参数
     'hxwj' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//1.1用户信息与兑换资格查询接口地址
