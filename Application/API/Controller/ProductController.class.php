@@ -508,7 +508,7 @@ class ProductController extends Controller
     }
 
     //改变骏和
-    protected  function chanageJH($clearcd,$secretcd,$method){
+    protected  function changeJH($clearcd,$secretcd,$method){
         if($method==1){
             $new_method="freeze";
         }elseif ($method==2){
