@@ -5,7 +5,7 @@ namespace API\Controller;
 use Think\Controller;
 use API\Common\Curl;
 use API\Common\EncryptSignVerify;
-use Admin\Model\BaseModel;
+use API\Model\BaseModel;
 /**
  * 登录类
  * 
