@@ -256,7 +256,7 @@ class PageController extends LoginController
                         if ($res['data']['exchangPlanAmount']) {
                             $plan_info = explode(',', $res['data']['exchangPlanAmount']);
                             foreach ($plan_info as $key => $value) {
-                                $res['data']['plan_detail'][] = explode('-', $value)[0];
+                                $res['data']['plan_detail'][] = explode('-', $value)[1];
                             }
                         }
                     }
@@ -283,7 +283,7 @@ class PageController extends LoginController
                         if ($res['data']['exchangPlanAmount']) {
                             $plan_info = explode(',', $res['data']['exchangPlanAmount']);
                             foreach ($plan_info as $key => $value) {
-                                $res['data']['plan_detail'][] = explode('-', $value)[0];
+                                $res['data']['plan_detail'][] = explode('-', $value)[1];
                             }
                         }
                     }

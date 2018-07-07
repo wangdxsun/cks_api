@@ -29,7 +29,7 @@ class TuiController extends Controller
         //file_put_contents("./Application/Runtime/test.txt",$channel.'-'.$kcode.'-'.$mobile.'-'.$exratio.'-'.$rate,FILE_APPEND);
         $url="https://treceive-service.phi-go.com/cks/blackDiamond";
         $where["secretcd"]=$kcode;
-        $where["status"]=1;
+        //$where["status"]=1;
         $money=M("relation")->where($where)->getField("money");
         $arr["channel"]="TUI";
         $arr["cksSnsNo"]=md5($kcode);

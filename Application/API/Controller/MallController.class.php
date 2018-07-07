@@ -49,7 +49,7 @@ class MallController extends Controller
         $add["url"]=$url;
         $add["request"]=$param;
         $add["response"]=$result;
-        $add["create_at"]=date("Y-m-d H:i:s",time());
+        $add["created_at"]=date("Y-m-d H:i:s",time());
         M("loglist")->add($add);
         $result = json_decode($result, true);
 
