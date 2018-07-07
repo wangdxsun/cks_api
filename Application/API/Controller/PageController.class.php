@@ -329,8 +329,9 @@ class PageController extends LoginController
         }
         $user_info = $this->user_info;
 
-        //变更状态--锁定-to do 
+        //变更状态--锁定
         $save_data['status'] = 5;
+        $save_data['channel3'] = $cash.'-'.$tag;
         $result = M('relation')->where(["secretcd"=>$kcode])->save($save_data);
 
         if ($result) {
@@ -439,7 +440,9 @@ class PageController extends LoginController
                 }
             }else{
                 //变更状态--已分配
-                M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>1));
+                $save_data['status'] = 5;
+                $save_data['channel3'] = ' ';
+                M('relation')->where(["secretcd"=>$kcode])->save($save_data);
             }
         }
         exit(BaseController::returnMsg($res));
