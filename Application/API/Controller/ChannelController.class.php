@@ -25,6 +25,7 @@ class ChannelController extends Controller
             exit(json_encode(array("status"=>false,"message"=>"兑换比例参数传递错误")));
         }
         $tag=$channel=="HXWJ"?1:2;
+        $channel=="HXWJ"?"华夏万家":"骏合";
         $data=M("allot_policy")->where(["cash"=>7,"describe"=>$channel])->find();
         if($data){
             //修改
