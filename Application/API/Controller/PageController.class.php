@@ -130,7 +130,7 @@ class PageController extends LoginController
 
         $channel_list['last_rate'] = $rate;
         $channel_list['rate_str'] = $rate_str;
-        $channel_list['change_money'] = $res['money']*$rate;
+        $channel_list['change_money'] = floor($res['money']*$rate);
         $channel_list['channel_unit'] = C('channel_unit')[$channel_list['cash'].'-'.$channel_list['tag']];
         return $channel_list;
     }
@@ -419,6 +419,7 @@ class PageController extends LoginController
                     //print_r($param);
                     $res = ExGiftController::pushGift($param, 'hxwj_push_gift', 'hxwj_key');
                     $res = json_decode($res,true);
+                    $res['data']['last_return_time'] = $res['data']['fristExpireDate'];
                     $res['error'] = $res['rescode']=='0000'?'0':'110';
 
                     // 0000 礼包生成成功 1000 用户不存在或未实名 2000 无兑换资格，请先投资兑换相应k码资格 3000  该k码礼包已生成 4000   k码类型不存在 5000  data数据有误 // 6000  请求繁忙 // 7000 推送礼包失败
@@ -437,7 +438,9 @@ class PageController extends LoginController
                     //print_r($param);
                     $res = ExGiftController::pushGift($param, 'jh_push_gift', 'hxwj_key');
                     //{"rescode":"0000","message":"礼包生成成功","data":{"fristExpireDate":"2018-08-04","name":"李三毛","phone":"13795000061"}}
+
                     $res = json_decode($res,true);
+                    $res['data']['last_return_time'] = $res['data']['fristExpireDate'];
                     $res['error'] = $res['rescode']=='0000'?'0':'110';
                     break;
                 default:
