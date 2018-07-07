@@ -47,7 +47,6 @@ class PageController extends LoginController
         ];
         
         $res = BaseModel::getDbData($condition, false);
-        $res['money'] = floor($res['money']);
         if (empty($res)) {
             exit(BaseController::returnMsg(array('error'=>'101')));
         }
@@ -63,6 +62,7 @@ class PageController extends LoginController
             'where' => ['cash' => 1],
             'order' => 'sort desc'
         ];
+        $res['money'] = floor($res['money']);
         $channel_info = BaseModel::getDbData($condition2);
         foreach ($channel_info as $key => $value) {
             $channel_list[] = $this->getChangeMoney($value['tag'],$res);
