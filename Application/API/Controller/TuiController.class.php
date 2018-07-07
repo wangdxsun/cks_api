@@ -33,7 +33,7 @@ class TuiController extends Controller
         $money=M("relation")->where($where)->getField("money");
         $arr["channel"]="TUI";
         $arr["cksSnsNo"]=md5($kcode);
-        $arr["diamondValue"]=$dhtotal=number_format(round($money*$exratio,2),2);
+        $arr["diamondValue"]=$dhtotal=number_format(round($money*$exratio,2),2,".","");
         $arr["kcode"]=$kcode;
         $arr["kcodeValue"]=$money;
         $arr["mobile"]=$mobile;
