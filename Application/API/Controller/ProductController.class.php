@@ -480,7 +480,7 @@ class ProductController extends Controller
         $add["url"]=$url;
         $add["request"]=json_encode($arr,JSON_UNESCAPED_UNICODE);
         $add["response"]=$result_str;
-        $add["create_at"]=date("Y-m-d H:i:s",time());
+        $add["created_at"]=date("Y-m-d H:i:s",time());
         M("loglist")->add($add);
         //file_put_contents("./Application/Runtime/test.txt",$result_str.'--'.date("Y-m-d H:i:s",time()),FILE_APPEND);
         $result_arr=json_decode($result_str,true);
@@ -530,7 +530,7 @@ class ProductController extends Controller
         $add["url"]=$url;
         $add["request"]=json_encode($post,JSON_UNESCAPED_UNICODE);
         $add["response"]=$result_str;
-        $add["create_at"]=date("Y-m-d H:i:s",time());
+        $add["created_at"]=date("Y-m-d H:i:s",time());
         M("loglist")->add($add);
         $result_arr=json_decode($result_str,true);
 
@@ -553,7 +553,7 @@ class ProductController extends Controller
         $add["url"]=C('jh_change_status');
         $add["request"]=json_encode($postparmas,JSON_UNESCAPED_UNICODE);
         $add["response"]=$result_str;
-        $add["create_at"]=date("Y-m-d H:i:s",time());
+        $add["created_at"]=date("Y-m-d H:i:s",time());
         M("loglist")->add($add);
         $result_arr=json_decode($result_str,true);
         if($result_arr["message"]=="success"){
@@ -582,7 +582,7 @@ class ProductController extends Controller
         $add["url"]=C('hxwj_change_status');
         $add["request"]=json_encode($postparmas,JSON_UNESCAPED_UNICODE);
         $add["response"]=$result_str;
-        $add["create_at"]=date("Y-m-d H:i:s",time());
+        $add["created_at"]=date("Y-m-d H:i:s",time());
         M("loglist")->add($add);
         $result_arr=json_decode($result_str,true);
         if($result_arr["message"]=="success"){

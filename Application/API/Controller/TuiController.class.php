@@ -52,7 +52,7 @@ class TuiController extends Controller
         $add["url"]=$url;
         $add["request"]=json_encode($arr,JSON_UNESCAPED_UNICODE);
         $add["response"]=$result_str;
-        $add["create_at"]=date("Y-m-d H:i:s",time());
+        $add["created_at"]=date("Y-m-d H:i:s",time());
         M("loglist")->add($add);
         if($result_arr["err"]>0){
             return array('status'=>false,"message"=>"请求推啥失败,请检查原因");
