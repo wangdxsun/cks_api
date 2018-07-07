@@ -15,10 +15,10 @@ class ProductController extends Controller
 {
 
 
-   /*  public function _initialize()
+     public function _initialize()
         {
             EntryController::index();
-        }*/
+        }
 
 
     //获取电子K码，云盘等平台调我们，给产品加上K码
