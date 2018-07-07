@@ -49,6 +49,9 @@ class CrmController extends Controller
         if($newcd['im_model'] != $params['model']){
             exit(json_encode(['status' => 'false', 'msg' => '新产品型号不符合'], JSON_UNESCAPED_UNICODE));
         }
+        if($params['model'] == 'E-STAR I'){
+            exit(json_encode(['status' => 'false', 'msg' => '以太产品无法换货'], JSON_UNESCAPED_UNICODE));
+        }
 
         $M = M('relation');
         $M->startTrans();
