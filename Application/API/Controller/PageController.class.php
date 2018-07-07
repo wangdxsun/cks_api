@@ -47,6 +47,7 @@ class PageController extends LoginController
         ];
         
         $res = BaseModel::getDbData($condition, false);
+        $res['money'] = floor($res['money']);
         if (empty($res)) {
             exit(BaseController::returnMsg(array('error'=>'101')));
         }
@@ -172,7 +173,7 @@ class PageController extends LoginController
         ],false);
         $data['rate_str'] = $data['id'].':'.$data['exratio'];
         $data['last_rate'] = $data['exratio'];
-        $data['change_money'] = $data['exratio'] * $money;
+        $data['change_money'] = floor($data['exratio'] * $money);
         $data['channel_unit'] = C('channel_unit')[$data['cash'].'-'.$data['tag']];
         return $data;
     }
@@ -256,7 +257,7 @@ class PageController extends LoginController
                         if ($res['data']['exchangPlanAmount']) {
                             $plan_info = explode(',', $res['data']['exchangPlanAmount']);
                             foreach ($plan_info as $key => $value) {
-                                $res['data']['plan_detail'][] = explode('-', $value)[1];
+                                $res['data']['plan_detail'][] = explode('-', $value)[0];
                             }
                         }
                     }
@@ -283,7 +284,7 @@ class PageController extends LoginController
                         if ($res['data']['exchangPlanAmount']) {
                             $plan_info = explode(',', $res['data']['exchangPlanAmount']);
                             foreach ($plan_info as $key => $value) {
-                                $res['data']['plan_detail'][] = explode('-', $value)[1];
+                                $res['data']['plan_detail'][] = explode('-', $value)[0];
                             }
                         }
                     }
@@ -341,12 +342,12 @@ class PageController extends LoginController
             exit(BaseController::returnMsg(array('error'=>'110', 'message' => C('kcdoe_stauts')[$kcode_info['status']])));
         }
         $user_info = $this->user_info;
-
+        
         //变更状态--锁定
         $save_data['status'] = 5;
         $save_data['channel3'] = $cash.'-'.$tag;
         $result = M('relation')->where(["secretcd"=>$kcode])->save($save_data);
-
+    
         if ($result) {
             M()->commit();//事务提交
         }
@@ -367,7 +368,7 @@ class PageController extends LoginController
                     break;
                 case 2://'推啥':
                     $result = TuiController::index("TS",$kcode,$user_info['phonenumber'],sprintf('%.2f', $change_info['last_rate']),1);
-
+                    
                     if ($result['status']) {
                         $res = array('error' => '0', 'data' => array('last_return_time' => $result['last_return_time']));
                     }
