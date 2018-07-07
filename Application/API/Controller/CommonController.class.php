@@ -65,7 +65,7 @@ class CommonController extends Controller
         $add_data["url"]=$url;
         $add_data["request"]=$request;
         $add_data["response"]=$response;
-        $add_data["create_at"]=date("Y-m-d H:i:s",time());
+        $add_data["created_at"]=date("Y-m-d H:i:s",time());
         M("loglist")->add($add_data);
     }
 

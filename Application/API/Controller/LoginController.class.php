@@ -127,7 +127,7 @@ class LoginController extends Controller
         //$data['mailaddress'] = $_POST['account_number'];
         //$data['phonenumber'] = $_POST['account_number'];
         //$data['username'] = $_POST['account_number'];
-        $data['password'] = $_POST['password'];
+        $data['password'] = strtoupper($_POST['password']);
         $url = C('cloud_url').C('cloud_login');
         $res = Curl::curl_post($url,$data);
         exit(BaseController::returnMsg($res));
@@ -166,7 +166,7 @@ class LoginController extends Controller
         //$data['mailaddress'] = $_POST['mailaddress'];
         //$data['phonenumber'] = $_POST['phonenumber'];
         //$data['username'] = $_POST['username'];
-        $data['password'] = $_POST['password'];
+        $data['password'] = strtoupper($_POST['password']);
         $data['registersource'] = $_POST['registersource'];
         $data['verificationcode'] = $_POST['verificationcode'];
         //$data['data'] = $_POST['data'];
@@ -196,7 +196,7 @@ class LoginController extends Controller
         //忘记密码时邮箱和电话只能传一个
         //$data['mailaddress'] = $_POST['mailaddress'];
         //$data['phonenumber'] = $_POST['phonenumber'];
-        $data['newpassword'] = $_POST['newpassword'];
+        $data['newpassword'] = strtoupper($_POST['newpassword']);
         $data['verificationcode'] = $_POST['verificationcode'];
         $url = C('cloud_url').C('cloud_forgetpassword');
         $res = Curl::curl_post($url,$data);
