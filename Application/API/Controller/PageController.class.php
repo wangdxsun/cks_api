@@ -306,7 +306,18 @@ class PageController extends LoginController
         @author:yy
         @date:2018-07-01
     **/
-    public function exchange(){
+    public function exchange() {
+        header('Content-Type: application/json');
+        //如果K码连续错误次数超过5次，直接禁止兑换一段时间
+        $redis = new \Redis();
+        $redisCon = $redis->connect(C('REDIS_HOST'), C('REDIS_PORT'), 1);
+        if (!$redisCon) {
+            exit(json_encode(['error' => 110, 'message' => 'Redis连接超时']));
+        }
+        $redisKey = 'kcode_error_times'.$this->user_info['uid'];
+        if (intval($redis->get($redisKey)) > 5) {
+            exit(json_encode(['error' => 110, 'message' => 'K码连续错误次数过多，请稍后再试']));
+        }
         // token   是   身份唯一表示
         // tag     是   渠道代码 tag: 1：商城 2：推啥 3：DDW 4：以太星球
         // kcode   是   K码值，暗码
@@ -316,15 +327,17 @@ class PageController extends LoginController
         $kcode = $_POST['kcode'];
         $cash = $_POST['cash'];
         $rate=1;//汇率
-        // $condition = [
-        //     'table' => 'relation',
-        //     'fields' => '*',
-        //     'where' => ['secretcd' => $kcode]
-        // ];
-        //$kcode_info = BaseModel::getDbData($condition, false);
         M()->startTrans();//开启事务
         $where['secretcd'] = $kcode;
         $kcode_info = M('relation')->lock(true)->where($where)->find();
+
+        //如果K码不存在，错误次数+1
+        if (is_null($kcode_info)) {
+            $redis->incr($redisKey);
+            $redis->expire($redisKey, 60 * 5);
+            exit(json_encode(['error' => 110, 'message' => 'K码不存在']));
+        }
+
         //判断kcode状态
         if ($kcode_info['status']!=1) {
             exit(BaseController::returnMsg(array('error'=>'110', 'message' => C('kcdoe_stauts')[$kcode_info['status']])));
