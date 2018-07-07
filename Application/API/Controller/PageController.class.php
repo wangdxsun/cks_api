@@ -129,7 +129,7 @@ class PageController extends LoginController
             $rate = $rate * $info['exratio'];
             $rate_str = $rate_str.'-'.$info['id'].':'.$info['exratio'];
         }
-
+        $rate = sprintf('%.2f', $rate);
         $channel_list['last_rate'] = $rate;
         $channel_list['rate_str'] = $rate_str;
         $channel_list['change_money'] = floor($res['money']*$rate)*$channel_list['rate'];
