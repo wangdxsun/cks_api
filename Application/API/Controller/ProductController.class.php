@@ -15,10 +15,10 @@ class ProductController extends Controller
 {
 
 
-   /*  public function _initialize()
+     public function _initialize()
         {
             EntryController::index();
-        }*/
+        }
 
 
     //获取电子K码，云盘等平台调我们，给产品加上K码
@@ -206,12 +206,18 @@ class ProductController extends Controller
                 $where["secretcd"]=$secretcd;
             }
 
-            $data=M("relation")->field("status as kstatus,last_return_time,money,channel3")->where($where)->find();
+            $data=M("relation")->field("status as kstatus,last_return_time,money,channel3,secretcd,im_model as pname,im_pnumber as pnumber,clearcd")->where($where)->find();
+
+            $new_where["secretcd"]=$data["secretcd"];
+            $data1=M("use_details")->where($new_where)->field("activate_time,dhtotal,exratio")->find();
 
             if(!$data){
                 exit(json_encode(array("status"=>false,"message"=>"查无数据")));
             }
-            exit(json_encode(array("status"=>true,"kstatus"=>$data["kstatus"])));
+            unset($data["secretcd"]);
+            $data1['status']=true;
+            $new_data=array_merge($data,$data1);
+            exit(json_encode($new_data));
         }else{
             exit(json_encode(array("status"=>false,"message"=>"请求方式错误")));
         }
@@ -480,7 +486,7 @@ class ProductController extends Controller
         $add["url"]=$url;
         $add["request"]=json_encode($arr,JSON_UNESCAPED_UNICODE);
         $add["response"]=$result_str;
-        $add["create_at"]=date("Y-m-d H:i:s",time());
+        $add["created_at"]=date("Y-m-d H:i:s",time());
         M("loglist")->add($add);
         //file_put_contents("./Application/Runtime/test.txt",$result_str.'--'.date("Y-m-d H:i:s",time()),FILE_APPEND);
         $result_arr=json_decode($result_str,true);
@@ -530,7 +536,7 @@ class ProductController extends Controller
         $add["url"]=$url;
         $add["request"]=json_encode($post,JSON_UNESCAPED_UNICODE);
         $add["response"]=$result_str;
-        $add["create_at"]=date("Y-m-d H:i:s",time());
+        $add["created_at"]=date("Y-m-d H:i:s",time());
         M("loglist")->add($add);
         $result_arr=json_decode($result_str,true);
 
@@ -553,7 +559,7 @@ class ProductController extends Controller
         $add["url"]=C('jh_change_status');
         $add["request"]=json_encode($postparmas,JSON_UNESCAPED_UNICODE);
         $add["response"]=$result_str;
-        $add["create_at"]=date("Y-m-d H:i:s",time());
+        $add["created_at"]=date("Y-m-d H:i:s",time());
         M("loglist")->add($add);
         $result_arr=json_decode($result_str,true);
         if($result_arr["message"]=="success"){
@@ -582,7 +588,7 @@ class ProductController extends Controller
         $add["url"]=C('hxwj_change_status');
         $add["request"]=json_encode($postparmas,JSON_UNESCAPED_UNICODE);
         $add["response"]=$result_str;
-        $add["create_at"]=date("Y-m-d H:i:s",time());
+        $add["created_at"]=date("Y-m-d H:i:s",time());
         M("loglist")->add($add);
         $result_arr=json_decode($result_str,true);
         if($result_arr["message"]=="success"){

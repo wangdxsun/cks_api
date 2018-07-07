@@ -27,7 +27,7 @@ class TuiController extends Controller
      */
     public function index($channel="TUI",$kcode="vtMeyKmDqp",$mobile="18770031847",$exratio=1.1,$rate=1){
         //file_put_contents("./Application/Runtime/test.txt",$channel.'-'.$kcode.'-'.$mobile.'-'.$exratio.'-'.$rate,FILE_APPEND);
-        $url=" https://treceive-service.phi-go.com/cks/blackDiamond";
+        $url="https://treceive-service.phi-go.com/cks/blackDiamond";
         $where["secretcd"]=$kcode;
         $where["status"]=1;
         $money=M("relation")->where($where)->getField("money");
@@ -52,7 +52,7 @@ class TuiController extends Controller
         $add["url"]=$url;
         $add["request"]=json_encode($arr,JSON_UNESCAPED_UNICODE);
         $add["response"]=$result_str;
-        $add["create_at"]=date("Y-m-d H:i:s",time());
+        $add["created_at"]=date("Y-m-d H:i:s",time());
         M("loglist")->add($add);
         if($result_arr["err"]>0){
             return array('status'=>false,"message"=>"请求推啥失败,请检查原因");

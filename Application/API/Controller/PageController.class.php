@@ -253,7 +253,6 @@ class PageController extends LoginController
                         $res['data'] = array_merge($gift_info, $res['data']);
                         $res['data']['account_number'] = $res['data']['phone'];
                         $res['data']['is_account'] = '0';
-                        $res['error'] = '0';
                         if ($res['data']['exchangPlanAmount']) {
                             $plan_info = explode(',', $res['data']['exchangPlanAmount']);
                             foreach ($plan_info as $key => $value) {
@@ -264,7 +263,7 @@ class PageController extends LoginController
                     elseif ($res['rescode']=='1000') {
                         $res['data']['is_account'] = '1';
                     }
-                    $res['error'] = $res['rescode']=='0000'?'0':'110';
+                    $res['error'] = $res['rescode'];
                     
                     break;
                 case 2://'骏和':
@@ -281,7 +280,6 @@ class PageController extends LoginController
                         $res['data'] = array_merge($gift_info, $res['data']);
                         $res['data']['account_number'] = $res['data']['phone'];
                         $res['data']['is_account'] = '0';
-                        $res['error'] = '0';
                         if ($res['data']['exchangPlanAmount']) {
                             $plan_info = explode(',', $res['data']['exchangPlanAmount']);
                             foreach ($plan_info as $key => $value) {
@@ -292,7 +290,7 @@ class PageController extends LoginController
                     elseif ($res['rescode']=='1000') {
                         $res['data']['is_account'] = '1';
                     }
-                    $res['error'] = $res['rescode']=='0000'?'0':'110';
+                    $res['error'] = $res['rescode'];
                     break;
                 default:
                     # code...
@@ -344,8 +342,9 @@ class PageController extends LoginController
         }
         $user_info = $this->user_info;
 
-        //变更状态--锁定-to do 
+        //变更状态--锁定
         $save_data['status'] = 5;
+        $save_data['channel3'] = $cash.'-'.$tag;
         $result = M('relation')->where(["secretcd"=>$kcode])->save($save_data);
 
         if ($result) {
@@ -415,7 +414,7 @@ class PageController extends LoginController
                         'kcodeSn' => $kcode_info['clearcd'],//'mm1234', //明码
                         'deviceSn' => $kcode_info['sn'],//'sb1234',//设备码
                         'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
-                        'Amount' => strval($kcode_info['money']),//'666'  //礼包金额
+                        'Amount' => strval($gift_info['change_money']),//'666'  //礼包金额
                     );
                     //print_r($param);
                     $res = ExGiftController::pushGift($param, 'hxwj_push_gift', 'hxwj_key');
@@ -433,7 +432,7 @@ class PageController extends LoginController
                         'kcodeSn' => $kcode_info['clearcd'],//'mm1234', //明码
                         'deviceSn' => $kcode_info['sn'],//'sb1234',//设备码
                         'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
-                        'Amount' => strval($kcode_info['money']),//'666'  //礼包金额
+                        'Amount' => strval($gift_info['change_money']),//'666'  //礼包金额
                     );
                     //print_r($param);
                     $res = ExGiftController::pushGift($param, 'jh_push_gift', 'hxwj_key');
@@ -454,7 +453,9 @@ class PageController extends LoginController
                 }
             }else{
                 //变更状态--已分配
-                M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>1));
+                $save_data['status'] = 5;
+                $save_data['channel3'] = ' ';
+                M('relation')->where(["secretcd"=>$kcode])->save($save_data);
             }
         }
         exit(BaseController::returnMsg($res));
