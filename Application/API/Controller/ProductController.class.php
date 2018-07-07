@@ -206,15 +206,18 @@ class ProductController extends Controller
                 $where["secretcd"]=$secretcd;
             }
 
-            $data=M("relation")->field("status as kstatus,last_return_time,money,channel3,secretcd")->where($where)->find();
+            $data=M("relation")->field("status as kstatus,last_return_time,money,channel3,secretcd,im_model as pname,im_pnumber as pnumber,clearcd")->where($where)->find();
 
             $new_where["secretcd"]=$data["secretcd"];
-            $activate_time=M("use_details")->where($new_where)->getField("activate_time");
+            $data1=M("use_details")->where($new_where)->field("activate_time,dhtotal,exratio")->find();
 
             if(!$data){
                 exit(json_encode(array("status"=>false,"message"=>"查无数据")));
             }
-            exit(json_encode(array("status"=>true,"kstatus"=>$data["kstatus"],"last_return_time"=>$data["last_return_time"],"money"=>$data["money"],"channel"=>$data["channel3"],"activate_time"=>$activate_time)));
+            unset($data["secretcd"]);
+            $data1['status']=true;
+            $new_data=array_merge($data,$data1);
+            exit(json_encode($new_data));
         }else{
             exit(json_encode(array("status"=>false,"message"=>"请求方式错误")));
         }
