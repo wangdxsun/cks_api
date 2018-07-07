@@ -10,6 +10,8 @@ return array(
     'DB_PORT' => 3306, // 端口
     'DB_PREFIX' => "", // 数据库表前缀
     'DB_CHARSET' => "utf8", // 字符集
+    'REDIS_HOST' => "192.168.170.80",
+    'REDIS_PORT' => 6379,
 
 
     'TMPL_EXCEPTION_FILE' => APP_DEBUG ? THINK_PATH.'Tpl/think_exception.tpl' : './Public/html/404.html',

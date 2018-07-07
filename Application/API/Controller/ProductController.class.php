@@ -206,7 +206,7 @@ class ProductController extends Controller
                 $where["secretcd"]=$secretcd;
             }
 
-            $data=M("relation")->field("status as kstatus,last_return_time,money,channel3,secretcd,im_model as pname,im_pnumber as pnumber,clearcd")->where($where)->find();
+            $data=M("relation")->field("status as kstatus,last_return_time,money,channel3 as channel,secretcd,im_model as pname,im_pnumber as pnumber,clearcd")->where($where)->find();
 
             $new_where["secretcd"]=$data["secretcd"];
             $data1=M("use_details")->where($new_where)->field("activate_time,dhtotal,exratio")->find();
