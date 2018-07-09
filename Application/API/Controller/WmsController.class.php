@@ -15,14 +15,23 @@ class WmsController extends Controller
     public function getstatus(){
         $params = json_decode(file_get_contents('php://input'), true);
         $clearcd = $params['clearcd'];
-
+        $post_sign = $params['sign'];
+        $sign = md5($clearcd."phicomm*123");
+        if($post_sign != $sign){
+            $info['status'] = false;
+            $info['kstatus'] = NULL;
+            $info['isExpire'] = NULL;
+            $info['activeTime'] = NULL;
+            $info['msg'] = '秘钥错误';
+            exit(json_encode($info,JSON_UNESCAPED_UNICODE));
+        }
         $data = BaseModel::getDbData(['table'=>'relation','where'=>['clearcd'=>$clearcd]],false);
 
         $info = array();
         $info['status'] = $data?true:false;
         $info['kstatus'] = $data?intval($data['status']):NULL;
         $info['isExpire'] = $data?((date("Y-m-d H:i:s")>$data['last_return_time'])?0:1):NULL;//如果没查到记录，是否过期返回NULL
-        $info['activeTime'] = $data['allot_time'];
+        $info['activeTime'] = $data?$data['allot_time']:NULL;
         $info['msg'] = $data?NULL:"没有查到k码";
 
         exit(json_encode($info,JSON_UNESCAPED_UNICODE));
