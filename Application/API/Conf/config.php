@@ -106,6 +106,6 @@ return array(
     'parter_code' => 'phicomm',
     'sign_type' => 'MD5',
     'hxwj_key' => 'CDB2ACA0F79D43647C12A3CE01B1EC5A',//'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
-    'jh_key' ='y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
+    'jh_key' =>'y36smqkfeOHen88SOq9sYOZ4sTkxfv60'
 
 );
