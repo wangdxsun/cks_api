@@ -182,6 +182,11 @@ class WmsController extends Controller
             exit(json_encode(array('result'=>1, 'msg'=>'数据提交不完整，请检查'),JSON_UNESCAPED_UNICODE));
         }
 
+        //检查秘钥
+        $sign = md5(strtotime($params['allotTime'])."phicomm*123");
+        if($sign != $params['sign']){
+            exit(json_encode(array('result'=>1, 'msg'=>'秘钥错误'),JSON_UNESCAPED_UNICODE));
+        }
         //检查明码或者k码金额是否完整
         for($i = 0;$i<count($params['allotList']);$i++){
             if(empty($params['allotList'][$i]['cardId'])||empty($params['allotList'][$i]['kMoney'])) {
