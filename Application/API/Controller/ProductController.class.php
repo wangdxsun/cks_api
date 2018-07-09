@@ -466,7 +466,8 @@ class ProductController extends Controller
     public   function changeTS($clearcd,$secretcd,$method){
        //进行判断
         //$url="http://172.17.44.98:8082/cks/blackDiamond/state";
-        $url="https://treceive-service.phi-go.com/cks/blackDiamond/state";
+        //$url="https://treceive-service.phi-go.com/cks/blackDiamond/state";
+        $url="https://receive-service.phi-go.com/cks/blackDiamond/state";
         if($method==1){
             $kcodeState=2;
         }elseif($method==2){
