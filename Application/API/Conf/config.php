@@ -90,16 +90,16 @@ return array(
     //DDW
     'ddw_h5' => 'https://accountsymtest.phicomm.com/ddwh5/index.html#/conversion',
     //以太星球
-    'eth_url' => 'smartc8.phicomm.com',//'http://testnottobuy.phi-block.com:18000/api/',//https://www.phi-block.com/api/
+    'eth_url' => 'https://www.phi-block.com/api/',//'http://testnottobuy.phi-block.com:18000/api/',
     'eth_act' => 'cloud_star_points',
     'eth_md5_key' => '1wSn0kMbpxaDCx',
     'ddw_url' => 'https://accountsymtest.phicomm.com/aftersales/v1/returngoods',//'http://172.17.84.239:8090/aftersales/v1/returngoods',//开发环境
     'ddw_secret' => 'a',
 
     //华夏、骏和,固定参数
-    'hxwj' => 'http://release.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//1.1用户信息与兑换资格查询接口地址
-    'hxwj_push_gift' => 'http://release.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//1.2
-    'hxwj_change_status' => 'http://release.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_state_change_req',//'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_state_change_req',//1.2
+    'hxwj' => 'https://www.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//1.1用户信息与兑换资格查询接口地址
+    'hxwj_push_gift' => 'https://www.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//1.2
+    'hxwj_change_status' => 'https://www.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_state_change_req',//'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_state_change_req',//1.2
     'jh' => 'http://webapi.junfix.com/CKSKM/QueryUserAndKCode',
     'jh_push_gift' => 'http://webapi.junfix.com/CKSKM/ActivateKcode',
     'jh_change_status' => 'http://webapi.junfix.com/CKSKM/DealKCodeStatus',
