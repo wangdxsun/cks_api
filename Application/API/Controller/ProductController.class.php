@@ -87,7 +87,7 @@ class ProductController extends Controller
     {
         $response = array();
         $status_pool=array();
-      
+
        try{
            M()->startTrans();
            foreach ($products as $k => $v) {
@@ -466,7 +466,8 @@ class ProductController extends Controller
     public   function changeTS($clearcd,$secretcd,$method){
        //进行判断
         //$url="http://172.17.44.98:8082/cks/blackDiamond/state";
-        $url="https://treceive-service.phi-go.com/cks/blackDiamond/state";
+        //$url="https://treceive-service.phi-go.com/cks/blackDiamond/state";
+        $url="https://receive-service.phi-go.com/cks/blackDiamond/state";
         if($method==1){
             $kcodeState=2;
         }elseif($method==2){
@@ -507,13 +508,13 @@ class ProductController extends Controller
     //改变商城
     public  function changeMall($clearcd,$secretcd,$method){
         if($method==1){
-            $url="https://uat.phimall.com/openapi/vcprice/froze";
+            $url="https://www.phimall.com/openapi/vcprice/froze";
             $new_method="froze";
         }elseif ($method==2){
-            $url="https://uat.phimall.com/openapi/vcprice/unfroze";
+            $url="https://www.phimall.com/openapi/vcprice/unfroze";
             $new_method="unfroze";
         }else{
-            $url="https://uat.phimall.com/openapi/vcprice/cancel";
+            $url="https://www.phimall.com/openapi/vcprice/cancel";
             $new_method="cancel";
         }
         $phone=M("relation")->where(["clearcd"=>$clearcd])->getField("rephone");
