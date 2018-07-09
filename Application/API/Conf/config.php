@@ -16,7 +16,7 @@ return array(
     'SECRET_KEY' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
 
     //云账号域名地址
-    'cloud_url' => 'https://accountsymtest.phicomm.com',//'http://114.141.173.41:48080',//'https://accountsym.phicomm.com'
+    'cloud_url' => 'https://accountsym.phicomm.com',//'https://accountsymtest.phicomm.com',//'http://114.141.173.41:48080',
 	//K码兑换H5
 	'h5_client_id' => '1569234',
 	'h5_client_secret' => '6FE32D94BE97DBB120E7B1C54FC0B239',
@@ -84,27 +84,28 @@ return array(
     ),
 
     //商城api
-    'mall_url' => 'https://uat.phimall.com/openapi/vcprice/exchange',//'http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/exchange',
+    'mall_url' => 'https://www.phimall.com/openapi/vcprice/exchange',//'https://www.phimall.com/openapi/vcprice/exchange',//'http://mall.wzc.dev.wx-mall.xin:33092/openapi/vcprice/exchange',
     'mall_interface' => 'vmcshop_vcprice_interface',
     //推啥api……
     //DDW
     'ddw_h5' => 'https://accountsymtest.phicomm.com/ddwh5/index.html#/conversion',
     //以太星球
-    'eth_url' => 'http://testnottobuy.phi-block.com:18000/api/',//https://www.phi-block.com/api/
+    'eth_url' => 'smartc8.phicomm.com',//'http://testnottobuy.phi-block.com:18000/api/',//https://www.phi-block.com/api/
     'eth_act' => 'cloud_star_points',
     'eth_md5_key' => '1wSn0kMbpxaDCx',
     'ddw_url' => 'https://accountsymtest.phicomm.com/aftersales/v1/returngoods',//'http://172.17.84.239:8090/aftersales/v1/returngoods',//开发环境
     'ddw_secret' => 'a',
 
     //华夏、骏和,固定参数
-    'hxwj' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//1.1用户信息与兑换资格查询接口地址
-    'hxwj_push_gift' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//1.2
-    'hxwj_change_status' => 'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_state_change_req',//1.2
+    'hxwj' => 'http://release.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//1.1用户信息与兑换资格查询接口地址
+    'hxwj_push_gift' => 'http://release.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//1.2
+    'hxwj_change_status' => 'http://release.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_state_change_req',//'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_state_change_req',//1.2
     'jh' => 'http://180.167.58.6:8206/CKSKM/QueryUserAndKCode',
     'jh_push_gift' => 'http://180.167.58.6:8206/CKSKM/ActivateKcode',
     'jh_change_status' => 'http://180.167.58.6:8206/CKSKM/DealKCodeStatus',
     'parter_code' => 'phicomm',
     'sign_type' => 'MD5',
-    'hxwj_key' => 'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
+    'hxwj_key' => 'CDB2ACA0F79D43647C12A3CE01B1EC5A',//'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
+    'jh_key' =>'y36smqkfeOHen88SOq9sYOZ4sTkxfv60'
 
 );
