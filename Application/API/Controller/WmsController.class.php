@@ -34,7 +34,7 @@ class WmsController extends Controller
      * 定时更新华夏万家N1和N1M推送接口
      */
     public function pushN1Code(){
-        $url = 'http://114.141.173.61:6064/api/pushN1Code';
+        $url = 'http://114.141.173.61:6063/api/pushN1Code';
         $header = array('Content-Type:application/json','Accept:application/json');
         $data = BaseModel::getDbData(['table'=>'relation','where'=>['im_model'=>array('in',array('N1M','N1')),'hcode_flag'=>0,'status'=>1]]);
         if(empty($data))
