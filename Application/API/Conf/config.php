@@ -90,7 +90,7 @@ return array(
     //DDW
     'ddw_h5' => 'https://accountsymtest.phicomm.com/ddwh5/index.html#/conversion',
     //以太星球
-    'eth_url' => 'https://smartc8.phicomm.com',//'http://testnottobuy.phi-block.com:18000/api/',//https://www.phi-block.com/api/
+    'eth_url' => 'https://www.phi-block.com/api/',//'http://testnottobuy.phi-block.com:18000/api/',
     'eth_act' => 'cloud_star_points',
     'eth_md5_key' => '1wSn0kMbpxaDCx',
     'ddw_url' => 'https://accountsymtest.phicomm.com/aftersales/v1/returngoods',//'http://172.17.84.239:8090/aftersales/v1/returngoods',//开发环境
