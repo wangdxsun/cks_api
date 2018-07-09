@@ -100,9 +100,9 @@ return array(
     'hxwj' => 'http://release.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_activate_info_req',//1.1用户信息与兑换资格查询接口地址
     'hxwj_push_gift' => 'http://release.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_exchange_plans_req',//1.2
     'hxwj_change_status' => 'http://release.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_state_change_req',//'http://newtest.wanjiajinfu.com/webAPI/api?service_name=mbm_kcode_state_change_req',//1.2
-    'jh' => 'http://180.167.58.6:8206/CKSKM/QueryUserAndKCode',
-    'jh_push_gift' => 'http://180.167.58.6:8206/CKSKM/ActivateKcode',
-    'jh_change_status' => 'http://180.167.58.6:8206/CKSKM/DealKCodeStatus',
+    'jh' => 'http://webapi.junfix.com/CKSKM/QueryUserAndKCode',
+    'jh_push_gift' => 'http://webapi.junfix.com/CKSKM/ActivateKcode',
+    'jh_change_status' => 'http://webapi.junfix.com/CKSKM/DealKCodeStatus',
     'parter_code' => 'phicomm',
     'sign_type' => 'MD5',
     'hxwj_key' => 'CDB2ACA0F79D43647C12A3CE01B1EC5A',//'y36smqkfeOHen88SOq9sYOZ4sTkxfv60',
