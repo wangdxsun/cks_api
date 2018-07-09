@@ -559,7 +559,7 @@ class ProductController extends Controller
             $new_method="invalid";
         }
         $postparmas=array("kcode"=>$secretcd,"status"=>$new_method,"statusname"=>"status");
-        $result_str=ExGiftController::changeGiftStatus($postparmas,'jh_change_status', 'hxwj_key');
+        $result_str=ExGiftController::changeGiftStatus($postparmas,'jh_change_status', 'jh_key');
 
         $add["url"]=C('jh_change_status');
         $add["request"]=json_encode($postparmas,JSON_UNESCAPED_UNICODE);

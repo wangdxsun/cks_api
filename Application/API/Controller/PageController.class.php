@@ -275,7 +275,7 @@ class PageController extends LoginController
                         'amount' => strval($kcode_info['money'])//金额
                     );
                     //print_r($param);
-                    $res = ExGiftController::inquireUserExStatus($param, 'jh', 'hxwj_key');
+                    $res = ExGiftController::inquireUserExStatus($param, 'jh', 'jh_key');
                     //{"message":"用户不存在或未实名","data":null,"rescode":"1000","error":"1000"}
                     $res = json_decode($res, true);
                     if ($res['rescode']=='0000') {
@@ -438,7 +438,7 @@ class PageController extends LoginController
                         'Amount' => strval($gift_info['change_money']),//'666'  //礼包金额
                     );
                     //print_r($param);
-                    $res = ExGiftController::pushGift($param, 'jh_push_gift', 'hxwj_key');
+                    $res = ExGiftController::pushGift($param, 'jh_push_gift', 'jh_key');
                     //{"rescode":"0000","message":"礼包生成成功","data":{"fristExpireDate":"2018-08-04","name":"李三毛","phone":"13795000061"}}
 
                     $res = json_decode($res,true);
