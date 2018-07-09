@@ -29,7 +29,9 @@ class ProductController extends Controller
             $phone = $_POST["phone"];
             $channel = $_POST["channel"];
             $order_no = $_POST["order_no"];
-            if(M("relation")->where(["orderId"=>$order_no])->select()){
+            $count=M("relation")->where(["orderid"=>$order_no])->select();
+
+            if(count($count)){
                 exit(json_encode(array("status" => false, "message" => "该订单已经存在")));
             }
             $products = json_decode($_POST["products"],true);
@@ -65,6 +67,7 @@ class ProductController extends Controller
 
                 self::sendMessages($channel,$order_no);
             } else if ($channel == 'ETH') {
+
                 //获取金额
                 $response = $this->getTresult($phone,$order_no, $products,$channel);
             } else {
@@ -84,9 +87,9 @@ class ProductController extends Controller
     {
         $response = array();
         $status_pool=array();
-
+      
        try{
-           //M()->startTrans();
+           M()->startTrans();
            foreach ($products as $k => $v) {
                $where["status"] = 0;
                $where["im_model"] = $v["pname"];
@@ -96,6 +99,7 @@ class ProductController extends Controller
                $data = M("relation")->lock(true)->where($where)->find();
 
               if(empty($data)){
+                  M()->rollback();
                    return array("status"=>false,"message"=>"查不到对应K码");
                }
                $id = $data["id"];
@@ -207,7 +211,7 @@ class ProductController extends Controller
             }
 
             $data=M("relation")->field("status as kstatus,last_return_time,money,channel3 as channel,secretcd,im_model as pname,im_pnumber as pnumber,clearcd")->where($where)->find();
-
+          
             $new_where["secretcd"]=$data["secretcd"];
             $data1=M("use_details")->where($new_where)->field("activate_time,dhtotal,exratio")->find();
 
