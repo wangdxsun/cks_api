@@ -249,7 +249,7 @@ class ProductController extends Controller
              $senddata["phonenumber"]=$phone;
              $senddata["verificationtype"]=0;
              //$url="http://114.141.173.41:48080/v1/verificationCode?".http_build_query($senddata);
-             $url="http://accountsym.phicomm.com/v1/verificationCode?".http_build_query($senddata);
+             $url="https://accountsym.phicomm.com/v1/verificationCode?".http_build_query($senddata);
              Curl::curl_get($url);
              //sleep(1);
          }
