@@ -18,9 +18,9 @@ class LoginController extends Controller
     {
         $this->allowOrigin(); 
         $is_sign = $this->verifyEncryptSign();
-        if (!$is_sign) {
-            exit(json_encode(array('error' => 1,'message' => '验证失败'),JSON_UNESCAPED_UNICODE));
-        }
+        // if (!$is_sign) {
+        //     exit(json_encode(array('error' => 1,'message' => '验证失败'),JSON_UNESCAPED_UNICODE));
+        // }
     }
     public function allowOrigin(){
         header("Access-Control-Allow-Origin: *");
