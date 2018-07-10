@@ -117,9 +117,10 @@ class LoginController extends Controller
         $isEmail = $this->checkEmailOrPhone($_POST['account_number']);
         if($isEmail){
             $data[$isEmail] = $_POST['account_number'];
-        }elseif (!empty($_POST['account_number'])) {
-            $data['username'] = $_POST['account_number'];
         }
+        // elseif (!empty($_POST['account_number'])) {
+        //     $data['username'] = $_POST['account_number'];
+        // }
         else{
             exit(BaseController::returnMsg(array('error'=>'100')));
         }

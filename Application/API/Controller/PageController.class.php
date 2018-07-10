@@ -23,7 +23,7 @@ class PageController extends LoginController
     {
         parent::_initialize();
         $this->token = $_POST['token'];
-        if (empty(isset($this->token))) {
+        if (empty($this->token)) {
             exit(BaseController::returnMsg(array('error' => '103')));
         }
         //验证token 获取手机号等信息
@@ -185,7 +185,7 @@ class PageController extends LoginController
     **/
     public function getHistoryInfo(){
         $token = $this->token;
-        if (empty(isset($token))) {
+        if (empty($token)) {
             exit(BaseController::returnMsg(array('error' => '103')));
         }
         //验证token 获取手机号等信息
