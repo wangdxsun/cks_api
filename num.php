@@ -1,7 +1,7 @@
 <?php
 $_GET['m']='API';
 $_GET['c']='Wms';
-$_GET['a']='pushN1Code';
+$_GET['a']='pushCode';
 // 检测PHP环境
 if(version_compare(PHP_VERSION,'5.3.0','<'))  die('require PHP > 5.3.0 !');
 
