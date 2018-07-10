@@ -42,10 +42,10 @@ class WmsController extends Controller
     /*
      * 定时更新华夏万家N1和N1M推送接口
      */
-    public function pushN1Code(){
-        $url = 'http://114.141.173.61:6063/api/pushN1Code';
+    public function pushCode(){
+        $url = 'http://114.141.173.61:6063/api/pushCode';
         $header = array('Content-Type:application/json','Accept:application/json');
-        $data = BaseModel::getDbData(['table'=>'relation','where'=>['im_model'=>array('in',array('N1M','N1')),'hcode_flag'=>0,'status'=>1]]);
+        $data = BaseModel::getDbData(['table'=>'relation','where'=>['im_model'=>array('in',array('N1M','N1','K3-D1')),'hcode_flag'=>0,'status'=>1]]);
         if(empty($data))
             exit;
         $sign = md5(count($data).'phicomm*123');
@@ -57,6 +57,7 @@ class WmsController extends Controller
             $kcodes[$i]['nassn'] = $data[$i]['sn'];
             $kcodes[$i]['order_no'] = $data[$i]['orderid'];
             $kcodes[$i]['kcode_type'] = $data[$i]['im_model'];
+            $kcodes[$i]['mac'] = $data[$i]['mac'];
         }
 
         $postData['sign'] = $sign;
