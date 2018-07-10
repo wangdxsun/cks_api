@@ -29,9 +29,11 @@ class ProductController extends Controller
             $phone = $_POST["phone"];
             $channel = $_POST["channel"];
             $order_no = $_POST["order_no"];
-            $count=M("relation")->where(["orderid"=>$order_no])->select();
 
-            if(count($count)){
+            $count=M("relation")->where(["orderid"=>$order_no])->count();
+
+
+            if($count>0){
                 exit(json_encode(array("status" => false, "message" => "该订单已经存在")));
             }
             $products = json_decode($_POST["products"],true);
@@ -69,6 +71,7 @@ class ProductController extends Controller
             } else if ($channel == 'ETH') {
 
                 //获取金额
+
                 $response = $this->getTresult($phone,$order_no, $products,$channel);
             } else {
                 $response = $this->getTresult($phone, $order_no, $products,$channel);
@@ -87,7 +90,7 @@ class ProductController extends Controller
     {
         $response = array();
         $status_pool=array();
-
+      
        try{
            M()->startTrans();
            foreach ($products as $k => $v) {
