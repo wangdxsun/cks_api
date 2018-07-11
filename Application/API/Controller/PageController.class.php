@@ -58,18 +58,22 @@ class PageController extends LoginController
         
         $condition2 = [
             'table' => 'allot_policy',
-            'fields' => 'tag',
+            'fields' => 'cash,tag',
             'where' => ['cash' => 1],
             'order' => 'sort desc'
         ];
+        $show_channel = explode(',', $res['channel_policy']);
         $res['money'] = floor($res['money']);
         $channel_info = BaseModel::getDbData($condition2);
+        $channel_list=array();
         foreach ($channel_info as $key => $value) {
-            $channel_list[] = $this->getChangeMoney($value['tag'],$res);
+            if (in_array($value['cash'].'-'.$value['tag'], $show_channel)) {
+                $channel_list[] = $this->getChangeMoney($value['tag'],$res);
+            } 
         }
 
         //各个理财包数据
-        $gift_data = $this->inquireUserExRatio($res['money']);
+        $gift_data = $this->inquireUserExRatio($res['money'],$show_channel);
 
         exit(BaseController::returnMsg(array('error' => '0','code_data' => $res,'data' => $channel_list,'gift_data' => $gift_data)));
         
@@ -152,16 +156,18 @@ class PageController extends LoginController
      * @param string $money
      * @return []
      */
-    public function inquireUserExRatio($money){
+    public function inquireUserExRatio($money,$show_channel){
 
         $data = BaseModel::getDbData([
             'table' => 'allot_policy',
             'where' => ['cash' => 7]
         ]);
-
+        $resData=array();
         if($data){
             foreach ($data as $key => $val){
-                $resData[] = self::getGiftMoney($val['tag'], $money);
+                if (in_array($val['cash'].'-'.$val['tag'], $show_channel)){
+                    $resData[] = self::getGiftMoney($val['tag'], $money);
+                }
             }
         }
         return $resData;

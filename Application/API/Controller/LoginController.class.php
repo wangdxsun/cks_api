@@ -18,9 +18,9 @@ class LoginController extends Controller
     {
         $this->allowOrigin(); 
         $is_sign = $this->verifyEncryptSign();
-        // if (!$is_sign) {
-        //     exit(json_encode(array('error' => 1,'message' => '验证失败'),JSON_UNESCAPED_UNICODE));
-        // }
+        if (!$is_sign) {
+            exit(json_encode(array('error' => 1,'message' => '验证失败'),JSON_UNESCAPED_UNICODE));
+        }
     }
     public function allowOrigin(){
         header("Access-Control-Allow-Origin: *");
@@ -31,12 +31,13 @@ class LoginController extends Controller
     public function checkEmailOrPhone($account_number){
         $preg_email='/^[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*@([a-zA-Z0-9]+[-.])+([a-z]{2,5})$/ims';
         $preg_phone='/^1[34578]\d{9}$/ims';
-        if(preg_match($preg_email,$account_number)){
-            $code = 'mailaddress';
-        }
-        elseif(preg_match($preg_phone,$account_number)){
+        if(preg_match($preg_phone,$account_number)){
             $code = 'phonenumber';
-        }else{
+        }
+        // elseif(preg_match($preg_email,$account_number)){
+        //     $code = 'mailaddress';
+        // }
+        else{
             $code = false;
         }
 
