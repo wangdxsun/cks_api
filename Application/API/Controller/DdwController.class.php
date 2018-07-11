@@ -89,13 +89,14 @@ class DdwController extends Controller
 
     //获取pnames
     public function getPnames(){
-        $data=M("relation")->field("pname")->group("pname")->select();
+        EntryController::index();
+        $data=M("relation")->field("im_model")->group("im_model")->select();
         $pnames=array();
         foreach($data as $k=>$v){
-            if(empty($v["pname"])){
+            if(empty($v["im_model"])){
                 continue;
             }
-            array_push($pnames,$v["pname"]);
+            array_push($pnames,$v["im_model"]);
         }
         exit(json_encode(array("status"=>true,"panmes"=>$pnames)));
     }

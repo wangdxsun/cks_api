@@ -464,7 +464,7 @@ class PageController extends LoginController
                 }
             }else{
                 //变更状态--已分配
-                $save_data['status'] = 5;
+                $save_data['status'] = 1;
                 $save_data['channel3'] = ' ';
                 M('relation')->where(["secretcd"=>$kcode])->save($save_data);
             }
