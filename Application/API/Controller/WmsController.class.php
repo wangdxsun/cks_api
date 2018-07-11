@@ -175,23 +175,23 @@ class WmsController extends Controller
     protected function postCheck($params){
         //检查格式
         if(!is_array($params)){
-            exit(json_encode(array('result'=>1, 'msg'=>'请求数据格式出错，请检查'),JSON_UNESCAPED_UNICODE));
+            exit(json_encode(array('result'=>1, 'message'=>'请求数据格式出错，请检查'),JSON_UNESCAPED_UNICODE));
         }
 
         //检查必传数据
         if(empty($params['allotTime'])||empty($params['allotList'])||empty($params['channel'])){
-            exit(json_encode(array('result'=>1, 'msg'=>'数据提交不完整，请检查'),JSON_UNESCAPED_UNICODE));
+            exit(json_encode(array('result'=>1, 'message'=>'数据提交不完整，请检查'),JSON_UNESCAPED_UNICODE));
         }
 
         //检查秘钥
         $sign = md5(strtotime($params['allotTime'])."phicomm*123");
         if($sign != $params['sign']){
-            exit(json_encode(array('result'=>1, 'msg'=>'秘钥错误'),JSON_UNESCAPED_UNICODE));
+            exit(json_encode(array('result'=>1, 'message'=>'秘钥错误'),JSON_UNESCAPED_UNICODE));
         }
         //检查明码或者k码金额是否完整
         for($i = 0;$i<count($params['allotList']);$i++){
             if(empty($params['allotList'][$i]['cardId'])||empty($params['allotList'][$i]['kMoney'])) {
-                exit(json_encode(array('result' => 1, 'msg' => '明码或者k码金额未提交，请检查'),JSON_UNESCAPED_UNICODE));
+                exit(json_encode(array('result' => 1, 'message' => '明码或者k码金额未提交，请检查'),JSON_UNESCAPED_UNICODE));
             }
         }
 
