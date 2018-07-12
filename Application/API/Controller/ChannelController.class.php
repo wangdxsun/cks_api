@@ -24,8 +24,11 @@ class ChannelController extends Controller
         if(empty($exratio)){
             exit(json_encode(array("status"=>false,"message"=>"兑换比例参数传递错误")));
         }
-        $tag=$channel=="HXWJ"?1:2;
-        $channel=="HXWJ"?"华夏万家":"骏合";
+        $channel=="HXWJ"?"7-1":"7-2";
+        $where["platform"]=$channel;
+        $save["policy_value"]=$exratio;
+        $result=M("policy")->where($where)->save($save);
+    /*    $channel=="HXWJ"?"华夏万家":"骏合";
         $data=M("allot_policy")->where(["cash"=>7,"describe"=>$channel])->find();
         if($data){
             //修改
@@ -40,7 +43,9 @@ class ChannelController extends Controller
             $add["tag"]=$tag;
             $add["describe"]=$channel;
             $result=M("allot_policy")->add($add);
-        }
+        }*/
+
+
         if($result===false){
             exit(json_encode(array("status"=>false,"message"=>"修改汇率失败")));
         }else{
