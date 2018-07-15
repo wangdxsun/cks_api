@@ -61,6 +61,21 @@ class BaseController extends Controller
         $info = json_decode(Curl::curl_get($url),true);
         return $info; 
     }
+
+    /**
+        @功能:验证短信验证码
+        @param:yy
+        @date:2018-06-30
+    **/
+    public function verifyVerificationCode($phone, $verificationcode){
+        $data['authorizationcode'] = self::authorization();
+        $data['phonenumber'] = $phone;
+        $data['verificationcode'] = $verificationcode;
+        $params = http_build_query($data);
+        $url = C('cloud_url').C('cloud_verifyVerificationCode').'?'.$params;
+        $info = json_decode(Curl::curl_get($url),true);
+        return $info; 
+    }
     /**
         @功能:获取云账号登录授权码
         @param:yy

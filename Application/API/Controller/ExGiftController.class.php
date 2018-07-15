@@ -59,12 +59,16 @@ class ExGiftController extends Controller
 
     //发送数据
     public function curlPostSend($paramArr, $source, $key){
-//        echo json_encode(EncryptSignVerify::sign($paramArr, $key));
-        return Curl::curl_header_post(
-            C($source),
-            json_encode(EncryptSignVerify::sign($paramArr, $key)),
-            ["content-type: application/json;charset=UTF-8"]
-        );
+        $data = json_encode(EncryptSignVerify::sign($paramArr, $key));
+        $res = Curl::curl_header_post(C($source),$data,["content-type: application/json;charset=UTF-8"]);
+        //log
+        $add["url"]=C($source);
+        $add["request"]=$data;
+        $add["response"]=$res;
+        $add["created_at"]=date("Y-m-d H:i:s",time());
+        M("loglist")->add($add);
+
+        return $res;
     }
 
 

@@ -313,6 +313,16 @@ class PageController extends LoginController
         @date:2018-07-01
     **/
     public function exchange() {
+        $user_info = $this->user_info;
+        $verificationcode = $_POST['verificationcode'];
+        if (empty($verificationcode)) {
+            exit(BaseController::returnMsg(array('error'=>'110', 'message' => '验证码不能为空')));
+        }
+        $info = BaseController::verifyVerificationCode($user_info['phonenumber'], $verificationcode);
+        if ($info['error']!='0') {
+            exit(BaseController::returnMsg($info));
+        }
+
         header('Content-Type: application/json');
         //如果K码连续错误次数超过5次，直接禁止兑换一段时间
         $redis = new \Redis();
@@ -348,7 +358,6 @@ class PageController extends LoginController
         if ($kcode_info['status']!=1) {
             exit(BaseController::returnMsg(array('error'=>'110', 'message' => C('kcdoe_stauts')[$kcode_info['status']])));
         }
-        $user_info = $this->user_info;
         
         //变更状态--锁定
         $save_data['status'] = 5;
@@ -424,7 +433,7 @@ class PageController extends LoginController
                         'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
                         'Amount' => strval($gift_info['change_money']),//'666'  //礼包金额
                     );
-                    //print_r($param);
+                    //var_dump($param);
                     $res = ExGiftController::pushGift($param, 'hxwj_push_gift', 'hxwj_key');
                     $res = json_decode($res,true);
                     $res['data']['last_return_time'] = $res['data']['fristExpireDate'];

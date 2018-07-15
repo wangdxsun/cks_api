@@ -17,8 +17,22 @@ class EncryptSignVerify{
     public static function sign($parmArr, $key) {
 
         ksort($parmArr);
-
-        return [
+        if ($key=='hxwj_key') {
+            return [
+                'parterCode' => C('parter_code'),
+                'signType' => C('sign_type'),
+                'sign' => md5(
+                    'data='.json_encode($parmArr,JSON_UNESCAPED_UNICODE).
+                    '&'
+                    .http_build_query([
+                        'parterCode' => C('parter_code'),
+                        'signType' => C('sign_type'),
+                        'key'=>C($key)
+                    ])),
+                'data' => $parmArr,
+            ];
+        }else{
+            return [
                 'parterCode' => C('parter_code'),
                 'signType' => C('sign_type'),
                 'sign' => md5(
@@ -30,7 +44,9 @@ class EncryptSignVerify{
                         'key'=>C($key)
                     ])),
                 'data' => $parmArr,
-        ];
+            ];
+        }
+        
 
     }
  //需要签名的数据类型

@@ -41,6 +41,8 @@ return array(
     'cloud_checkPhonenumber' => '/v1/checkPhonenumber',
     //
     'cloud_uidInfo' => '/v1/uidInfo',
+    //验证短信验证码
+    'cloud_verifyVerificationCode' => '/v1/verifyVerificationCode',
 
     //错误信息
     'error_msg' => array(
@@ -88,7 +90,7 @@ return array(
     'mall_interface' => 'vmcshop_vcprice_interface',
     //推啥api……
     //DDW
-    'ddw_h5' => 'https://accountsymtest.phicomm.com/ddwh5/index.html#/conversion',
+    'ddw_h5' => 'https://kcodeddw.phicomm.com/kcodeh5/index.html#/conversion',//'https://accountsymtest.phicomm.com/ddwh5/index.html#/conversion',
     //以太星球
     'eth_url' => 'https://www.phi-block.com/api/',//'http://testnottobuy.phi-block.com:18000/api/',
     'eth_act' => 'cloud_star_points',

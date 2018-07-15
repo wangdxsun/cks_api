@@ -28,14 +28,26 @@ class DdwController extends Controller
            exit("接口请求错误");
        }
        $rate=$data["data"]["rate"];
+       $where["cash"]=1;
+       $where["describe"]="DDW";
+       $result=M("allot_policy")->where($where)->find();
+       if($result){
+           //修改
+           $id=$result["id"];
+           $save["update_time"]=date("Y-m-d H:i:s",time());
+           $save["rate"]=$rate;
+           M("allot_policy")->where(["id"=>$id])->save($save);
 
-       $save["rate"]=round(1/$rate,4);
-       $where["platform"]="1-3";
-       $result=M("policy")->where($where)->save($save);
-       if($result===false){
-           exit(json_encode(array("status"=>false,"message"=>"修改接口失败")));
        }else{
-           exit(json_encode(array("status"=>true,"message"=>"请求接口成功")));
+           //新增
+           $add["cash"]=1;
+           $add["describe"]="DDW";
+           $add["create_time"]=date("Y-m-d H:i:s",time());
+           $add["exratio"]=$data["data"]["premium"];
+           $add["rate"]=$rate;
+           M("allot_policy")->add($add);
+
+
        }
 
    }
