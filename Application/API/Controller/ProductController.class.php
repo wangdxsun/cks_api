@@ -162,7 +162,7 @@ class ProductController extends Controller
         $where["status"]=1;
         $data = M("relation")->where($where)->field("secretcd,money,pname")->select();
         if(empty($data)){
-            exit(json_encode(array("status"=>false,"message"=>"找到不到对应的订单")));
+            exit(json_encode(array("status"=>false,"message"=>"找到不到对应的订单或该订单已经兑换")));
         }
         //发消息接口
         self::sendMessages($channel,$order_no);
