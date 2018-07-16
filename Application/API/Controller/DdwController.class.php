@@ -21,7 +21,7 @@ class DdwController extends Controller
 
     //定时任务更新,完成
    public function getrate(){
-       $url="https://accountsymtest.phicomm.com/ddwservice/v1/ddwrate?activityID=2";
+       $url="https://accountsym.phicomm.com/ddwservice/v1/ddwrate?activityID=2";
        $data_str=file_get_contents($url);
        $data=json_decode($data_str,true);
        if($data["error"]!=0){
