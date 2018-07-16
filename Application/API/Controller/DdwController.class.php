@@ -50,7 +50,7 @@ class DdwController extends Controller
         //策略信息
         $info = M('policy')
             ->join('platform ON policy.platform = platform.platform')
-            ->where(['policy_type' => 4,'policy.pnumber' => $data['im_pnumber'],'platform.platform' => $cash.'-'.$tag])
+            ->where(['policy.policy_type' => 4,'policy.pnumber' => $data['im_pnumber'],'platform.platform' => '1'.'-'.'3'])
             ->find();
         $request=PageController::getChangeMoney($info,$data);
         $exratio=$request["last_rate"];
