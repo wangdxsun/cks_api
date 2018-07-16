@@ -28,26 +28,14 @@ class DdwController extends Controller
            exit("接口请求错误");
        }
        $rate=$data["data"]["rate"];
-       $where["cash"]=1;
-       $where["describe"]="DDW";
-       $result=M("allot_policy")->where($where)->find();
-       if($result){
-           //修改
-           $id=$result["id"];
-           $save["update_time"]=date("Y-m-d H:i:s",time());
-           $save["rate"]=$rate;
-           M("allot_policy")->where(["id"=>$id])->save($save);
 
+       $save["rate"]=round(1/$rate,4);
+       $where["platform"]="1-3";
+       $result=M("policy")->where($where)->save($save);
+       if($result===false){
+           exit(json_encode(array("status"=>false,"message"=>"修改接口失败")));
        }else{
-           //新增
-           $add["cash"]=1;
-           $add["describe"]="DDW";
-           $add["create_time"]=date("Y-m-d H:i:s",time());
-           $add["exratio"]=$data["data"]["premium"];
-           $add["rate"]=$rate;
-           M("allot_policy")->add($add);
-
-
+           exit(json_encode(array("status"=>true,"message"=>"请求接口成功")));
        }
 
    }
@@ -57,9 +45,14 @@ class DdwController extends Controller
 
         EntryController::index();
         $where["secretcd"]=$kcode=$_POST["kcode"];
-        $data=M("relation")->where($where)->field("status,money,im_pnumber as pnumber,im_model as pname")->find();
+        $data=M("relation")->where($where)->field("status,money,im_pnumber,im_model as pname")->find();
         //print_r(M()->getLastSql());die;
-        $request=PageController::getChangeMoney(3,$data);
+        //策略信息
+        $info = M('policy')
+            ->join('platform ON policy.platform = platform.platform')
+            ->where(['policy_type' => 4,'policy.pnumber' => $data['im_pnumber'],'platform.platform' => $cash.'-'.$tag])
+            ->find();
+        $request=PageController::getChangeMoney($info,$data);
         $exratio=$request["last_rate"];
 
 
@@ -69,6 +62,7 @@ class DdwController extends Controller
         }else{
             $data["exratio"]=$exratio;
             $data["kstatus"]=$data["status"];
+            $data["pnumber"]=$data['im_pnumber'];
             $data["cksSnsNo"]=md5($kcode);
             unset($data["status"]);
             $reponse["status"]=true;

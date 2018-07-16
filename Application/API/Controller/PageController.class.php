@@ -57,133 +57,72 @@ class PageController extends LoginController
         }
         
         $condition2 = [
-            'table' => 'allot_policy',
-            'fields' => 'cash,tag',
-            'where' => ['cash' => 1],
-            'order' => 'sort desc'
+            'table' => 'policy',
+            'fields' => 'policy.*,platform.*, policy.id',
+            'joinWhere' => 'LEFT JOIN platform ON policy.platform = platform.platform',
+            'where' => ['policy_type' => 4,'policy.pnumber' => $res['im_pnumber'], 'policy.status' => 1],
+            'order' => 'platform.sort desc'
         ];
-        $show_channel = explode(',', $res['channel_policy']);
-        $res['money'] = floor($res['money']);
-        $channel_info = BaseModel::getDbData($condition2);
-        $channel_list=array();
-        foreach ($channel_info as $key => $value) {
-            if (in_array($value['cash'].'-'.$value['tag'], $show_channel)) {
-                $channel_list[] = $this->getChangeMoney($value['tag'],$res);
-            } 
-        }
+        
+        $channel_info = BaseModel::joinSecDbData($condition2);
 
-        //各个理财包数据
-        $gift_data = $this->inquireUserExRatio($res['money'],$show_channel);
+        $channel_list = array();
+        $gift_data = array();
+        $res['money'] = floor($res['money']);
+        foreach ($channel_info as $key => $value) {
+            if ($value['platform']=='7-1' || $value['platform']=='7-2') {
+                $gift_data[] = $this->getChangeMoney($value, $res);
+            }
+            else{
+                $channel_list[] =  $this->getChangeMoney($value, $res);
+            }
+        }
 
         exit(BaseController::returnMsg(array('error' => '0','code_data' => $res,'data' => $channel_list,'gift_data' => $gift_data)));
         
     }
     //$res 关系表单条k码数据 tag: 1：商城 2：推啥 3：DDW 4：以太星球
-    public function getChangeMoney($tag,$res){
-        //1兑换渠道策略 兑付策略 1渠道 2出货时间 3激活时间 4客户渠道 5料号 6兑换渠道
-        $condition2 = [
-            'table' => 'allot_policy',
-            'where' => ['cash' => 1, 'tag' => $tag]
-        ];
-        $channel_list = BaseModel::getDbData($condition2,false); 
-        $rate = $channel_list['exratio'];
-        $rate_str = $channel_list['id'].':'.$channel_list['exratio'];
-
-        //2出货时间策略 
-        $condition2 = [
-            'table' => 'allot_policy',
-            'where' => ['cash' => 2]
-        ];
-
-        $info = BaseModel::getDbData($condition2,false);
-        if(!empty($info) && self::compareOperat(strtotime($res['allot_time']), strtotime(date('Y-m-d 23:59:59',strtotime($info['describe']))), $info['operator'])){
-            $rate = $rate * $info['exratio'];
-            $rate_str = $rate_str.'-'.$info['id'].':'.$info['exratio'];
-        }
-        
-        //3激活时间策略
-        $condition2 = [
-            'table' => 'allot_policy',
-            'where' => ['cash' => 3]
-        ];
-        $info = BaseModel::getDbData($condition2,false);
-        if(!empty($info) && self::compareOperat(strtotime(date('Y-m-d')), strtotime(date('Y-m-d 23:59:59',strtotime($info['describe']))), $info['operator'])){
-            $rate = $rate * $info['exratio'];
-            $rate_str = $rate_str.'-'.$info['id'].':'.$info['exratio'];
-        }
-
-        //4客户渠道策略
-        $condition2 = [
-            'table' => 'allot_policy',
-            'where' => ['cash' => 4, 'describe' => $res['channel2']]
-        ];
-        $info = BaseModel::getDbData($condition2,false);
-        if(!empty($info)){
-            $rate = $rate * $info['exratio'];
-            $rate_str = $rate_str.'-'.$info['id'].':'.$info['exratio'];
-        }
-        
-        //5料号策略
-        $condition2 = [
-            'table' => 'allot_policy',
-            'where' => ['cash' => 5, 'describe' => $res['im_pnumber']]
-        ];
-        $info = BaseModel::getDbData($condition2,false);
-        if(!empty($info)){
-            $rate = $rate * $info['exratio'];
-            $rate_str = $rate_str.'-'.$info['id'].':'.$info['exratio'];
-        }
-        $rate = sprintf('%.2f', $rate);
-        $channel_list['last_rate'] = $rate;
-        $channel_list['rate_str'] = $rate_str;
-        $channel_list['change_money'] = floor($res['money']*$rate*$channel_list['rate']);
-        $channel_list['channel_unit'] = C('channel_unit')[$channel_list['cash'].'-'.$channel_list['tag']];
-        return $channel_list;
-    }
-
-    public function compareOperat($num_1,$num_2,$operator)
-    {
-        if (empty($num_1)||empty($num_2)) {
-            return false;
-        }
-        $value = null;
-        eval("\$value = $num_1 $operator $num_2;");
-        return $value?true:false;
-    }
-
-    /**
-     * @ Purpose: 礼包兑换金额页面显示
-     * @param string $money
-     * @return []
-     */
-    public function inquireUserExRatio($money,$show_channel){
-
-        $data = BaseModel::getDbData([
-            'table' => 'allot_policy',
-            'where' => ['cash' => 7]
-        ]);
-        $resData=array();
-        if($data){
-            foreach ($data as $key => $val){
-                if (in_array($val['cash'].'-'.$val['tag'], $show_channel)){
-                    $resData[] = self::getGiftMoney($val['tag'], $money);
+    public function getChangeMoney($info, $res){
+        //4兑换渠道比例
+        $last_rate = $info['policy_value'];
+        $rate_str = $info['id'].':'.$info['policy_value'];
+        $platform = explode('-', $info['platform']);
+        if ($info['flag']) {
+            $condition2 = [
+                'table' => 'policy',
+                'where' => ['pnumber' => $res['im_pnumber'], 'status' =>1]
+            ];
+            $channel_list = BaseModel::getDbData($condition2); 
+            $now_time = time();
+            foreach ($channel_list as $key => $value) {
+                if ($value['policy_type']==1) {
+                    $last_rate *= $value['policy_value'];
+                    $rate_str .= '-'.$value['id'].':'.$value['policy_value'];
+                }
+                if ($value['policy_type']==2 && strtotime($res['allot_time'])>=strtotime($value['start_time']) && strtotime($res['allot_time'])<=strtotime($value['end_time'])) {
+                    $last_rate *= $value['policy_value'];
+                    $rate_str .= '-'.$value['id'].':'.$value['policy_value'];
+                }
+                if ($value['policy_type']==3 && $now_time>=strtotime($value['start_time']) && $now_time<=strtotime($value['end_time'])) {
+                    $last_rate *= $value['policy_value'];
+                    $rate_str .= '-'.$value['id'].':'.$value['policy_value'];
+                }
+                if ($value['policy_type']==5 && $res['channel2']==$value['channel']) {
+                    $last_rate *= $value['policy_value'];
+                    $rate_str .= '-'.$value['id'].':'.$value['policy_value'];
                 }
             }
         }
-        return $resData;
+
+        $last_rate = sprintf('%.2f', $last_rate);
+        $info['last_rate'] = $last_rate;
+        $info['rate_str'] = $rate_str;
+        $info['cash'] = $platform[0];
+        $info['tag'] = $platform[1];
+        $info['change_money'] = floor($res['money']*$last_rate*$info['rate']);
+        return $info;
     }
 
-    public function getGiftMoney($tag, $money){
-        $data = BaseModel::getDbData([
-            'table' => 'allot_policy',
-            'where' => ['cash' => 7, 'tag' => $tag]
-        ],false);
-        $data['rate_str'] = $data['id'].':'.$data['exratio'];
-        $data['last_rate'] = $data['exratio'];
-        $data['change_money'] = floor($data['exratio'] * $money);
-        $data['channel_unit'] = C('channel_unit')[$data['cash'].'-'.$data['tag']];
-        return $data;
-    }
     /**
         @功能:获取兑换记录
         @author:yy
@@ -200,17 +139,14 @@ class PageController extends LoginController
         $page = $_POST['page'];
         $data = BaseModel::joinSecListData([
             'table' => 'use_details',
-            'fields' => ['use_details.dhtotal','use_details.activate_time','relation.secretcd','relation.money','relation.im_model,allot_policy.describe,use_details.cash,use_details.tag'],
-            'joinWhere' => 'LEFT JOIN relation ON use_details.secretcd = relation.secretcd LEFT JOIN allot_policy ON (allot_policy.cash = use_details.cash AND allot_policy.tag = use_details.tag)',
+            'fields' => ['use_details.dhtotal','use_details.activate_time','relation.secretcd','relation.money','relation.im_model,platform.platform_name'],
+            'joinWhere' => 'LEFT JOIN relation ON use_details.secretcd = relation.secretcd LEFT JOIN platform ON platform.platform = use_details.exchannel',
             'where' => ['atvphone' => $info['phonenumber']],
             'order' => 'activate_time',
             'pnum' => 10,
             'page' => $page = !empty($page) ? $page : 0
         ]);
 
-        array_walk($data['data'],function(&$val, $key){
-            $val['channel_unit'] = C('channel_unit')[$val['cash'].'-'.$val['tag']]; 
-        });
         exit(BaseController::returnMsg(array('error' => '0', 'data'=>$data)));
     }
 
@@ -233,8 +169,16 @@ class PageController extends LoginController
         //验证token 并获取uid 手机
         $user_info = $this->user_info;
 
+        //策略信息
+        $info = M('policy')
+            ->join('platform ON policy.platform = platform.platform')
+            ->where(['policy_type' => 4,'policy.pnumber' => $kcode_info['im_pnumber'],'policy.status' => 1,'platform.platform' => $cash.'-'.$tag])
+            ->find();
+        $change_info = $this->getChangeMoney($info,$kcode_info);
+
+        
         if ($cash==1) {
-            $change_info = $this->getChangeMoney($tag,$kcode_info);
+            
             $change_info['account_number'] = $user_info['phonenumber'];
             $change_info['is_account'] = '0';
             if($tag==3)
@@ -244,7 +188,7 @@ class PageController extends LoginController
             exit(BaseController::returnMsg(array('error' => '0', 'data'=>$change_info)));
         }
         elseif ($cash==7) {
-            $gift_info = $this->getGiftMoney($tag, $kcode_info['money']);
+            
             switch ($tag) {
                 case 1://'华夏':
                     $param = array(
@@ -258,7 +202,7 @@ class PageController extends LoginController
                     //'0000'成功 rescode 1000 用户不存在或未实名 2000 k码类型不存在 4000 data数据有误 5000 签名不正确
                     $res = json_decode($res, true);
                     if ($res['rescode']=='0000') {
-                        $res['data'] = array_merge($gift_info, $res['data']);
+                        $res['data'] = array_merge($change_info, $res['data']);
                         $res['data']['account_number'] = $res['data']['phone'];
                         $res['data']['is_account'] = '0';
                         if ($res['data']['exchangPlanAmount']) {
@@ -285,7 +229,7 @@ class PageController extends LoginController
                     //{"message":"用户不存在或未实名","data":null,"rescode":"1000","error":"1000"}
                     $res = json_decode($res, true);
                     if ($res['rescode']=='0000') {
-                        $res['data'] = array_merge($gift_info, $res['data']);
+                        $res['data'] = array_merge($change_info, $res['data']);
                         $res['data']['account_number'] = $res['data']['phone'];
                         $res['data']['is_account'] = '0';
                         if ($res['data']['exchangPlanAmount']) {
@@ -372,9 +316,15 @@ class PageController extends LoginController
             exit(BaseController::returnMsg(array('error'=>'110', 'message' => '系统错误')));
         }
         
+        //策略信息
+        $info = M('policy')
+            ->join('platform ON policy.platform = platform.platform')
+            ->where(['policy_type' => 4,'policy.pnumber' => $kcode_info['im_pnumber'],'policy.status' => 1,'platform.platform' => $cash.'-'.$tag])
+            ->find();
+        $change_info = $this->getChangeMoney($info,$kcode_info);
         //第一大类策略
         if ($cash==1) {
-            $change_info = $this->getChangeMoney($tag,$kcode_info);
+            
             switch ($tag) {
                 case 1://'商城':
                     $sku_bn = $kcode_info['im_pnumber'];//料号
@@ -407,20 +357,9 @@ class PageController extends LoginController
                     break;  
             }
           
-            if ($res['error']==='0') {
-                //变更状态--已兑换
-                $result = CommonController::ChangeLog($kcode,$rate,$change_info['change_money'],$user_info['phonenumber'],1,$cash."-".$tag,round($change_info['last_rate'], 2),md5($kcode),$res['data']['last_return_time'],$cash,$tag,$change_info['rate_str']);
-                if ($result) {
-                    $data['error'] = '0';
-                }
-            }else{
-                //变更状态--已分配
-                M('relation')->where(["secretcd"=>$kcode])->save(array(['status']=>1));
-            }
         }
         //第七大类策略
         elseif ($cash==7) {
-            $gift_info = $this->getGiftMoney($tag, $kcode_info['money']);
             switch ($tag) {
                 
                 case 1://'华夏':
@@ -431,9 +370,9 @@ class PageController extends LoginController
                         'kcodeSn' => $kcode_info['clearcd'],//'mm1234', //明码
                         'deviceSn' => $kcode_info['sn'],//'sb1234',//设备码
                         'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
-                        'Amount' => strval($gift_info['change_money']),//'666'  //礼包金额
+                        'Amount' => strval($change_info['change_money']),//'666'  //礼包金额
                     );
-                    //var_dump($param);
+                    //print_r($param);
                     $res = ExGiftController::pushGift($param, 'hxwj_push_gift', 'hxwj_key');
                     $res = json_decode($res,true);
                     $res['data']['last_return_time'] = $res['data']['fristExpireDate'];
@@ -450,7 +389,7 @@ class PageController extends LoginController
                         'kcodeSn' => $kcode_info['clearcd'],//'mm1234', //明码
                         'deviceSn' => $kcode_info['sn'],//'sb1234',//设备码
                         'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
-                        'Amount' => strval($gift_info['change_money']),//'666'  //礼包金额
+                        'Amount' => strval($change_info['change_money']),//'666'  //礼包金额
                     );
                     //print_r($param);
                     $res = ExGiftController::pushGift($param, 'jh_push_gift', 'jh_key');
@@ -465,18 +404,18 @@ class PageController extends LoginController
                     break;
             }
 
-            if ($res['error']==='0') {
-                //变更状态--已兑换
-                $result = CommonController::ChangeLog($kcode,$rate,$gift_info['change_money'],$user_info['phonenumber'],1,$cash."-".$tag,round($gift_info['last_rate'], 2),md5($kcode),$res['data']['last_return_time'],$cash,$tag,$gift_info['rate_str']);
-                if ($result) {
-                    $data['error'] = '0';
-                }
-            }else{
-                //变更状态--已分配
-                $save_data['status'] = 1;
-                $save_data['channel3'] = ' ';
-                M('relation')->where(["secretcd"=>$kcode])->save($save_data);
+        }
+        if ($res['error']==='0') {
+            //变更状态--已兑换
+            $result = CommonController::ChangeLog($kcode,$rate,$change_info['change_money'],$user_info['phonenumber'],1,$cash."-".$tag,round($change_info['last_rate'], 2),md5($kcode),$res['data']['last_return_time'],$cash,$tag,$change_info['rate_str']);
+            if ($result) {
+                $data['error'] = '0';
             }
+        }else{
+            //变更状态--已分配
+            $save_data['status'] = 1;
+            $save_data['channel3'] = ' ';
+            M('relation')->where(["secretcd"=>$kcode])->save($save_data);
         }
         exit(BaseController::returnMsg($res));
     }
