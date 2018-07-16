@@ -24,7 +24,7 @@ class PageController extends LoginController
         parent::_initialize();
         $this->token = $_POST['token'];
         if (empty($this->token)) {
-            exit(BaseController::returnMsg(array('error' => '103')));
+            exit(BaseController::returnMsg(array('error' => '21')));
         }
         //验证token 获取手机号等信息
         $info = BaseController::getInfoByToken($this->token);
