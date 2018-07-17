@@ -50,7 +50,7 @@ class DdwController extends Controller
         //策略信息
         $info = M('policy')
             ->join('platform ON policy.platform = platform.platform')
-            ->where(['policy.policy_type' => 4,'policy.pnumber' => $data['im_pnumber'],'platform.platform' => '1'.'-'.'3'])
+            ->where(['policy.policy_type' => 4,'policy.pnumber' => $data['im_pnumber'],'platform.platform' => '1'.'-'.'3','status'=>1])
             ->find();
         print_r($info);
         print_r($data);
