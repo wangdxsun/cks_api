@@ -92,8 +92,7 @@ class PageController extends LoginController
                 'table' => 'policy',
                 'where' => ['pnumber' => $res['im_pnumber'], 'status' =>1]
             ];
-            $channel_list = BaseModel::getDbData($condition2);
-           
+            $channel_list = BaseModel::getDbData($condition2); 
             $now_time = time();
             foreach ($channel_list as $key => $value) {
                 if ($value['policy_type']==1) {
@@ -366,11 +365,11 @@ class PageController extends LoginController
                 case 1://'华夏':
                     $param = array(
                         'phone' => $user_info['phonenumber'],//手机号//手机号
-                        'kcodeType' => $kcode_info['im_model'], //产品型号
-                        'kcode' => $kcode_info['secretcd'],//'am123', //暗码
-                        'kcodeSn' => $kcode_info['clearcd'],//'mm1234', //明码
-                        'deviceSn' => $kcode_info['sn'],//'sb1234',//设备码
-                        'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
+                        'kcodeType' => trim($kcode_info['im_model']), //产品型号
+                        'kcode' => trim($kcode_info['secretcd']),//'am123', //暗码
+                        'kcodeSn' => trim($kcode_info['clearcd']),//'mm1234', //明码
+                        'deviceSn' => trim($kcode_info['sn']),//'sb1234',//设备码
+                        'bingSn' => trim($kcode_info['hcode']),//'bd123',  //绑定码
                         'Amount' => strval($change_info['change_money']),//'666'  //礼包金额
                     );
                     //print_r($param);
@@ -385,11 +384,11 @@ class PageController extends LoginController
                 case 2://'骏和':
                     $param = array(
                         'phone' => $user_info['phonenumber'],//手机号//手机号
-                        'kcodeType' => $kcode_info['im_model'], //产品型号
-                        'kcode' => $kcode_info['secretcd'],//'am123', //暗码
-                        'kcodeSn' => $kcode_info['clearcd'],//'mm1234', //明码
-                        'deviceSn' => $kcode_info['sn'],//'sb1234',//设备码
-                        'bingSn' => $kcode_info['hcode'],//'bd123',  //绑定码
+                        'kcodeType' => trim($kcode_info['im_model']), //产品型号
+                        'kcode' => trim($kcode_info['secretcd']),//'am123', //暗码
+                        'kcodeSn' => trim($kcode_info['clearcd']),//'mm1234', //明码
+                        'deviceSn' => trim($kcode_info['sn']),//'sb1234',//设备码
+                        'bingSn' => trim($kcode_info['hcode']),//'bd123',  //绑定码
                         'Amount' => strval($change_info['change_money']),//'666'  //礼包金额
                     );
                     //print_r($param);
