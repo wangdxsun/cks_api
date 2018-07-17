@@ -217,7 +217,11 @@ class ProductController extends Controller
           
             $new_where["secretcd"]=$data["secretcd"];
             $data1=M("use_details")->where($new_where)->field("activate_time,dhtotal,exratio")->find();
-
+            if(empty($data1)){
+                $data1["activate_time"]="";
+                $data1["dhtotal"]="";
+                $data1["exratio"]="";
+            }
             if(!$data){
                 exit(json_encode(array("status"=>false,"message"=>"查无数据")));
             }
