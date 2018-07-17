@@ -52,10 +52,9 @@ class DdwController extends Controller
             ->join('platform ON policy.platform = platform.platform')
             ->where(['policy.policy_type' => 4,'policy.pnumber' => $data['im_pnumber'],'platform.platform' => '1'.'-'.'3','status'=>1])
             ->find();
-        print_r($info);
-        print_r($data);
+
         $request=PageController::getChangeMoney($info,$data);
-        print_r($request);die;
+       
         $exratio=$request["last_rate"];
 
 
