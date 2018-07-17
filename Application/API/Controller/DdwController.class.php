@@ -54,7 +54,7 @@ class DdwController extends Controller
             ->find();
 
         $request=PageController::getChangeMoney($info,$data);
-       
+
         $exratio=$request["last_rate"];
 
 
@@ -86,13 +86,18 @@ class DdwController extends Controller
     //获取pnames
     public function getPnames(){
         EntryController::index();
-        $data=M("relation")->field("im_model")->group("im_model")->select();
+       /* $data=M("relation")->field("im_model")->group("im_model")->select();
         $pnames=array();
         foreach($data as $k=>$v){
             if(empty($v["im_model"])){
                 continue;
             }
             array_push($pnames,$v["im_model"]);
+        }*/
+        $pnames=array();
+        $data=M("pn_type")->field("pname")->select();
+        foreach($data as $k=>$v){
+            array_push($pnames,$v["pname"]);
         }
         exit(json_encode(array("status"=>true,"panmes"=>$pnames)));
     }
