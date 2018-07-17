@@ -93,7 +93,7 @@ class PageController extends LoginController
                 'where' => ['pnumber' => $res['im_pnumber'], 'status' =>1]
             ];
             $channel_list = BaseModel::getDbData($condition2);
-            print_r($channel_list);
+           
             $now_time = time();
             foreach ($channel_list as $key => $value) {
                 if ($value['policy_type']==1) {
