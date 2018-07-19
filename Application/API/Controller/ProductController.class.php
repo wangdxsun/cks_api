@@ -53,7 +53,8 @@ class ProductController extends Controller
                     exit(json_encode(array("status" => false, "message" => "找不到合适的产品")));
                 }
                 foreach ($pmoneys as $kk => $money) {
-                    if ($money < $v["money"]) {
+
+                    if ($money["pmoney"] < $v["money"]) {
                         exit(json_encode(array("status" => false, "message" => "传递产品金额大于实际产品金额")));
                         break;
                     }
@@ -111,13 +112,13 @@ class ProductController extends Controller
                $save["status"]=1;
                $save["allot_time"]=date("Y-m-d H:i:s",time());
                if($channel=="TUI"){
-                   $save["channel3"]="1-2";
+                   $save["channel1"]="1-2";
                }else if($channel=="ETH"){
-                   $save["channel3"]="1-4";
+                   $save["channel1"]="1-4";
                    $save["sn"]=$v["sn"];
                    $result["secretcd"]=$data["secretcd"];
                }else{
-                   $save["channel3"]="YP";
+                   $save["channel1"]="YP";
                }
 
                $result["money"] = $save["money"] = $v["money"];
