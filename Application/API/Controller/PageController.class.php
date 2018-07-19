@@ -171,12 +171,12 @@ class PageController extends LoginController
 
         //策略信息
         $info = M('policy')
+            ->field('policy.*,platform.*, policy.id')
             ->join('platform ON policy.platform = platform.platform')
             ->where(['policy_type' => 4,'policy.pnumber' => $kcode_info['im_pnumber'],'policy.status' => 1,'platform.platform' => $cash.'-'.$tag])
             ->find();
         $change_info = $this->getChangeMoney($info,$kcode_info);
 
-        
         if ($cash==1) {
             
             $change_info['account_number'] = $user_info['phonenumber'];
@@ -318,6 +318,7 @@ class PageController extends LoginController
         
         //策略信息
         $info = M('policy')
+            ->field('policy.*,platform.*, policy.id')
             ->join('platform ON policy.platform = platform.platform')
             ->where(['policy_type' => 4,'policy.pnumber' => $kcode_info['im_pnumber'],'policy.status' => 1,'platform.platform' => $cash.'-'.$tag])
             ->find();
