@@ -18,6 +18,11 @@ class PageController extends LoginController
 {   
     public $token = "";
     public $user_info = array();
+    /*
+     * param Redis
+     */
+    private $redis;
+    private $redisKey;
     //初始操作
     public function _initialize()
     {
@@ -32,6 +37,7 @@ class PageController extends LoginController
             exit(BaseController::returnMsg($info));
         }
         $this->user_info = $info;
+        $this->redisKey = 'kcode_error_times_'.$this->user_info['phonenumber'];
     }
     /**
         @功能:前端查询K码，获取可兑换信息
@@ -39,6 +45,7 @@ class PageController extends LoginController
         @date:2018-07-01
     **/
     public function getChangeInfo(){
+        $this->checkErrorTime();
         $kcode = $_POST['kcode'];
         $condition = [
             'table' => 'relation',
@@ -48,7 +55,7 @@ class PageController extends LoginController
         
         $res = BaseModel::getDbData($condition, false);
         if (empty($res)) {
-            exit(BaseController::returnMsg(array('error'=>'101')));
+            $this->addErrorTime();
         }
 
         //status 状态 0未分配 1已分配 2已兑换 
@@ -81,6 +88,7 @@ class PageController extends LoginController
         exit(BaseController::returnMsg(array('error' => '0','code_data' => $res,'data' => $channel_list,'gift_data' => $gift_data)));
         
     }
+
     //$res 关系表单条k码数据 tag: 1：商城 2：推啥 3：DDW 4：以太星球
     public function getChangeMoney($info, $res){
         //4兑换渠道比例
@@ -156,6 +164,7 @@ class PageController extends LoginController
         @date:2018-07-01
     **/
     public function butnChange(){
+        $this->checkErrorTime();
         $token = $this->token;
         $tag = $_POST['tag'];
         $kcode = $_POST['kcode'];
@@ -166,6 +175,9 @@ class PageController extends LoginController
             'where' => ['secretcd' => $kcode]
         ];
         $kcode_info = BaseModel::getDbData($condition, false);
+        if (empty($kcode_info)) {
+            $this->addErrorTime();
+        }
         //验证token 并获取uid 手机
         $user_info = $this->user_info;
 
@@ -267,17 +279,7 @@ class PageController extends LoginController
             exit(BaseController::returnMsg($info));
         }
 
-        header('Content-Type: application/json');
-        //如果K码连续错误次数超过5次，直接禁止兑换一段时间
-        $redis = new \Redis();
-        $redisCon = $redis->connect(C('REDIS_HOST'), C('REDIS_PORT'), 1);
-        if (!$redisCon) {
-            exit(json_encode(['error' => 110, 'message' => 'Redis连接超时']));
-        }
-        $redisKey = 'kcode_error_times'.$this->user_info['uid'];
-        if (intval($redis->get($redisKey)) > 5) {
-            exit(json_encode(['error' => 110, 'message' => 'K码连续错误次数过多，请稍后再试']));
-        }
+        $this->checkErrorTime();
         // token   是   身份唯一表示
         // tag     是   渠道代码 tag: 1：商城 2：推啥 3：DDW 4：以太星球
         // kcode   是   K码值，暗码
@@ -293,9 +295,7 @@ class PageController extends LoginController
 
         //如果K码不存在，错误次数+1
         if (is_null($kcode_info)) {
-            $redis->incr($redisKey);
-            $redis->expire($redisKey, 60 * 5);
-            exit(json_encode(['error' => 110, 'message' => 'K码不存在']));
+            $this->addErrorTime();
         }
 
         //判断kcode状态
@@ -419,6 +419,31 @@ class PageController extends LoginController
             M('relation')->where(["secretcd"=>$kcode])->save($save_data);
         }
         exit(BaseController::returnMsg($res));
+    }
+
+    private function checkErrorTime()
+    {
+        //如果K码连续错误次数超过5次，直接禁止兑换一段时间
+        $this->redis = new \Redis();
+        $redisCon = $this->redis->connect(C('REDIS_HOST'), C('REDIS_PORT'), 1);
+        if (!$redisCon) {
+            $this->ajaxReturn(['error' => 110, 'message' => 'Redis连接超时']);
+        }
+        if ($this->redis->sIsMember('kcode_blacklist', $this->user_info['phonenumber'])) {
+            $this->ajaxReturn(['error' => 110, 'message' => '系统检测到您有刷K码的嫌疑，请联系客服']);
+        } elseif (intval($this->redis->get($this->redisKey)) > 5) {
+            $this->ajaxReturn(['error' => 110, 'message' => 'K码连续错误次数过多，请稍后再试']);
+        }
+    }
+
+    private function addErrorTime()
+    {
+        $res = $this->redis->incr($this->redisKey);
+        if ($res > 1000) {
+            $this->redis->sadd('kcode_blacklist', $this->user_info['phonenumber']);
+        }
+        $this->redis->expire($this->redisKey, 60 * 60 * 4);
+        exit(json_encode(['error' => 110, 'message' => 'K码不存在']));
     }
 
 }
