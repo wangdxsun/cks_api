@@ -30,7 +30,7 @@ class LoginController extends Controller
     //邮箱手机号验证
     public function checkEmailOrPhone($account_number){
         $preg_email='/^[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*@([a-zA-Z0-9]+[-.])+([a-z]{2,5})$/ims';
-        $preg_phone='/^1[34578]\d{9}$/ims';
+        $preg_phone= '/^[1][3,4,5,7,8,9,6][0-9]{9}$/';//'/^1[34578]\d{9}$/ims';
         if(preg_match($preg_phone,$account_number)){
             $code = 'phonenumber';
         }
@@ -224,6 +224,20 @@ class LoginController extends Controller
         $params = http_build_query($data);
         $url = C('cloud_url').C('cloud_checkPhonenumber')."?".$params;
         $res = Curl::curl_get($url,$data);
+        exit(BaseController::returnMsg($res));
+    }
+
+    /**
+        @功能:验证token有效性接口--前端调用
+        @param:yy
+        @date:2018-06-30
+    **/
+    public function checkToken(){
+        $token = $_POST['token'];
+        // if (empty($token)) {
+        //     exit(BaseController::returnMsg(array('error' => '21')));
+        // }
+        $res = BaseController::checkToken($token);
         exit(BaseController::returnMsg($res));
     }
 }
