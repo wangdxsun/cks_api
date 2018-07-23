@@ -46,13 +46,12 @@ class PageController extends LoginController
     public function getChangeInfo(){
         $this->checkErrorTimes();
         $kcode = $_POST['kcode'];
-        $condition = [
-            'table' => 'relation',
-            'fields' => '*',
-            'where' => ['secretcd' => $kcode]
-        ];
-        
-        $res = BaseModel::getDbData($condition, false);
+        //策略信息
+        $res = M('relation')
+            ->field('relation.*,IFNULL(policy.policy_value ,0)as lock_time')
+            ->join('LEFT JOIN policy ON (policy.pnumber = relation.im_pnumber AND policy.policy_type=6 AND policy.status=1)')
+            ->where(['secretcd' => $kcode,'relation.status' => 1])
+            ->find();
         if (empty($res)) {
             $this->addErrorTimes();
         }
@@ -61,7 +60,9 @@ class PageController extends LoginController
         if ($res['status']!=1) {
             exit(BaseController::returnMsg(array('error'=>'110', 'message' => C('kcdoe_stauts')[$res['status']])));
         }
-        
+        //锁定期
+        $lock_time = $res['lock_time'] - round((time()-strtotime($res['allot_time']))/3600/24);
+        $res['lock_time'] = $lock_time>0?$lock_time:0;
         $condition2 = [
             'table' => 'policy',
             'fields' => 'policy.*,platform.*, policy.id',
@@ -291,7 +292,6 @@ class PageController extends LoginController
         M()->startTrans();//开启事务
         $where['secretcd'] = $kcode;
         $kcode_info = M('relation')->lock(true)->where($where)->find();
-
         //如果K码不存在，错误次数+1
         if (is_null($kcode_info)) {
             $this->addErrorTimes();
@@ -301,7 +301,12 @@ class PageController extends LoginController
         if ($kcode_info['status']!=1) {
             exit(BaseController::returnMsg(array('error'=>'110', 'message' => C('kcdoe_stauts')[$kcode_info['status']])));
         }
-        
+        //锁定期判断
+        $lock_time = M('policy')->where(['policy_type'=>6,'pnumber'=>$kcode_info['im_pnumber'],'status'=>1])->getField('policy_value');
+        $lock_time = $lock_time - round((time()-strtotime($kcode_info['allot_time']))/3600/24);
+        if ($lock_time>0) {
+            exit(BaseController::returnMsg(array('error'=>'110', 'message' => 'K码还在锁定期，不能兑换')));
+        }
         //变更状态--锁定
         $save_data['status'] = 5;
         $save_data['channel3'] = $cash.'-'.$tag;
