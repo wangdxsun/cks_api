@@ -50,7 +50,7 @@ class PageController extends LoginController
         $res = M('relation')
             ->field('relation.*,IFNULL(policy.policy_value ,0)as lock_time')
             ->join('LEFT JOIN policy ON (policy.pnumber = relation.im_pnumber AND policy.policy_type=6 AND policy.status=1)')
-            ->where(['secretcd' => $kcode,'relation.status' => 1])
+            ->where(['secretcd' => $kcode])
             ->find();
         if (empty($res)) {
             $this->addErrorTimes();
