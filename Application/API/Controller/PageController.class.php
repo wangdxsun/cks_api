@@ -434,7 +434,7 @@ class PageController extends LoginController
         }
         //先判断是不是在黑名单里面
         if ($this->redis->sIsMember('kcode_blacklist', $this->user_info['phonenumber'])) {
-            $this->ajaxReturn(['error' => 110, 'message' => '系统检测到您有刷K码的嫌疑，请联系客服']);
+            $this->ajaxReturn(['error' => 110, 'message' => '系统监测到您有刷K码嫌疑，您的账户已被锁定，请联系客服']);
         }
         //如果尝试次数过快，直接拉黑
         $attemptTimes = $this->redis->incr($this->attemptTimes);
@@ -443,7 +443,7 @@ class PageController extends LoginController
             $this->redis->sadd('kcode_blacklist', $this->user_info['phonenumber']);
         }
         if (intval($this->redis->get($this->errorTimes)) > 5) {
-            $this->ajaxReturn(['error' => 110, 'message' => 'K码连续错误次数过多，请稍后再试']);
+            $this->ajaxReturn(['error' => 110, 'message' => '您的K码已累积输错5次，请4小时后再来']);
         }
     }
 
@@ -451,7 +451,7 @@ class PageController extends LoginController
     {
         $this->redis->incr($this->errorTimes);
         $this->redis->expire($this->errorTimes, 60 * 60 * 4);
-        exit(json_encode(['error' => 110, 'message' => 'K码不存在']));
+        exit(json_encode(['error' => 110, 'message' => '您的K码输入有误，累积输错5次，账户将锁定4小时']));
     }
 
 }
