@@ -157,7 +157,7 @@ class ProductController extends Controller
         $order_no = $_POST["order_no"];
         $channel=$_POST["channel"];
         if($channel=="TUI"){
-            $where["channel3"]="1-2";
+            $where["channel1"]="1-2";
         }
         $where["orderid"]=$order_no;
         $where["status"]=1;
@@ -611,6 +611,13 @@ class ProductController extends Controller
             return false;
         }
     }
+
+
+
+
+    //查询相关数据
+
+
 
 }
 
